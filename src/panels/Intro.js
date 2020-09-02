@@ -6,6 +6,8 @@ import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
+import card1 from '../img/Intro-card-1.png';
+import card2 from '../img/Intro-card-2.png';
 
 import './Intro.css';
 
@@ -18,6 +20,10 @@ const Intro = ({ id, snackbarError, fetchedUser, userHasSeenIntro, go }) => {
 			{(!userHasSeenIntro && fetchedUser) &&
 				<Fragment>
 					<Group>
+						<Div className='Cards'>
+							<img src={card1} alt='Промо карточка 1'/>
+							<img src={card2} alt='Промо карточка 2'/>
+						</Div>
 						<Div className='User'>
 							{fetchedUser.photo_200 && <Avatar src={fetchedUser.photo_200}/>}
 							<h2>Создавайте счётчики для любых событий</h2>
