@@ -1,9 +1,7 @@
 import React, { Fragment } from 'react';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
-import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import Group from '@vkontakte/vkui/dist/components/Group/Group';
 import Div from '@vkontakte/vkui/dist/components/Div/Div';
-import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import card1 from '../img/Intro-card-1.png';
@@ -14,9 +12,6 @@ import './Intro.css';
 const Intro = ({ id, snackbarError, fetchedUser, userHasSeenIntro, go }) => {
 	return (
 		<Panel id={id} centered={true}>
-			<PanelHeader>
-				Счётчик дней
-			</PanelHeader>
 			{(!userHasSeenIntro && fetchedUser) &&
 				<Fragment>
 					<Group>
