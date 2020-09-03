@@ -20,12 +20,9 @@ const Intro = ({ id, snackbarError, fetchedUser, userHasSeenIntro, go }) => {
 			{(!userHasSeenIntro && fetchedUser) &&
 				<Fragment>
 					<Group>
-						<Div className='Cards'>
-							<img src={card1} alt='Промо карточка 1'/>
-							<img src={card2} alt='Промо карточка 2'/>
-						</Div>
-						<Div className='User'>
-							{fetchedUser.photo_200 && <Avatar src={fetchedUser.photo_200}/>}
+						<Div className='About'>
+							<img src={card1} alt='Промо карточка 1' className='Card1'/>
+							<img src={card2} alt='Промо карточка 2' className='Card2'/>
 							<h2>Создавайте счётчики для любых событий</h2>
 							<p>Вы можете следить за тем, сколько осталось до события или сколько уже прошло времени после него</p>
 						</Div>
