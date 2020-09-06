@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import View from '@vkontakte/vkui/dist/components/View/View';
+import Epic from '@vkontakte/vkui/dist/components/Epic/Epic';
+import Tabbar from '@vkontakte/vkui/dist/components/Tabbar/Tabbar';
+import TabbarItem from '@vkontakte/vkui/dist/components/TabbarItem/TabbarItem';
+import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
+import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import Snackbar from '@vkontakte/vkui/dist/components/Snackbar/Snackbar';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
+import Icon28RecentOutline from '@vkontakte/icons/dist/28/recent_outline';
+import Icon28AddCircleOutline from '@vkontakte/icons/dist/28/add_circle_outline';
+import Icon28UsersOutline from '@vkontakte/icons/dist/28/users_outline';
 import Icon24Error from '@vkontakte/icons/dist/24/error';
 
 import '@vkontakte/vkui/dist/vkui.css';
 
-import Home from './panels/Home';
 import Intro from './panels/Intro';
 
 const ROUTES = {
@@ -18,6 +25,65 @@ const ROUTES = {
 
 const STORAGE_KEYS = {
 	STATUS: 'status',
+}
+
+class Home extends React.Component {
+	constructor (props) {
+		super(props);
+
+		this.state = {
+			activeStory: 'counters'
+		};
+		this.onStoryChange = this.onStoryChange.bind(this);
+	}
+
+	onStoryChange (e) {
+		this.setState({ activeStory: e.currentTarget.dataset.story })
+	}
+
+	render () {
+	
+		return (
+			<Epic activeStory={this.state.activeStory} tabbar={
+				<Tabbar>
+					<TabbarItem
+					onClick={this.onStoryChange}
+					selected={this.state.activeStory === 'counters'}
+					data-story="counters"
+					text="Счетчики"
+					><Icon28RecentOutline/></TabbarItem>
+					<TabbarItem
+					onClick={this.onStoryChange}
+					selected={this.state.activeStory === 'create'}
+					data-story="create"
+					text="Создать"
+					><Icon28AddCircleOutline/></TabbarItem>
+					<TabbarItem
+					onClick={this.onStoryChange}
+					selected={this.state.activeStory === 'friends'}
+					data-story="friends"
+					text="Друзья"
+					><Icon28UsersOutline/></TabbarItem>
+				</Tabbar>
+			}>
+				<View id="counters" activePanel="counters">
+					<Panel id="counters">
+						<PanelHeader>Счетчики</PanelHeader>
+					</Panel>
+				</View>
+				<View id="create" activePanel="create">
+					<Panel id="create">
+						<PanelHeader>Создать</PanelHeader>
+					</Panel>
+				</View>
+				<View id="friends" activePanel="friends">
+					<Panel id="friends">
+						<PanelHeader>Друзья</PanelHeader>
+					</Panel>
+				</View>
+			</Epic>
+		)
+	}
 }
 
 const App = () => {
