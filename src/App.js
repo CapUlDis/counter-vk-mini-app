@@ -16,78 +16,81 @@ import Icon24Error from '@vkontakte/icons/dist/24/error';
 
 import '@vkontakte/vkui/dist/vkui.css';
 
+// import Home from './panels/Home';
 import Intro from './panels/Intro';
 
 const ROUTES = {
-	HOME: 'home',
-	INTRO: 'intro'
+	INTRO: 'intro',
+	COUNTERS: 'counters',
+	CREATE: 'create',
+	FRIENDS: 'friends'
 };
 
 const STORAGE_KEYS = {
 	STATUS: 'status',
 }
 
-class Home extends React.Component {
-	constructor (props) {
-		super(props);
+// class Home extends React.Component {
+// 	constructor (props) {
+// 		super(props);
 
-		this.state = {
-			activeStory: 'counters'
-		};
-		this.onStoryChange = this.onStoryChange.bind(this);
-	}
+// 		this.state = {
+// 			activeStory: 'counters'
+// 		};
+// 		this.onStoryChange = this.onStoryChange.bind(this);
+// 	}
 
-	onStoryChange (e) {
-		this.setState({ activeStory: e.currentTarget.dataset.story })
-	}
+// 	onStoryChange (e) {
+// 		this.setState({ activeStory: e.currentTarget.dataset.story })
+// 	}
 
-	render () {
+// 	render () {
 	
-		return (
-			<Epic activeStory={this.state.activeStory} tabbar={
-				<Tabbar>
-					<TabbarItem
-					onClick={this.onStoryChange}
-					selected={this.state.activeStory === 'counters'}
-					data-story="counters"
-					text="Счетчики"
-					><Icon28RecentOutline/></TabbarItem>
-					<TabbarItem
-					onClick={this.onStoryChange}
-					selected={this.state.activeStory === 'create'}
-					data-story="create"
-					text="Создать"
-					><Icon28AddCircleOutline/></TabbarItem>
-					<TabbarItem
-					onClick={this.onStoryChange}
-					selected={this.state.activeStory === 'friends'}
-					data-story="friends"
-					text="Друзья"
-					><Icon28UsersOutline/></TabbarItem>
-				</Tabbar>
-			}>
-				<View id="counters" activePanel="counters">
-					<Panel id="counters">
-						<PanelHeader>Счетчики</PanelHeader>
-					</Panel>
-				</View>
-				<View id="create" activePanel="create">
-					<Panel id="create">
-						<PanelHeader>Создать</PanelHeader>
-					</Panel>
-				</View>
-				<View id="friends" activePanel="friends">
-					<Panel id="friends">
-						<PanelHeader>Друзья</PanelHeader>
-					</Panel>
-				</View>
-			</Epic>
-		)
-	}
-}
+// 		return (
+// 			<Epic activeStory={this.state.activeStory} tabbar={
+// 				<Tabbar>
+// 					<TabbarItem
+// 					onClick={this.onStoryChange}
+// 					selected={this.state.activeStory === 'counters'}
+// 					data-story="counters"
+// 					text="Счетчики"
+// 					><Icon28RecentOutline/></TabbarItem>
+// 					<TabbarItem
+// 					onClick={this.onStoryChange}
+// 					selected={this.state.activeStory === 'create'}
+// 					data-story="create"
+// 					text="Создать"
+// 					><Icon28AddCircleOutline/></TabbarItem>
+// 					<TabbarItem
+// 					onClick={this.onStoryChange}
+// 					selected={this.state.activeStory === 'friends'}
+// 					data-story="friends"
+// 					text="Друзья"
+// 					><Icon28UsersOutline/></TabbarItem>
+// 				</Tabbar>
+// 			}>
+// 				<View id="counters" activePanel="counters">
+// 					<Panel id="counters">
+// 						<PanelHeader>Счетчики</PanelHeader>
+// 					</Panel>
+// 				</View>
+// 				<View id="create" activePanel="create">
+// 					<Panel id="create">
+// 						<PanelHeader>Создать</PanelHeader>
+// 					</Panel>
+// 				</View>
+// 				<View id="friends" activePanel="friends">
+// 					<Panel id="friends">
+// 						<PanelHeader>Друзья</PanelHeader>
+// 					</Panel>
+// 				</View>
+// 			</Epic>
+// 		)
+// 	}
+// }
 
 const App = () => {
-	const [activePanel, setActivePanel] = useState(ROUTES.INTRO);
+	const [activePanel, setActivePanel] = useState(ROUTES.COUNTERS);
 	const [fetchedUser, setUser] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [userHasSeenIntro, setUserHasSeenIntro] = useState(false);
@@ -114,7 +117,7 @@ const App = () => {
 					switch (key) {
 						case STORAGE_KEYS.STATUS:
 							if (data[key].hasSeenIntro) {
-								setActivePanel(ROUTES.HOME);
+								setActivePanel(ROUTES.COUNTERS);
 								setUserHasSeenIntro(true);
 							}
 						default:
@@ -150,7 +153,7 @@ const App = () => {
 					hasSeenIntro: true
 				})
 			});
-			go(ROUTES.HOME);
+			go(ROUTES.COUNTERS);
 		} catch (error) {
 			setSnackbar(<Snackbar
 				layout='vertical'
@@ -166,7 +169,44 @@ const App = () => {
 
 	return (
 		<View activePanel={activePanel} popout={popout}>
-			<Home id={ROUTES.HOME} fetchedUser={fetchedUser} go={go} snackbarError={snackbar}/>
+			<Epic activeStory={activePanel} tabbar={
+				<Tabbar>
+					<TabbarItem
+					onClick={() => setActivePanel(ROUTES.COUNTERS)}
+					selected={activePanel === ROUTES.COUNTERS}
+					data-story={ROUTES.COUNTERS}
+					text="Счетчики"
+					><Icon28RecentOutline/></TabbarItem>
+					<TabbarItem
+					onClick={() => setActivePanel(ROUTES.CREATE)}
+					selected={activePanel === ROUTES.CREATE}
+					data-story={ROUTES.CREATE}
+					text="Создать"
+					><Icon28AddCircleOutline/></TabbarItem>
+					<TabbarItem
+					onClick={() => setActivePanel(ROUTES.FRIENDS)}
+					selected={activePanel === ROUTES.FRIENDS}
+					data-story={ROUTES.FRIENDS}
+					text="Друзья"
+					><Icon28UsersOutline/></TabbarItem>
+				</Tabbar>
+			}>
+				<View id={ROUTES.COUNTERS} activePanel={ROUTES.COUNTERS}>
+					<Panel id={ROUTES.COUNTERS}>
+						<PanelHeader>Счетчики</PanelHeader>
+					</Panel>
+				</View>
+				<View id={ROUTES.CREATE} activePanel={ROUTES.CREATE}>
+					<Panel id={ROUTES.CREATE}>
+						<PanelHeader>Создать</PanelHeader>
+					</Panel>
+				</View>
+				<View id={ROUTES.FRIENDS} activePanel={ROUTES.FRIENDS}>
+					<Panel id={ROUTES.FRIENDS}>
+						<PanelHeader>Друзья</PanelHeader>
+					</Panel>
+				</View>
+			</Epic>
 			<Intro id={ROUTES.INTRO} fetchedUser={fetchedUser} go={viewIntro} snackbarError={snackbar} userHasSeenIntro={userHasSeenIntro}/>
 		</View>
 	);
