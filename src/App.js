@@ -16,7 +16,9 @@ import Icon24Error from '@vkontakte/icons/dist/24/error';
 
 import '@vkontakte/vkui/dist/vkui.css';
 
-// import Home from './panels/Home';
+import Counters from './panels/Counters';
+import Create from './panels/Create';
+import Friends from './panels/Friends';
 import Intro from './panels/Intro';
 
 const ROUTES = {
@@ -140,19 +142,13 @@ const App = () => {
 				</Tabbar>
 			}>
 				<View id={ROUTES.COUNTERS} activePanel={ROUTES.COUNTERS}>
-					<Panel id={ROUTES.COUNTERS}>
-						<PanelHeader>Счетчики</PanelHeader>
-					</Panel>
+					<Counters id={ROUTES.COUNTERS}/>
 				</View>
 				<View id={ROUTES.CREATE} activePanel={ROUTES.CREATE}>
-					<Panel id={ROUTES.CREATE}>
-						<PanelHeader>Создать</PanelHeader>
-					</Panel>
+					<Create id={ROUTES.CREATE}/>
 				</View>
 				<View id={ROUTES.FRIENDS} activePanel={ROUTES.FRIENDS}>
-					<Panel id={ROUTES.FRIENDS}>
-						<PanelHeader>Друзья</PanelHeader>
-					</Panel>
+					<Friends id={ROUTES.FRIENDS}/>
 				</View>
 			</Epic>
 	);
