@@ -30,67 +30,8 @@ const STORAGE_KEYS = {
 	STATUS: 'status',
 }
 
-// class Home extends React.Component {
-// 	constructor (props) {
-// 		super(props);
-
-// 		this.state = {
-// 			activeStory: 'counters'
-// 		};
-// 		this.onStoryChange = this.onStoryChange.bind(this);
-// 	}
-
-// 	onStoryChange (e) {
-// 		this.setState({ activeStory: e.currentTarget.dataset.story })
-// 	}
-
-// 	render () {
-	
-// 		return (
-// 			<Epic activeStory={this.state.activeStory} tabbar={
-// 				<Tabbar>
-// 					<TabbarItem
-// 					onClick={this.onStoryChange}
-// 					selected={this.state.activeStory === 'counters'}
-// 					data-story="counters"
-// 					text="Счетчики"
-// 					><Icon28RecentOutline/></TabbarItem>
-// 					<TabbarItem
-// 					onClick={this.onStoryChange}
-// 					selected={this.state.activeStory === 'create'}
-// 					data-story="create"
-// 					text="Создать"
-// 					><Icon28AddCircleOutline/></TabbarItem>
-// 					<TabbarItem
-// 					onClick={this.onStoryChange}
-// 					selected={this.state.activeStory === 'friends'}
-// 					data-story="friends"
-// 					text="Друзья"
-// 					><Icon28UsersOutline/></TabbarItem>
-// 				</Tabbar>
-// 			}>
-// 				<View id="counters" activePanel="counters">
-// 					<Panel id="counters">
-// 						<PanelHeader>Счетчики</PanelHeader>
-// 					</Panel>
-// 				</View>
-// 				<View id="create" activePanel="create">
-// 					<Panel id="create">
-// 						<PanelHeader>Создать</PanelHeader>
-// 					</Panel>
-// 				</View>
-// 				<View id="friends" activePanel="friends">
-// 					<Panel id="friends">
-// 						<PanelHeader>Друзья</PanelHeader>
-// 					</Panel>
-// 				</View>
-// 			</Epic>
-// 		)
-// 	}
-// }
-
 const App = () => {
-	const [activePanel, setActivePanel] = useState(ROUTES.COUNTERS);
+	const [activePanel, setActivePanel] = useState(ROUTES.INTRO);
 	const [fetchedUser, setUser] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [userHasSeenIntro, setUserHasSeenIntro] = useState(false);
@@ -167,9 +108,16 @@ const App = () => {
 		}
 	}
 
+	if (activePanel === ROUTES.INTRO) {
+		return (
+			<View activePanel={activePanel} popout={popout}>
+				<Intro id={ROUTES.INTRO} fetchedUser={fetchedUser} go={viewIntro} snackbarError={snackbar} userHasSeenIntro={userHasSeenIntro}/>
+			</View>
+		);
+	}
+
 	return (
-		<View activePanel={activePanel} popout={popout}>
-			<Epic activeStory={activePanel} tabbar={
+		<Epic activeStory={activePanel} tabbar={
 				<Tabbar>
 					<TabbarItem
 					onClick={() => setActivePanel(ROUTES.COUNTERS)}
@@ -207,8 +155,6 @@ const App = () => {
 					</Panel>
 				</View>
 			</Epic>
-			<Intro id={ROUTES.INTRO} fetchedUser={fetchedUser} go={viewIntro} snackbarError={snackbar} userHasSeenIntro={userHasSeenIntro}/>
-		</View>
 	);
 }
 
