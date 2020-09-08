@@ -19,7 +19,7 @@ const Intro = ({ id, snackbarError, fetchedUser, userHasSeenIntro, go }) => {
 						<img src={card2} alt='Промо карточка 2' className='card2'/>
 						<Placeholder 
 							header="Создавайте счетчики для любых событий" 
-							className='placeholder'
+							className='placeholder_intro'
 							>
 							Вы можете следить за тем, сколько осталось до события или сколько уже прошло времени после него
 						</Placeholder>

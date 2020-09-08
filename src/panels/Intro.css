@@ -19,7 +19,7 @@ img {
   left: 12.5px;
 }
 
-.Placeholder__in {
+.Placeholder__in.placeholder_intro {
   position: relative;
   top: -109px;
   margin-top: 17px; 

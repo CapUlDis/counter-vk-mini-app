@@ -1,0 +1,10 @@
+:root { 
+    --tabbar_active_icon: #4bb34b;
+}
+
+.placeholder_counters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+

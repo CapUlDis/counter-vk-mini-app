@@ -9,7 +9,7 @@ import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 const Create = ({ id }) => (
 	<Panel id={id}>
 		<PanelHeader 
-            left={<PanelHeaderButton><Icon28Notifications/></PanelHeaderButton>}
+            left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
             separator={false}>Создать</PanelHeader>
 	</Panel>
 );
