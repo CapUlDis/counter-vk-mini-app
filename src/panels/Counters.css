@@ -1,4 +1,4 @@
-:root { 
+:root, body[scheme="space_gray"] { 
     --tabbar_active_icon: #4bb34b;
 }
 
@@ -7,4 +7,3 @@
     align-items: center;
     justify-content: center;
 }
-
