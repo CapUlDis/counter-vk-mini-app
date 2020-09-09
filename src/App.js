@@ -4,8 +4,6 @@ import View from '@vkontakte/vkui/dist/components/View/View';
 import Epic from '@vkontakte/vkui/dist/components/Epic/Epic';
 import Tabbar from '@vkontakte/vkui/dist/components/Tabbar/Tabbar';
 import TabbarItem from '@vkontakte/vkui/dist/components/TabbarItem/TabbarItem';
-import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
-import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import Snackbar from '@vkontakte/vkui/dist/components/Snackbar/Snackbar';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
