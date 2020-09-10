@@ -118,37 +118,37 @@ const App = () => {
 
 	return (
 		<Epic activeStory={activePanel} tabbar={
-				<Tabbar>
-					<TabbarItem
-					onClick={() => setActivePanel(ROUTES.COUNTERS)}
-					selected={activePanel === ROUTES.COUNTERS}
-					data-story={ROUTES.COUNTERS}
-					text="Счетчики"
-					><Icon28RecentOutline/></TabbarItem>
-					<TabbarItem
-					onClick={() => setActivePanel(ROUTES.CREATE)}
-					selected={activePanel === ROUTES.CREATE}
-					data-story={ROUTES.CREATE}
-					text="Создать"
-					><Icon28AddCircleOutline/></TabbarItem>
-					<TabbarItem
-					onClick={() => setActivePanel(ROUTES.FRIENDS)}
-					selected={activePanel === ROUTES.FRIENDS}
-					data-story={ROUTES.FRIENDS}
-					text="Друзья"
-					><Icon28UsersOutline/></TabbarItem>
-				</Tabbar>
-			}>
-				<View id={ROUTES.COUNTERS} activePanel={ROUTES.COUNTERS}>
-					<Counters id={ROUTES.COUNTERS} go={() => go(ROUTES.CREATE)}/>
-				</View>
-				<View id={ROUTES.CREATE} activePanel={ROUTES.CREATE}>
-					<Create id={ROUTES.CREATE}/>
-				</View>
-				<View id={ROUTES.FRIENDS} activePanel={ROUTES.FRIENDS}>
-					<Friends id={ROUTES.FRIENDS}/>
-				</View>
-			</Epic>
+			<Tabbar>
+				<TabbarItem
+				onClick={() => setActivePanel(ROUTES.COUNTERS)}
+				selected={activePanel === ROUTES.COUNTERS}
+				data-story={ROUTES.COUNTERS}
+				text="Счетчики"
+				><Icon28RecentOutline/></TabbarItem>
+				<TabbarItem
+				onClick={() => setActivePanel(ROUTES.CREATE)}
+				selected={activePanel === ROUTES.CREATE}
+				data-story={ROUTES.CREATE}
+				text="Создать"
+				><Icon28AddCircleOutline/></TabbarItem>
+				<TabbarItem
+				onClick={() => setActivePanel(ROUTES.FRIENDS)}
+				selected={activePanel === ROUTES.FRIENDS}
+				data-story={ROUTES.FRIENDS}
+				text="Друзья"
+				><Icon28UsersOutline/></TabbarItem>
+			</Tabbar>
+		}>
+			<View id={ROUTES.COUNTERS} activePanel={ROUTES.COUNTERS}>
+				<Counters id={ROUTES.COUNTERS} go={() => go(ROUTES.CREATE)}/>
+			</View>
+			<View id={ROUTES.CREATE} activePanel={ROUTES.CREATE}>
+				<Create id={ROUTES.CREATE}/>
+			</View>
+			<View id={ROUTES.FRIENDS} activePanel={ROUTES.FRIENDS}>
+				<Friends id={ROUTES.FRIENDS}/>
+			</View>
+		</Epic>
 	);
 }
 
