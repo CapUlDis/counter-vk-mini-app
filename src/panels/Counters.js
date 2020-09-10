@@ -10,7 +10,7 @@ import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 
 import './Counters.css';
 
-const Counters = ({ id }) => (
+const Counters = ({ id, go }) => (
 	<Panel id={id} centered={true}>
 		<PanelHeader 
 			left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
@@ -21,7 +21,7 @@ const Counters = ({ id }) => (
 			<Placeholder 
 				icon={<Icon56AddCircleOutline/>}
 				header="Создайте счетчик"
-				action={<Button size="l" mode="commerce">Создать счетчик</Button>}
+				action={<Button size="l" mode="commerce" onClick={go}>Создать счетчик</Button>}
 			>
 				Здесь будут отображаться ваши счетчики.
 			</Placeholder>

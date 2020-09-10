@@ -140,7 +140,7 @@ const App = () => {
 				</Tabbar>
 			}>
 				<View id={ROUTES.COUNTERS} activePanel={ROUTES.COUNTERS}>
-					<Counters id={ROUTES.COUNTERS}/>
+					<Counters id={ROUTES.COUNTERS} go={() => go(ROUTES.CREATE)}/>
 				</View>
 				<View id={ROUTES.CREATE} activePanel={ROUTES.CREATE}>
 					<Create id={ROUTES.CREATE}/>
