@@ -1,0 +1,15 @@
+.RadioCards {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.App {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.RadioCard__in2 {
+    height: 96px;
+    border-radius: 6px;
+}

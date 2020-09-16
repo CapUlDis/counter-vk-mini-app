@@ -4,8 +4,8 @@ import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout';
 import Placeholder from '@vkontakte/vkui/dist/components/Placeholder/Placeholder';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
-import card1 from '../img/Intro-card-1.png';
-import card2 from '../img/Intro-card-2.png';
+import card1 from './components/img/Intro-card-1.png';
+import card2 from './components/img/Intro-card-2.png';
 
 import './Intro.css';
 

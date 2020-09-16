@@ -1,5 +1,6 @@
 :root, body[scheme="space_gray"] { 
     --tabbar_active_icon: #4bb34b;
+    --accent: #4bb34b;
 }
 
 .placeholder_counters {
