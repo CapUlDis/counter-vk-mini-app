@@ -14,7 +14,7 @@ import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 import './Create.css';
 
 import RadioCard from './components/RadioCard';
-import images from './components/img/Images';
+import { images, colors } from './components/img/Covers';
 
 
 const COVERS = {
@@ -22,27 +22,12 @@ const COVERS = {
 	THEMES: 'themes'
 };
 
-const COLORS = {
-	BLUE: 'linear-gradient(72.51deg, #5D9DE7 0%, #6FB1FF 100%)',
-	MAGENTA: 'linear-gradient(72.7deg, #AB67F0 0%, #C18AF6 100%)',
-	RED: 'linear-gradient(72.51deg, #FE3548 0%, #FF727F 100%)',
-	CYAN: 'linear-gradient(72.7deg, #67C2C3 0%, #9AE4E6 100%)',
-	ORANGE: 'linear-gradient(135deg, #FF9142 0%, #E7750C 100%)',
-	GREEN: 'linear-gradient(135deg, #50C750 0%, #32B332 100%)',
-	GRAY: 'linear-gradient(135deg, #B1B6BD 0%, #99A2AD 100%)',
-	YELLOW: 'linear-gradient(135deg, #FFB73D 0%, #FFA000 100%)',
-	PINK: 'linear-gradient(135deg, #FDACCC 0%, #F37AC1 100%)',
-	BLACK: 'linear-gradient(135deg, #626466 0%, #444647 100%)'
-};
-
-
-
 const Create = ({ id }) => {
 	const [activeCoverTab, setActiveCoverTab] = useState(COVERS.COLORS);
-	const [color, setColor] = useState("1");
+	const [cover, setCover] = useState({ color: "blue" });
 
 	function onCoverChange(e) {
-		setColor(e.target.value);
+		setCover(e.target.value);
 	}
 
 	return (
@@ -89,65 +74,23 @@ const Create = ({ id }) => {
 					{activeCoverTab === 'colors'
 						? <div className="App">
 							<div className="RadioCards">
-								<RadioCard
-									color={COLORS.BLUE}
-									checked={color === COLORS.BLUE}
-									onChange={onCoverChange}
-								/>
-								<RadioCard
-									color={COLORS.MAGENTA}
-									checked={color === COLORS.MAGENTA}
-									onChange={onCoverChange}
-								/>
-								<RadioCard
-									value={COLORS.RED}
-									checked={color === COLORS.RED}
-									onChange={onCoverChange}
-								/>
-								<RadioCard
-									value={COLORS.CYAN}
-									checked={color === COLORS.CYAN}
-									onChange={onCoverChange}
-								/>
-								<RadioCard
-									value={COLORS.ORANGE}
-									checked={color === COLORS.ORANGE}
-									onChange={onCoverChange}
-								/>
-								<RadioCard
-									value={COLORS.GREEN}
-									checked={color === COLORS.GREEN}
-									onChange={onCoverChange}
-								/>
-								<RadioCard
-									value={COLORS.GRAY}
-									checked={color === COLORS.GRAY}
-									onChange={onCoverChange}
-								/>
-								<RadioCard
-									value={COLORS.YELLOW}
-									checked={color === COLORS.YELLOW}
-									onChange={onCoverChange}
-								/>
-								<RadioCard
-									value={COLORS.PINK}
-									checked={color === COLORS.PINK}
-									onChange={onCoverChange}
-								/>
-								<RadioCard
-									value={COLORS.BLACK}
-									checked={color === COLORS.BLACK}
-									onChange={onCoverChange}
-								/>
+								{ colors.map(({ id, title, style }) => 
+									<RadioCard
+										key={id}
+										value={{ color: title }} 
+										color={style} 
+										checked={cover.color === title}
+										onChange={onCoverChange}/>) }
 							</div>
 						</div>
 						: <div className="App">
 							<div className="RadioCards">
-								{ images.map(({ title, small }) => 
-									<RadioCard 
+								{ images.map(({ id, title, small }) => 
+									<RadioCard
+										key={id} 
 										value={{ theme: title }} 
 										theme={small} 
-										checked={ color === { theme: title } } 
+										checked={cover.theme === title}
 										onChange={onCoverChange}/>) }
 							</div>
 						</div>
