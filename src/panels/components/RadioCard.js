@@ -2,7 +2,7 @@ import React from "react";
 import Icon28DoneOutline from '@vkontakte/icons/dist/28/done_outline';
 import "./RadioCard.css";
 
-const RadioCard = ({ key, value, color, theme, onChange, checked, defaultChecked }) => {
+const RadioCard = ({ value, color, theme, onChange, checked, defaultChecked }) => {
 
     return (
         <label className="RadioCard">
@@ -10,7 +10,6 @@ const RadioCard = ({ key, value, color, theme, onChange, checked, defaultChecked
                 className="RadioCard__input "
                 type="radio"
                 name="cover"
-                key={key}
                 value={value}
                 color={color}
                 theme={theme}
