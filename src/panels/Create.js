@@ -72,7 +72,7 @@ const Create = ({ id }) => {
 						</TabsItem>
 					</Tabs>
 					{activeCoverTab === 'colors'
-						? <div className="App">
+						? <div className="CoversGrid">
 							<div className="RadioCards">
 								{ colors.map(({ id, title, style }) => 
 									<RadioCard
@@ -83,7 +83,7 @@ const Create = ({ id }) => {
 										onChange={onCoverChange}/>) }
 							</div>
 						</div>
-						: <div className="App">
+						: <div className="CoversGrid">
 							<div className="RadioCards">
 								{ images.map(({ id, title, small }) => 
 									<RadioCard
