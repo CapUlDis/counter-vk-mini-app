@@ -61,6 +61,7 @@ const App = () => {
 								setActivePanel(ROUTES.COUNTERS);
 								setUserHasSeenIntro(true);
 							}
+							break;
 						default:
 							break;
 					}

@@ -9,6 +9,8 @@ import Radio from '@vkontakte/vkui/dist/components/Radio/Radio';
 import Input from '@vkontakte/vkui/dist/components/Input/Input';
 import Tabs from '@vkontakte/vkui/dist/components/Tabs/Tabs';
 import TabsItem from '@vkontakte/vkui/dist/components/TabsItem/TabsItem';
+import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout';
+import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 
 import './Create.css';
@@ -96,8 +98,13 @@ const Create = ({ id }) => {
 						</div>
 					}
 				</FormLayoutGroup>
+				<FixedLayout vertical='bottom'>
+					<Button className='CreateButton' mode='commerce' size='xl'>
+						Создать счётчик
+					</Button>
+				</FixedLayout>
 			</FormLayout>
-
+			
 		</Panel>
 	)
 };
