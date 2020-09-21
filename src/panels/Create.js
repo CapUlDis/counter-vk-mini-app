@@ -26,10 +26,29 @@ const COVERS = {
 
 const Create = ({ id }) => {
 	const [activeCoverTab, setActiveCoverTab] = useState(COVERS.COLORS);
+	const [inputStatuses, setInputStatuses] = useState({ title: 'default', date: 'default' });
+	const [title, setTitle] = useState('');
+	const [date, setDate] = useState('');
+	const [howCount, setHowCount] = useState('');
+	const [pub, setPub] = useState(false);
 	const [cover, setCover] = useState({ color: "blue" });
 
 	function onCoverChange(e) {
 		setCover(e.target.value);
+	}
+
+	const handleCreateClick = async function () {
+		if (!title.trim()) {
+			return setInputStatuses({ title: 'error' });
+		} else {
+			console.log(date);
+			if (!date) {
+				return setInputStatuses({ title: 'default', date: 'error' });
+			}
+			setInputStatuses({ title: 'default', date: 'default' });
+		}
+		
+		
 	}
 
 	return (
@@ -42,13 +61,17 @@ const Create = ({ id }) => {
 				<Input
 					type="text"
 					top="Название"
-					name="name"
+					name="title"
+					value={title}
+					status={inputStatuses.title}
 					placeholder="Введите название"
+					onChange={e => setTitle(e.target.value)}
 				/>
 				<Input
 					type="date"
 					top="Дата"
 					name="date"
+					status={inputStatuses.date}
 					placeholder="Выберите дату"
 				/>
 				<FormLayoutGroup top="Как отсчитывать дату?">
@@ -99,7 +122,7 @@ const Create = ({ id }) => {
 					}
 				</FormLayoutGroup>
 				<FixedLayout vertical='bottom'>
-					<Button className='CreateButton' mode='commerce' size='xl'>
+					<Button className='CreateButton' mode='commerce' size='xl' onClick={handleCreateClick}>
 						Создать счётчик
 					</Button>
 				</FixedLayout>
