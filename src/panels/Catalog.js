@@ -6,12 +6,12 @@ import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 
 
 
-const Friends = ({ id }) => (
+const Catalog = ({ id }) => (
 	<Panel id={id}>
 		<PanelHeader 
             left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
-            separator={false}>Друзья</PanelHeader>
+            separator={false}>Каталог</PanelHeader>
 	</Panel>
 );
 
-export default Friends;
+export default Catalog;

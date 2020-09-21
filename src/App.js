@@ -9,21 +9,21 @@ import Snackbar from '@vkontakte/vkui/dist/components/Snackbar/Snackbar';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 import Icon28RecentOutline from '@vkontakte/icons/dist/28/recent_outline';
 import Icon28AddCircleOutline from '@vkontakte/icons/dist/28/add_circle_outline';
-import Icon28UsersOutline from '@vkontakte/icons/dist/28/users_outline';
+import Icon28MenuOutline from '@vkontakte/icons/dist/28/menu_outline';
 import Icon24Error from '@vkontakte/icons/dist/24/error';
 
 import '@vkontakte/vkui/dist/vkui.css';
 
 import Counters from './panels/Counters';
 import Create from './panels/Create';
-import Friends from './panels/Friends';
+import Catalog from './panels/Catalog';
 import Intro from './panels/Intro';
 
 const ROUTES = {
 	INTRO: 'intro',
 	COUNTERS: 'counters',
 	CREATE: 'create',
-	FRIENDS: 'friends'
+	CATALOG: 'catalog'
 };
 
 const STORAGE_KEYS = {
@@ -133,11 +133,11 @@ const App = () => {
 				text="Создать"
 				><Icon28AddCircleOutline/></TabbarItem>
 				<TabbarItem
-				onClick={() => setActivePanel(ROUTES.FRIENDS)}
-				selected={activePanel === ROUTES.FRIENDS}
-				data-story={ROUTES.FRIENDS}
-				text="Друзья"
-				><Icon28UsersOutline/></TabbarItem>
+				onClick={() => setActivePanel(ROUTES.CATALOG)}
+				selected={activePanel === ROUTES.CATALOG}
+				data-story={ROUTES.CATALOG}
+				text="Каталог"
+				><Icon28MenuOutline/></TabbarItem>
 			</Tabbar>
 		}>
 			<View id={ROUTES.COUNTERS} activePanel={ROUTES.COUNTERS}>
@@ -146,8 +146,8 @@ const App = () => {
 			<View id={ROUTES.CREATE} activePanel={ROUTES.CREATE}>
 				<Create id={ROUTES.CREATE}/>
 			</View>
-			<View id={ROUTES.FRIENDS} activePanel={ROUTES.FRIENDS}>
-				<Friends id={ROUTES.FRIENDS}/>
+			<View id={ROUTES.CATALOG} activePanel={ROUTES.CATALOG}>
+				<Catalog id={ROUTES.CATALOG}/>
 			</View>
 		</Epic>
 	);
