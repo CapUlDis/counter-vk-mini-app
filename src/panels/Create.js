@@ -54,6 +54,7 @@ const Create = ({ id }) => {
 	}
 
 	const handleCreateClick = async function () {
+		console.log(pub);
 		if (!title.trim()) {
 			return setInputStatuses({ title: 'error', date: 'default', howCount: 'default' });
 		} 
@@ -71,7 +72,7 @@ const Create = ({ id }) => {
 		if (today < userDate && howCount === 'from') {
 			return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
 		}
-		
+		console.log(pub);
 		
 	}
 
@@ -128,6 +129,8 @@ const Create = ({ id }) => {
 				<Checkbox 
 					top="Дополнительно"
 					name="public"
+					value={pub}
+					onChange={() => setPub(!pub)}
 				>Сделать счетчик публичным
 				</Checkbox>	
 				<FormLayoutGroup top="Обложка счётчик">
