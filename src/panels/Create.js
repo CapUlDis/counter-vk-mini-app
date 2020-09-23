@@ -32,11 +32,8 @@ const Create = ({ id }) => {
 	const [date, setDate] = useState('');
 	const [howCount, setHowCount] = useState('from');
 	const [pub, setPub] = useState(false);
-	const [cover, setCover] = useState({ color: "blue" });
-
-	function onCoverChange(e) {
-		setCover(e.target.value);
-	}
+	const [coverType, setCoverType] = useState('color');
+	const [coverTitle, setCoverTitle] = useState('blue');
 
 	const ErrorStatusBanner = function() {
 		if (inputStatuses.howCount === 'default') {
@@ -54,7 +51,6 @@ const Create = ({ id }) => {
 	}
 
 	const handleCreateClick = async function () {
-		console.log(pub);
 		if (!title.trim()) {
 			return setInputStatuses({ title: 'error', date: 'default', howCount: 'default' });
 		} 
@@ -72,7 +68,6 @@ const Create = ({ id }) => {
 		if (today < userDate && howCount === 'from') {
 			return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
 		}
-		console.log(pub);
 		
 	}
 
@@ -152,10 +147,13 @@ const Create = ({ id }) => {
 								{ colors.map(({ id, title, style }) => 
 									<RadioCard
 										key={id}
-										value={{ color: title }} 
+										value={title} 
 										color={style} 
-										checked={cover.color === title}
-										onChange={onCoverChange}/>) }
+										checked={coverTitle === title}
+										onChange={e => {
+											setCoverType('color');
+											setCoverTitle(e.target.value);
+										}}/>) }
 							</div>
 						</div>
 						: <div className="CoversGrid">
@@ -163,10 +161,13 @@ const Create = ({ id }) => {
 								{ images.map(({ id, title, small }) => 
 									<RadioCard
 										key={id} 
-										value={{ theme: title }} 
+										value={title} 
 										theme={small} 
-										checked={cover.theme === title}
-										onChange={onCoverChange}/>) }
+										checked={coverTitle === title}
+										onChange={e => {
+											setCoverType('theme');
+											setCoverTitle(e.target.value);
+										}}/>) }
 							</div>
 						</div>
 					}
