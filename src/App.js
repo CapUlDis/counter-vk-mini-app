@@ -27,7 +27,7 @@ const ROUTES = {
 };
 
 const STORAGE_KEYS = {
-	STATUS: 'status',
+	SERVICE: 'serviceCounters',
 };
 
 const App = () => {
@@ -87,9 +87,11 @@ const App = () => {
 	const viewIntro = async function () {
 		try {
 			await bridge.send('VKWebAppStorageSet', {
-				key: STORAGE_KEYS.STATUS,
+				key: STORAGE_KEYS.SERVICE,
 				value: JSON.stringify({
-					hasSeenIntro: true
+					hasSeenIntro: true,
+					counters: [],
+					deletedCounters: []
 				})
 			});
 			go(ROUTES.COUNTERS);
