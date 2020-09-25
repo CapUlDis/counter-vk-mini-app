@@ -77,22 +77,37 @@ const Create = ({ id }) => {
 
 		const serviceCounters = await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]});
 		const service = JSON.parse(serviceCounters.keys[0].value);
-		console.log(service);
-		await bridge.send('VKWebAppStorageSet', {
-			key: 'test',
-			value: JSON.stringify({
-				title,
-				date,
-				howCount,
-				pub,
-				coverType,
-				coverTitle
-			})
-		});
-		const keys = await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0});
-		console.log(keys);
-		const test = await bridge.send("VKWebAppStorageGet", {"keys": ["test"]});
-		console.log(test);
+		console.log(service.deletedCounters);
+		if (service.deletedCounters.length === 0) {
+			const id = service.counters.length + 1;
+			await bridge.send('VKWebAppStorageSet', {
+				key: `counter${id}`,
+				value: JSON.stringify({
+					title,
+					date,
+					howCount,
+					pub,
+					coverType,
+					coverTitle
+				})
+			});
+			return console.log(await bridge.send("VKWebAppStorageGet", {"keys": [`counter${id}`]}));
+		}
+		// await bridge.send('VKWebAppStorageSet', {
+		// 	key: 'test',
+		// 	value: JSON.stringify({
+		// 		title,
+		// 		date,
+		// 		howCount,
+		// 		pub,
+		// 		coverType,
+		// 		coverTitle
+		// 	})
+		// });
+		// const keys = await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0});
+		// console.log(keys);
+		// const test = await bridge.send("VKWebAppStorageGet", {"keys": ["test"]});
+		// console.log(test);
 	}
 
 	return (
