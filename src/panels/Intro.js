@@ -9,10 +9,10 @@ import card2 from './components/img/Intro-card-2.png';
 
 import './Intro.css';
 
-const Intro = ({ id, snackbarError, fetchedUser, userHasSeenIntro, go }) => {
+const Intro = ({ id, snackbarError, userHasSeenIntro, go }) => {
 	return (
 		<Panel id={id} centered={true}>
-			{(!userHasSeenIntro && fetchedUser) &&
+			{!userHasSeenIntro &&
 				<Fragment>
 					<Div className='about'>
 						<img src={card1} alt='Промо карточка 1' className='card1'/>

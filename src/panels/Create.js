@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import bridge from '@vkontakte/vk-bridge';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton';
@@ -34,6 +35,7 @@ const Create = ({ id }) => {
 	const [pub, setPub] = useState(false);
 	const [coverType, setCoverType] = useState('color');
 	const [coverTitle, setCoverTitle] = useState('blue');
+	// const [deleted, setDeleted] = 
 
 	const ErrorStatusBanner = function() {
 		if (inputStatuses.howCount === 'default') {
@@ -68,7 +70,23 @@ const Create = ({ id }) => {
 		if (today < userDate && howCount === 'from') {
 			return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
 		}
+
 		
+		await bridge.send('VKWebAppStorageSet', {
+			key: 'test',
+			value: JSON.stringify({
+				title,
+				date,
+				howCount,
+				pub,
+				coverType,
+				coverTitle
+			})
+		});
+		const keys = await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0});
+		console.log(keys);
+		const test = await bridge.send("VKWebAppStorageGet", {"keys": ["test"]});
+		console.log(test);
 	}
 
 	return (

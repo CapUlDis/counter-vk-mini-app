@@ -32,7 +32,6 @@ const STORAGE_KEYS = {
 
 const App = () => {
 	const [activePanel, setActivePanel] = useState(ROUTES.INTRO);
-	const [fetchedUser, setUser] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [userHasSeenIntro, setUserHasSeenIntro] = useState(false);
 	const [snackbar, setSnackbar] = useState(false);
@@ -46,7 +45,6 @@ const App = () => {
 			}
 		});
 		async function fetchData() {
-			const user = await bridge.send('VKWebAppGetUserInfo');
 			const storageData = await bridge.send('VKWebAppStorageGet', { 
 				keys: Object.values(STORAGE_KEYS)
 			});
@@ -77,7 +75,6 @@ const App = () => {
 					</Snackbar>)
 				}
 			})
-			setUser(user);
 			setPopout(null);
 		}
 		fetchData();
@@ -104,7 +101,7 @@ const App = () => {
 				><Icon24Error fill='#fff' width='14' height='14'/></Avatar>}
 				duration={900}
 			>
-				Проблема с отправкой данных из Storage.
+				Проблема с отправкой данных в Storage.
 			</Snackbar>)
 		}
 	}
@@ -112,7 +109,7 @@ const App = () => {
 	if (activePanel === ROUTES.INTRO) {
 		return (
 			<View activePanel={activePanel} popout={popout}>
-				<Intro id={ROUTES.INTRO} fetchedUser={fetchedUser} go={viewIntro} snackbarError={snackbar} userHasSeenIntro={userHasSeenIntro}/>
+				<Intro id={ROUTES.INTRO} go={viewIntro} snackbarError={snackbar} userHasSeenIntro={userHasSeenIntro}/>
 			</View>
 		);
 	}
