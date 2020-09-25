@@ -26,6 +26,10 @@ const COVERS = {
 	THEMES: 'themes'
 };
 
+const STORAGE_KEYS = {
+	SERVICE: 'serviceCounters',
+};
+
 const Create = ({ id }) => {
 	const [activeCoverTab, setActiveCoverTab] = useState(COVERS.COLORS);
 	const [inputStatuses, setInputStatuses] = useState({ title: 'default', date: 'default', howCount: 'default' });
@@ -71,7 +75,9 @@ const Create = ({ id }) => {
 			return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
 		}
 
-		
+		const serviceCounters = await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]});
+		const service = JSON.parse(serviceCounters.keys[0].value);
+		console.log(service);
 		await bridge.send('VKWebAppStorageSet', {
 			key: 'test',
 			value: JSON.stringify({

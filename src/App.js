@@ -48,7 +48,6 @@ const App = () => {
 			const storageData = await bridge.send('VKWebAppStorageGet', { 
 				keys: Object.values(STORAGE_KEYS)
 			});
-			console.log(storageData);
 			const data = {};
 			storageData.keys.forEach( ( key, value ) => {
 				try {
