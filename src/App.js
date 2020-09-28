@@ -142,7 +142,7 @@ const App = () => {
 				<Counters id={ROUTES.COUNTERS} go={() => go(ROUTES.CREATE)}/>
 			</View>
 			<View id={ROUTES.CREATE} activePanel={ROUTES.CREATE}>
-				<Create id={ROUTES.CREATE}/>
+				<Create id={ROUTES.CREATE} go={() => go(ROUTES.COUNTERS)}/>
 			</View>
 			<View id={ROUTES.CATALOG} activePanel={ROUTES.CATALOG}>
 				<Catalog id={ROUTES.CATALOG}/>

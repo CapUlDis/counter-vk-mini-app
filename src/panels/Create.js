@@ -30,7 +30,7 @@ const STORAGE_KEYS = {
 	SERVICE: 'serviceCounters',
 };
 
-const Create = ({ id }) => {
+const Create = ({ id, go }) => {
 	const [activeCoverTab, setActiveCoverTab] = useState(COVERS.COLORS);
 	const [inputStatuses, setInputStatuses] = useState({ title: 'default', date: 'default', howCount: 'default' });
 	const [title, setTitle] = useState('');
@@ -75,13 +75,21 @@ const Create = ({ id }) => {
 			return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
 		}
 
-		const serviceCounters = await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]});
-		const service = JSON.parse(serviceCounters.keys[0].value);
-		console.log(service.deletedCounters);
-		if (service.deletedCounters.length === 0) {
-			const id = service.counters.length + 1;
+		async function saveService(serviceObject) {
 			await bridge.send('VKWebAppStorageSet', {
-				key: `counter${id}`,
+				key: STORAGE_KEYS.SERVICE,
+				value: JSON.stringify(serviceObject)
+			});
+		}
+
+		async function getService() {
+			const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
+			return JSON.parse(getObject.keys[0].value);
+		}
+
+		async function saveNewCounter(counterKey) {
+			await bridge.send('VKWebAppStorageSet', {
+				key: counterKey,
 				value: JSON.stringify({
 					title,
 					date,
@@ -91,23 +99,32 @@ const Create = ({ id }) => {
 					coverTitle
 				})
 			});
-			return console.log(await bridge.send("VKWebAppStorageGet", {"keys": [`counter${id}`]}));
 		}
-		// await bridge.send('VKWebAppStorageSet', {
-		// 	key: 'test',
-		// 	value: JSON.stringify({
-		// 		title,
-		// 		date,
-		// 		howCount,
-		// 		pub,
-		// 		coverType,
-		// 		coverTitle
-		// 	})
-		// });
-		// const keys = await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0});
-		// console.log(keys);
-		// const test = await bridge.send("VKWebAppStorageGet", {"keys": ["test"]});
-		// console.log(test);
+
+		const service = await getService();
+		console.log(service);
+
+		if (service.deletedCounters.length === 0) {
+			const counterKey = `counter${service.counters.length + 1}`;
+			saveNewCounter(counterKey);
+			service.counters.push(counterKey);
+			saveService(service);
+
+			// Проверочные логи
+			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
+		} else {
+			const counterKey = service.deletedCounters.shift()
+			saveNewCounter(counterKey);
+			
+			// Проверочные логи
+			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}))
+		}
+		
+		go();
+
+		// Проверочные логи
+		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0}));
+		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
 	}
 
 	return (
