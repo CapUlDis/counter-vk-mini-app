@@ -20,6 +20,7 @@ import Catalog from './panels/Catalog';
 import Intro from './panels/Intro';
 
 const ROUTES = {
+	LOADER: 'loader',
 	INTRO: 'intro',
 	COUNTERS: 'counters',
 	CREATE: 'create',
@@ -31,7 +32,7 @@ const STORAGE_KEYS = {
 };
 
 const App = () => {
-	const [activePanel, setActivePanel] = useState(ROUTES.INTRO);
+	const [activePanel, setActivePanel] = useState(ROUTES.LOADER);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [userHasSeenIntro, setUserHasSeenIntro] = useState(false);
 	const [snackbar, setSnackbar] = useState(false);
@@ -49,14 +50,18 @@ const App = () => {
 				keys: Object.values(STORAGE_KEYS)
 			});
 			const data = {};
-			storageData.keys.forEach( ( key, value ) => {
+			storageData.keys.forEach( ({ key, value }) => {
 				try {
+					console.log(activePanel);
 					data[key] = value ? JSON.parse(value) : {};
 					switch (key) {
-						case STORAGE_KEYS.STATUS:
+						case STORAGE_KEYS.SERVICE:
 							if (data[key].hasSeenIntro) {
 								setActivePanel(ROUTES.COUNTERS);
 								setUserHasSeenIntro(true);
+							} else {
+								console.log(activePanel);
+								setActivePanel(ROUTES.COUNTERS);
 							}
 							break;
 						default:
@@ -77,7 +82,7 @@ const App = () => {
 			setPopout(null);
 		}
 		fetchData();
-	}, []);
+	});
 
 	const go = panel => {
 		setActivePanel(panel);
@@ -105,6 +110,14 @@ const App = () => {
 				Проблема с отправкой данных в Storage.
 			</Snackbar>)
 		}
+	}
+
+	if (activePanel === ROUTES.LOADER) {
+		return (
+			<View activePanel={activePanel} popout={popout}>
+				<ScreenSpinner size='large' />
+			</View>
+		);
 	}
 
 	if (activePanel === ROUTES.INTRO) {

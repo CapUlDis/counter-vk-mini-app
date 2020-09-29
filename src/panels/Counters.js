@@ -1,4 +1,6 @@
 import React from 'react';
+import bridge from '@vkontakte/vk-bridge';
+import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -17,6 +19,27 @@ const Counters = ({ id, go }) => (
 			separator={false}
 			>Счетчики
 		</PanelHeader>
+		<FixedLayout vertical='top'>
+			<Button 
+				className='CreateButton' 
+				mode='commerce' 
+				size='xl' 
+				onClick={() => {
+					async function delService() {
+						await bridge.send('VKWebAppStorageSet', {
+							key: 'serviceCounters',
+							value: JSON.stringify({
+								hasSeenIntro: true,
+								counters: [],
+								deletedCounters: []
+							})
+						});
+					}
+					delService();
+				}}>
+				Стереть service
+			</Button>
+		</FixedLayout>
 		<Div className='placeholder_counters'>
 			<Placeholder 
 				icon={<Icon56AddCircleOutline/>}
