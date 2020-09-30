@@ -9,30 +9,28 @@ import card2 from './components/img/Intro-card-2.png';
 
 import './Intro.css';
 
-const Intro = ({ id, snackbarError, userHasSeenIntro, go }) => {
+const Intro = ({ id, snackbarError, go }) => {
 	return (
 		<Panel id={id} centered={true}>
-			{!userHasSeenIntro &&
-				<Fragment>
-					<Div className='about'>
-						<img src={card1} alt='Промо карточка 1' className='card1'/>
-						<img src={card2} alt='Промо карточка 2' className='card2'/>
-						<Placeholder 
-							header="Создавайте счетчики для любых событий" 
-							className='placeholder_intro'
-							>
-							Вы можете следить за тем, сколько осталось до события или сколько уже прошло времени после него
-						</Placeholder>
+			<Fragment>
+				<Div className='about'>
+					<img src={card1} alt='Промо карточка 1' className='card1'/>
+					<img src={card2} alt='Промо карточка 2' className='card2'/>
+					<Placeholder 
+						header="Создавайте счетчики для любых событий" 
+						className='placeholder_intro'
+						>
+						Вы можете следить за тем, сколько осталось до события или сколько уже прошло времени после него
+					</Placeholder>
+				</Div>
+				<FixedLayout vertical='bottom'>
+					<Div>
+						<Button mode='commerce' size='xl' onClick={go}>
+							Начать
+						</Button>
 					</Div>
-					<FixedLayout vertical='bottom'>
-						<Div>
-							<Button mode='commerce' size='xl' onClick={go}>
-								Начать
-							</Button>
-						</Div>
-					</FixedLayout>
-				</Fragment>				
-			}
+				</FixedLayout>
+			</Fragment>				
 			{snackbarError}
 		</Panel>
 	)

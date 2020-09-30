@@ -29,7 +29,7 @@ const Counters = ({ id, go }) => (
 						await bridge.send('VKWebAppStorageSet', {
 							key: 'serviceCounters',
 							value: JSON.stringify({
-								hasSeenIntro: true,
+								hasSeenIntro: false,
 								counters: [],
 								deletedCounters: []
 							})

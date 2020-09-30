@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import bridge from '@vkontakte/vk-bridge';
+import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Epic from '@vkontakte/vkui/dist/components/Epic/Epic';
 import Tabbar from '@vkontakte/vkui/dist/components/Tabbar/Tabbar';
@@ -18,6 +19,7 @@ import Counters from './panels/Counters';
 import Create from './panels/Create';
 import Catalog from './panels/Catalog';
 import Intro from './panels/Intro';
+import { saveService, getService } from './components/storage'
 
 const ROUTES = {
 	LOADER: 'loader',
@@ -33,7 +35,7 @@ const STORAGE_KEYS = {
 
 const App = () => {
 	const [activePanel, setActivePanel] = useState(ROUTES.LOADER);
-	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+	const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
 	const [userHasSeenIntro, setUserHasSeenIntro] = useState(false);
 	const [snackbar, setSnackbar] = useState(false);
 
@@ -45,43 +47,36 @@ const App = () => {
 				document.body.attributes.setNamedItem(schemeAttribute);
 			}
 		});
-		async function fetchData() {
-			const storageData = await bridge.send('VKWebAppStorageGet', { 
-				keys: Object.values(STORAGE_KEYS)
-			});
-			const data = {};
-			storageData.keys.forEach( ({ key, value }) => {
-				try {
-					console.log(activePanel);
-					data[key] = value ? JSON.parse(value) : {};
-					switch (key) {
-						case STORAGE_KEYS.SERVICE:
-							if (data[key].hasSeenIntro) {
-								setActivePanel(ROUTES.COUNTERS);
-								setUserHasSeenIntro(true);
-							} else {
-								console.log(activePanel);
-								setActivePanel(ROUTES.COUNTERS);
-							}
-							break;
-						default:
-							break;
-					}
-				} catch (error) {
-					setSnackbar(<Snackbar
-						layout='vertical'
-						onClose={() => setSnackbar(null)}
-						before={<Avatar size={24} style={{ backgroundColor: 'var(--dynamic-red)'}}
-						><Icon24Error fill='#fff' width='14' height='14'/></Avatar>}
-						duration={900}
-					>
-						Проблема с получением данных из Storage.
-					</Snackbar>)
+		
+		async function checkHasSeenItro() {
+			try {
+				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
+				if (!getObject.keys[0].value) {
+					return setActivePanel(ROUTES.INTRO);
 				}
-			})
-			setPopout(null);
+
+				const service = JSON.parse(getObject.keys[0].value);
+				
+				if (!service.hasSeenIntro) {
+					return setActivePanel(ROUTES.INTRO);
+				}
+
+				return setActivePanel(ROUTES.COUNTERS);
+
+			} catch (error) {
+				setSnackbar(<Snackbar
+					layout='vertical'
+					onClose={() => setSnackbar(null)}
+					before={<Avatar size={24} style={{ backgroundColor: 'var(--dynamic-red)'}}
+					><Icon24Error fill='#fff' width='14' height='14'/></Avatar>}
+					duration={900}
+				>
+					Проблема с получением данных из Storage.
+				</Snackbar>)
+			}
 		}
-		fetchData();
+		
+		if (activePanel === ROUTES.LOADER) { checkHasSeenItro() }
 	});
 
 	const go = panel => {
@@ -115,7 +110,9 @@ const App = () => {
 	if (activePanel === ROUTES.LOADER) {
 		return (
 			<View activePanel={activePanel} popout={popout}>
-				<ScreenSpinner size='large' />
+				<Panel id={ROUTES.LOADER}>
+				</Panel>
+				<Intro id={ROUTES.INTRO} go={viewIntro} snackbarError={snackbar}/>
 			</View>
 		);
 	}
@@ -123,7 +120,7 @@ const App = () => {
 	if (activePanel === ROUTES.INTRO) {
 		return (
 			<View activePanel={activePanel} popout={popout}>
-				<Intro id={ROUTES.INTRO} go={viewIntro} snackbarError={snackbar} userHasSeenIntro={userHasSeenIntro}/>
+				<Intro id={ROUTES.INTRO} go={viewIntro} snackbarError={snackbar}/>
 			</View>
 		);
 	}
