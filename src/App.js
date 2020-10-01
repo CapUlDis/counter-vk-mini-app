@@ -19,24 +19,33 @@ import Counters from './panels/Counters';
 import Create from './panels/Create';
 import Catalog from './panels/Catalog';
 import Intro from './panels/Intro';
-import { saveService, getService } from './components/storage'
 
-const ROUTES = {
-	LOADER: 'loader',
-	INTRO: 'intro',
+
+const STORIES = {
 	COUNTERS: 'counters',
 	CREATE: 'create',
 	CATALOG: 'catalog'
 };
+
+const STEPS = {
+	LOADER_INTRO: 'loader_intro',
+	MAIN: 'main'
+};
+
+const LOADER_INTRO = {
+	INTRO: 'intro',
+	LOADER: 'loader'
+}
 
 const STORAGE_KEYS = {
 	SERVICE: 'serviceCounters',
 };
 
 const App = () => {
-	const [activePanel, setActivePanel] = useState(ROUTES.LOADER);
+	const [step, setStep] = useState(STEPS.LOADER_INTRO);
+	const [activePanel, setActivePanel] = useState(LOADER_INTRO.LOADER);
+	const [activeStory, setActiveStory] = useState(STORIES.COUNTERS);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
-	const [userHasSeenIntro, setUserHasSeenIntro] = useState(false);
 	const [snackbar, setSnackbar] = useState(false);
 
 	useEffect(() => {
@@ -51,17 +60,24 @@ const App = () => {
 		async function checkHasSeenItro() {
 			try {
 				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
+				// Проверка логов
+				console.log(getObject);
+
 				if (!getObject.keys[0].value) {
-					return setActivePanel(ROUTES.INTRO);
+					setPopout(null);
+					return setActivePanel(LOADER_INTRO.INTRO);
 				}
-
-				const service = JSON.parse(getObject.keys[0].value);
 				
+				const service = JSON.parse(getObject.keys[0].value);
+				// Проверка логов
+				console.log(service);
+
 				if (!service.hasSeenIntro) {
-					return setActivePanel(ROUTES.INTRO);
+					setPopout(null);
+					return setActivePanel(LOADER_INTRO.INTRO);
 				}
 
-				return setActivePanel(ROUTES.COUNTERS);
+				return setStep(STEPS.MAIN);
 
 			} catch (error) {
 				setSnackbar(<Snackbar
@@ -76,11 +92,11 @@ const App = () => {
 			}
 		}
 		
-		if (activePanel === ROUTES.LOADER) { checkHasSeenItro() }
+		if (step === STEPS.LOADER_INTRO) { checkHasSeenItro() }
 	});
 
 	const go = panel => {
-		setActivePanel(panel);
+		setActiveStory(panel);
 	};
 
 	const viewIntro = async function () {
@@ -93,7 +109,7 @@ const App = () => {
 					deletedCounters: []
 				})
 			});
-			go(ROUTES.COUNTERS);
+			setStep(STEPS.MAIN);
 		} catch (error) {
 			setSnackbar(<Snackbar
 				layout='vertical'
@@ -107,55 +123,47 @@ const App = () => {
 		}
 	}
 
-	if (activePanel === ROUTES.LOADER) {
+	if (step === STEPS.LOADER_INTRO) {
 		return (
 			<View activePanel={activePanel} popout={popout}>
-				<Panel id={ROUTES.LOADER}>
+				<Panel id={LOADER_INTRO.LOADER} >
 				</Panel>
-				<Intro id={ROUTES.INTRO} go={viewIntro} snackbarError={snackbar}/>
-			</View>
-		);
-	}
-
-	if (activePanel === ROUTES.INTRO) {
-		return (
-			<View activePanel={activePanel} popout={popout}>
-				<Intro id={ROUTES.INTRO} go={viewIntro} snackbarError={snackbar}/>
+				<Intro id={LOADER_INTRO.INTRO} go={viewIntro} snackbarError={snackbar}/>
 			</View>
 		);
 	}
 
 	return (
-		<Epic activeStory={activePanel} tabbar={
+		<Epic activeStory={activeStory} tabbar={
 			<Tabbar>
 				<TabbarItem
-				onClick={() => setActivePanel(ROUTES.COUNTERS)}
-				selected={activePanel === ROUTES.COUNTERS}
-				data-story={ROUTES.COUNTERS}
+				onClick={() => setActiveStory(STORIES.COUNTERS)}
+				selected={activeStory === STORIES.COUNTERS}
+				data-story={STORIES.COUNTERS}
 				text="Счетчики"
 				><Icon28RecentOutline/></TabbarItem>
 				<TabbarItem
-				onClick={() => setActivePanel(ROUTES.CREATE)}
-				selected={activePanel === ROUTES.CREATE}
-				data-story={ROUTES.CREATE}
+				onClick={() => setActiveStory(STORIES.CREATE)}
+				selected={activeStory === STORIES.CREATE}
+				data-story={STORIES.CREATE}
 				text="Создать"
 				><Icon28AddCircleOutline/></TabbarItem>
 				<TabbarItem
-				onClick={() => setActivePanel(ROUTES.CATALOG)}
-				selected={activePanel === ROUTES.CATALOG}
-				data-story={ROUTES.CATALOG}
+				onClick={() => setActiveStory(STORIES.CATALOG)}
+				selected={activeStory === STORIES.CATALOG}
+				data-story={STORIES.CATALOG}
 				text="Каталог"
 				><Icon28MenuOutline/></TabbarItem>
 			</Tabbar>
 		}>
-			<View id={ROUTES.COUNTERS} activePanel={ROUTES.COUNTERS}>
-				<Counters id={ROUTES.COUNTERS} go={() => go(ROUTES.CREATE)}/>
+			<View id={STORIES.COUNTERS} activePanel={STORIES.COUNTERS}>
+				<Counters id={STORIES.COUNTERS} go={() => go(STORIES.CREATE)}/>
 			</View>
-			<View id={ROUTES.CREATE} activePanel={ROUTES.CREATE}>
-				<Create id={ROUTES.CREATE} go={() => go(ROUTES.COUNTERS)}/>
+			<View id={STORIES.CREATE} activePanel={STORIES.CREATE}>
+				<Create id={STORIES.CREATE} go={() => go(STORIES.COUNTERS)}/>
 			</View>
-			<View id={ROUTES.CATALOG} activePanel={ROUTES.CATALOG}>
-				<Catalog id={ROUTES.CATALOG}/>
+			<View id={STORIES.CATALOG} activePanel={STORIES.CATALOG}>
+				<Catalog id={STORIES.CATALOG}/>
 			</View>
 		</Epic>
 	);
