@@ -30,7 +30,7 @@ const STORAGE_KEYS = {
 	SERVICE: 'serviceCounters',
 };
 
-const Create = ({ id, go }) => {
+const Create = ({ id, go, service, setService }) => {
 	const [activeCoverTab, setActiveCoverTab] = useState(COVERS.COLORS);
 	const [inputStatuses, setInputStatuses] = useState({ title: 'default', date: 'default', howCount: 'default' });
 	const [title, setTitle] = useState('');
@@ -82,10 +82,10 @@ const Create = ({ id, go }) => {
 			});
 		}
 
-		async function getService() {
-			const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
-			return JSON.parse(getObject.keys[0].value);
-		}
+		// async function getService() {
+		// 	const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
+		// 	return JSON.parse(getObject.keys[0].value);
+		// }
 
 		async function saveNewCounter(counterKey) {
 			await bridge.send('VKWebAppStorageSet', {
@@ -101,20 +101,25 @@ const Create = ({ id, go }) => {
 			});
 		}
 
-		const service = await getService();
 		console.log(service);
 
 		if (service.deletedCounters.length === 0) {
 			const counterKey = `counter${service.counters.length + 1}`;
 			saveNewCounter(counterKey);
 			service.counters.push(counterKey);
+			
 			saveService(service);
+			setService(service);
 
 			// Проверочные логи
 			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 		} else {
 			const counterKey = service.deletedCounters.shift()
 			saveNewCounter(counterKey);
+			
+			saveService(service);
+			setService(service);
+			
 			
 			// Проверочные логи
 			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}))

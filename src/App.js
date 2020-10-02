@@ -45,6 +45,7 @@ const App = () => {
 	const [step, setStep] = useState(STEPS.LOADER_INTRO);
 	const [activePanel, setActivePanel] = useState(LOADER_INTRO.LOADER);
 	const [activeStory, setActiveStory] = useState(STORIES.COUNTERS);
+	const [service, setService] = useState({});
 	const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
 	const [snackbar, setSnackbar] = useState(false);
 
@@ -68,7 +69,7 @@ const App = () => {
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
 				
-				const service = JSON.parse(getObject.keys[0].value);
+				setService(JSON.parse(getObject.keys[0].value));
 				// Проверка логов
 				console.log(service);
 
@@ -76,7 +77,7 @@ const App = () => {
 					setPopout(null);
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
-
+				
 				return setStep(STEPS.MAIN);
 
 			} catch (error) {
@@ -92,7 +93,7 @@ const App = () => {
 			}
 		}
 		
-		if (step === STEPS.LOADER_INTRO) { checkHasSeenItro() }
+		if (activePanel === LOADER_INTRO.LOADER) { checkHasSeenItro() }
 	});
 
 	const go = panel => {
@@ -157,10 +158,10 @@ const App = () => {
 			</Tabbar>
 		}>
 			<View id={STORIES.COUNTERS} activePanel={STORIES.COUNTERS}>
-				<Counters id={STORIES.COUNTERS} go={() => go(STORIES.CREATE)}/>
+				<Counters id={STORIES.COUNTERS} go={() => go(STORIES.CREATE)} service={service}/>
 			</View>
 			<View id={STORIES.CREATE} activePanel={STORIES.CREATE}>
-				<Create id={STORIES.CREATE} go={() => go(STORIES.COUNTERS)}/>
+				<Create id={STORIES.CREATE} go={() => go(STORIES.COUNTERS)} service={service} setService={setService}/>
 			</View>
 			<View id={STORIES.CATALOG} activePanel={STORIES.CATALOG}>
 				<Catalog id={STORIES.CATALOG}/>
@@ -170,4 +171,5 @@ const App = () => {
 }
 
 export default App;
+
 
