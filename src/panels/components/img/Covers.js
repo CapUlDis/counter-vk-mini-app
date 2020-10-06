@@ -43,33 +43,33 @@ import CandleLarge from  './large/candle_large.jpg';
 
 
 const colors = [
-    { id: 1, title: 'blue', style: 'linear-gradient(72.51deg, #5D9DE7 0%, #6FB1FF 100%)' },
-    { id: 2, title: 'magenta', style: 'linear-gradient(72.7deg, #AB67F0 0%, #C18AF6 100%)' },
-    { id: 3, title: 'red', style: 'linear-gradient(72.51deg, #FE3548 0%, #FF727F 100%)' },
-    { id: 4, title: 'cyan', style: 'linear-gradient(72.7deg, #67C2C3 0%, #9AE4E6 100%)' },
-    { id: 5, title: 'orange', style: 'linear-gradient(135deg, #FF9142 0%, #E7750C 100%)' },
-    { id: 6, title: 'green', style: 'linear-gradient(135deg, #50C750 0%, #32B332 100%)' },
-    { id: 7, title: 'gray', style: 'linear-gradient(135deg, #B1B6BD 0%, #99A2AD 100%)' },
-    { id: 8, title: 'yellow', style: 'linear-gradient(135deg, #FFB73D 0%, #FFA000 100%)' },
-    { id: 9, title: 'pink', style: 'linear-gradient(135deg, #FDACCC 0%, #F37AC1 100%)' },
-    { id: 10, title: 'black', style: 'linear-gradient(135deg, #626466 0%, #444647 100%)' }
+    { id: '1', title: 'blue', style: 'linear-gradient(72.51deg, #5D9DE7 0%, #6FB1FF 100%)' },
+    { id: '2', title: 'magenta', style: 'linear-gradient(72.7deg, #AB67F0 0%, #C18AF6 100%)' },
+    { id: '3', title: 'red', style: 'linear-gradient(72.51deg, #FE3548 0%, #FF727F 100%)' },
+    { id: '4', title: 'cyan', style: 'linear-gradient(72.7deg, #67C2C3 0%, #9AE4E6 100%)' },
+    { id: '5', title: 'orange', style: 'linear-gradient(135deg, #FF9142 0%, #E7750C 100%)' },
+    { id: '6', title: 'green', style: 'linear-gradient(135deg, #50C750 0%, #32B332 100%)' },
+    { id: '7', title: 'gray', style: 'linear-gradient(135deg, #B1B6BD 0%, #99A2AD 100%)' },
+    { id: '8', title: 'yellow', style: 'linear-gradient(135deg, #FFB73D 0%, #FFA000 100%)' },
+    { id: '9', title: 'pink', style: 'linear-gradient(135deg, #FDACCC 0%, #F37AC1 100%)' },
+    { id: '10', title: 'black', style: 'linear-gradient(135deg, #626466 0%, #444647 100%)' }
 ];
 
 const images = [
-    { id: 11, title: 'love', small: LoveSmall, medium: LoveMedium, large: LoveLarge },
-    { id: 12, title: 'newyear', small: NewYearSmall, medium: NewYearMedium, large: NewYearLarge },
-    { id: 13, title: 'marry', small: MarrySmall, medium: MarryMedium, large: MarryLarge },
-    { id: 14, title: 'palm', small: PalmSmall, medium: PalmMedium, large: PalmLarge },
-    { id: 15, title: 'flowers', small: FlowersSmall, medium: FlowersMedium, large: FlowersLarge },
-    { id: 16, title: 'stars', small: StarsSmall, medium: StarsMedium, large: StarsLarge },
-    { id: 17, title: 'rainbow', small: RainbowSmall, medium: RainbowMedium, large: RainbowLarge },
-    { id: 18, title: 'snowflake', small: SnowflakeSmall, medium: SnowflakeMedium, large: SnowflakeLarge },
-    { id: 19, title: 'avocado', small: AvocadoSmall, medium: AvocadoMedium, large: AvocadoLarge },
-    { id: 20, title: 'cake', small: CakeSmall, medium: CakeMedium, large: CakeLarge },
-    { id: 21, title: 'beer', small: BeerSmall, medium: BeerMedium, large: BeerLarge },
-    { id: 22, title: 'basketball', small: BasketballSmall, medium: BasketballMedium, large: BasketballLarge },
-    { id: 23, title: 'microphone', small: MicrophoneSmall, medium: MicrophoneMedium, large: MicrophoneLarge },
-    { id: 24, title: 'candle', small: CandleSmall, medium: CandleMedium, large: CandleLarge },
+    { id: '11', title: 'love', small: LoveSmall, medium: LoveMedium, large: LoveLarge },
+    { id: '12', title: 'newyear', small: NewYearSmall, medium: NewYearMedium, large: NewYearLarge },
+    { id: '13', title: 'marry', small: MarrySmall, medium: MarryMedium, large: MarryLarge },
+    { id: '14', title: 'palm', small: PalmSmall, medium: PalmMedium, large: PalmLarge },
+    { id: '15', title: 'flowers', small: FlowersSmall, medium: FlowersMedium, large: FlowersLarge },
+    { id: '16', title: 'stars', small: StarsSmall, medium: StarsMedium, large: StarsLarge },
+    { id: '17', title: 'rainbow', small: RainbowSmall, medium: RainbowMedium, large: RainbowLarge },
+    { id: '18', title: 'snowflake', small: SnowflakeSmall, medium: SnowflakeMedium, large: SnowflakeLarge },
+    { id: '19', title: 'avocado', small: AvocadoSmall, medium: AvocadoMedium, large: AvocadoLarge },
+    { id: '20', title: 'cake', small: CakeSmall, medium: CakeMedium, large: CakeLarge },
+    { id: '21', title: 'beer', small: BeerSmall, medium: BeerMedium, large: BeerLarge },
+    { id: '22', title: 'basketball', small: BasketballSmall, medium: BasketballMedium, large: BasketballLarge },
+    { id: '23', title: 'microphone', small: MicrophoneSmall, medium: MicrophoneMedium, large: MicrophoneLarge },
+    { id: '24', title: 'candle', small: CandleSmall, medium: CandleMedium, large: CandleLarge },
 ];
 
 

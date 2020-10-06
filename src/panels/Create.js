@@ -38,7 +38,7 @@ const Create = ({ id, go, service, setService }) => {
 	const [howCount, setHowCount] = useState('from');
 	const [pub, setPub] = useState(false);
 	const [coverType, setCoverType] = useState('color');
-	const [coverTitle, setCoverTitle] = useState('blue');
+	const [coverId, setCoverId] = useState('1');
 	// const [deleted, setDeleted] = 
 
 	const ErrorStatusBanner = function() {
@@ -96,7 +96,7 @@ const Create = ({ id, go, service, setService }) => {
 					howCount,
 					pub,
 					coverType,
-					coverTitle
+					coverId
 				})
 			});
 		}
@@ -117,6 +117,7 @@ const Create = ({ id, go, service, setService }) => {
 			const counterKey = service.deletedCounters.shift()
 			saveNewCounter(counterKey);
 			
+			service.counters.push(counterKey);
 			saveService(service);
 			setService(service);
 			
@@ -205,29 +206,29 @@ const Create = ({ id, go, service, setService }) => {
 					{activeCoverTab === 'colors'
 						? <div className="CoversGrid">
 							<div className="RadioCards">
-								{ colors.map(({ id, title, style }) => 
+								{ colors.map(({ id, style }) => 
 									<RadioCard
 										key={id}
-										value={title} 
+										value={id} 
 										color={style} 
-										checked={coverTitle === title}
+										checked={coverId === id}
 										onChange={e => {
 											setCoverType('color');
-											setCoverTitle(e.target.value);
+											setCoverId(e.target.value);
 										}}/>) }
 							</div>
 						</div>
 						: <div className="CoversGrid">
 							<div className="RadioCards">
-								{ images.map(({ id, title, small }) => 
+								{ images.map(({ id, small }) => 
 									<RadioCard
 										key={id} 
-										value={title} 
+										value={id} 
 										theme={small} 
-										checked={coverTitle === title}
+										checked={coverId === id}
 										onChange={e => {
 											setCoverType('theme');
-											setCoverTitle(e.target.value);
+											setCoverId(e.target.value);
 										}}/>) }
 							</div>
 						</div>
