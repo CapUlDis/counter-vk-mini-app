@@ -15,6 +15,9 @@ import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import FormStatus from '@vkontakte/vkui/dist/components/FormStatus/FormStatus';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 
+import CardGrid from '@vkontakte/vkui/dist/components/CardGrid/CardGrid';
+import Card from '@vkontakte/vkui/dist/components/Card/Card';
+
 import './Create.css';
 
 import RadioCard from './components/RadioCard';
@@ -30,7 +33,7 @@ const STORAGE_KEYS = {
 	SERVICE: 'serviceCounters',
 };
 
-const Create = ({ id, go, service, setService }) => {
+const Create = ({ id, go, service, setService, loadCounters }) => {
 	const [activeCoverTab, setActiveCoverTab] = useState(COVERS.COLORS);
 	const [inputStatuses, setInputStatuses] = useState({ title: 'default', date: 'default', howCount: 'default' });
 	const [title, setTitle] = useState('');
@@ -105,23 +108,24 @@ const Create = ({ id, go, service, setService }) => {
 
 		if (service.deletedCounters.length === 0) {
 			const counterKey = `counter${service.counters.length + 1}`;
-			saveNewCounter(counterKey);
+			await saveNewCounter(counterKey);
 			service.counters.push(counterKey);
 			
-			saveService(service);
+			await saveService(service);
 			setService(service);
-
+			
+			await loadCounters();
 			// Проверочные логи
 			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 		} else {
 			const counterKey = service.deletedCounters.shift()
-			saveNewCounter(counterKey);
-			
+			await saveNewCounter(counterKey);
 			service.counters.push(counterKey);
-			saveService(service);
+
+			await saveService(service);
 			setService(service);
 			
-			
+			await loadCounters();
 			// Проверочные логи
 			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}))
 		}
@@ -139,6 +143,11 @@ const Create = ({ id, go, service, setService }) => {
 				left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
 				separator={false}>Создать
 			</PanelHeader>
+			<CardGrid>
+				<Card size="l" mode="outline">
+					<div style={{ height: 96 }} />
+				</Card>
+			</CardGrid>
 			<FormLayout>
 				<ErrorStatusBanner/>
 				<Input

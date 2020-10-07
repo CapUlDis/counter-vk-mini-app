@@ -6,6 +6,7 @@ import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton';
 import Placeholder from '@vkontakte/vkui/dist/components/Placeholder/Placeholder';
+import Group from '@vkontakte/vkui/dist/components/Group/Group';
 import CardGrid from '@vkontakte/vkui/dist/components/CardGrid/CardGrid';
 import Card from '@vkontakte/vkui/dist/components/Card/Card';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
@@ -14,6 +15,8 @@ import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 
 import './Counters.css';
 import CounterCard from './components/CounterCard';
+import { images, colors } from './components/img/Covers';
+
 
 const Counters = ({ id, go, service, counters }) => {
 	// const [changed, setChanged] = useState(false);
@@ -42,6 +45,11 @@ const Counters = ({ id, go, service, counters }) => {
 				separator={false}
 				>Счетчики
 			</PanelHeader>
+			<CardGrid>
+				<Card size="l" mode="outline">
+					<div style={{ height: 96 }} />
+				</Card>
+			</CardGrid>
 			{/* Кнопка для проверок */}
 			{/* <FixedLayout vertical='top'>
 				<Button 
@@ -75,19 +83,32 @@ const Counters = ({ id, go, service, counters }) => {
 						Здесь будут отображаться ваши счетчики.
 					</Placeholder>
 				</Div>
-				: <CardGrid>
-					{counters.keys.forEach(({ key, value }) => {
-						console.log(value);
-						const counter = value ? JSON.parse(value) : {};
-						console.log(counter);
-						return (
-							<CounterCard
-								key={key}
-								counter={counter}
-							/>
-						);
-					})}
-				</CardGrid>
+				: <Group separator="hide">
+					<CardGrid>
+						{/* {counters.keys.forEach(({ key, value }) => {
+							console.log(value);
+							const counter = value ? JSON.parse(value) : {};
+							console.log(counter);
+							return (
+								// <CounterCard
+								// 	key={key}
+								// 	counter={counter}
+								// />
+								<Card size="l">
+									<div style={{ height: 189 }}>
+										{counter.coverType === "color"
+											? <div className="CounterCard__in" style={{ background:  colors[parseInt(counter.coverId) - 1].style}} />
+											: <div className="CounterCard__in" style={{ background: `url(${images[parseInt(counter.coverId) - 11].medium}) no-repeat center`, backgroundSize: "cover" }} />
+										}
+									</div>
+								</Card>
+							);
+						})} */}
+						<Card size="l" mode="outline">
+							<div style={{ height: 96 }} />
+						</Card>
+					</CardGrid>
+				</Group>
 			}
 			
 

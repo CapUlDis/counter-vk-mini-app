@@ -46,10 +46,20 @@ const App = () => {
 	const [activePanel, setActivePanel] = useState(LOADER_INTRO.LOADER);
 	const [activeStory, setActiveStory] = useState(STORIES.COUNTERS);
 	const [service, setService] = useState({});
+	const [counters, setCounters] = useState({});
 	const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
 	const [snackbar, setSnackbar] = useState(false);
-	const [changed, setChanged] = useState(false);
-	const [counters, setCounters] = useState({});
+	
+	const loadService = async function () {
+		const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
+		setService(JSON.parse(getObject.keys[0].value));
+	}
+
+	const loadCounters = async function () {
+		if (service.counters.length !== 0) {
+			setCounters(await bridge.send("VKWebAppStorageGet", { "keys": service.counters }));
+		}
+	};
 
 	useEffect(() => {
 		bridge.subscribe(({ detail: { type, data }}) => {
@@ -62,10 +72,7 @@ const App = () => {
 		
 		async function checkHasSeenItro() {
 			try {
-				// console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0}));
 				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
-				// Проверка логов
-				// console.log(getObject);
 
 				if (!getObject.keys[0].value) {
 					setPopout(null);
@@ -73,14 +80,14 @@ const App = () => {
 				}
 				
 				setService(JSON.parse(getObject.keys[0].value));
-				// Проверка логов
-				// console.log(service);
 
 				if (!service.hasSeenIntro) {
 					setPopout(null);
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
 				
+				await loadCounters();
+
 				return setStep(STEPS.MAIN);
 
 			} catch (error) {
@@ -94,21 +101,9 @@ const App = () => {
 					Проблема с получением данных из Storage.
 				</Snackbar>)
 			}
-		}
+		};
 		
 		if (activePanel === LOADER_INTRO.LOADER) { checkHasSeenItro() }
-
-		const loadCounters = async function () {
-			console.log(service.counters);
-			const get = await bridge.send("VKWebAppStorageGet", { "keys": service.counters });
-			setCounters(get);
-			setChanged(true);
-
-			// Logs
-			console.log(counters);
-		}
-
-		if (service.counters !== 0 && !changed) { loadCounters() }
 	});
 
 	const go = panel => {
@@ -173,10 +168,10 @@ const App = () => {
 			</Tabbar>
 		}>
 			<View id={STORIES.COUNTERS} activePanel={STORIES.COUNTERS}>
-				<Counters id={STORIES.COUNTERS} go={() => go(STORIES.CREATE)} service={service} counters={counters}/>
+				<Counters id={STORIES.COUNTERS} go={() => go(STORIES.CREATE)} service={service} counters={counters} loadCounters={loadCounters}/>
 			</View>
 			<View id={STORIES.CREATE} activePanel={STORIES.CREATE}>
-				<Create id={STORIES.CREATE} go={() => go(STORIES.COUNTERS)} service={service} setService={setService}/>
+				<Create id={STORIES.CREATE} go={() => go(STORIES.COUNTERS)} service={service} setService={setService} loadCounters={loadCounters}/>
 			</View>
 			<View id={STORIES.CATALOG} activePanel={STORIES.CATALOG}>
 				<Catalog id={STORIES.CATALOG}/>
