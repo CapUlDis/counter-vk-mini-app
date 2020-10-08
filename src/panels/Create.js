@@ -15,9 +15,6 @@ import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import FormStatus from '@vkontakte/vkui/dist/components/FormStatus/FormStatus';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 
-import CardGrid from '@vkontakte/vkui/dist/components/CardGrid/CardGrid';
-import Card from '@vkontakte/vkui/dist/components/Card/Card';
-
 import './Create.css';
 
 import RadioCard from './components/RadioCard';
@@ -143,11 +140,6 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 				left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
 				separator={false}>Создать
 			</PanelHeader>
-			<CardGrid>
-				<Card size="l" mode="outline">
-					<div style={{ height: 96 }} />
-				</Card>
-			</CardGrid>
 			<FormLayout>
 				<ErrorStatusBanner/>
 				<Input
