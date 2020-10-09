@@ -2,7 +2,6 @@ import React from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
-import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton';
 import Placeholder from '@vkontakte/vkui/dist/components/Placeholder/Placeholder';
@@ -71,8 +70,7 @@ const Counters = ({ id, go, service, counters }) => {
 					icon={<Icon56AddCircleOutline/>}
 					header="Создайте счетчик"
 					action={<Button size="l" mode="commerce" onClick={go}>Создать счетчик</Button>}
-					stretched
-				>
+					stretched>
 					<div className="Placeholder__text__in">
 						Здесь будут отображаться ваши счетчики.
 					</div>
