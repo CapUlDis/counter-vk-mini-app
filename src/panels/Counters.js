@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
@@ -8,16 +8,12 @@ import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton
 import Placeholder from '@vkontakte/vkui/dist/components/Placeholder/Placeholder';
 import Group from '@vkontakte/vkui/dist/components/Group/Group';
 import CardGrid from '@vkontakte/vkui/dist/components/CardGrid/CardGrid';
-import Card from '@vkontakte/vkui/dist/components/Card/Card';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
-import Title from '@vkontakte/vkui/dist/components/Typography/Title/Title';
-import Caption from '@vkontakte/vkui/dist/components/Typography/Caption/Caption';
 import Icon56AddCircleOutline from '@vkontakte/icons/dist/56/add_circle_outline';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 
 import './Counters.css';
 import CounterCard from './components/CounterCard';
-import { images, colors } from './components/img/Covers';
 
 const moment = require('moment');
 require('moment/locale/ru');
@@ -71,15 +67,16 @@ const Counters = ({ id, go, service, counters }) => {
 			</FixedLayout> */}
 			
 			{service.counters.length === 0
-				? <Div className='placeholder_counters'>
-					<Placeholder 
-						icon={<Icon56AddCircleOutline/>}
-						header="Создайте счетчик"
-						action={<Button size="l" mode="commerce" onClick={go}>Создать счетчик</Button>}
-					>
+				? <Placeholder 
+					icon={<Icon56AddCircleOutline/>}
+					header="Создайте счетчик"
+					action={<Button size="l" mode="commerce" onClick={go}>Создать счетчик</Button>}
+					stretched
+				>
+					<div className="Placeholder__text__in">
 						Здесь будут отображаться ваши счетчики.
-					</Placeholder>
-				</Div>
+					</div>
+				</Placeholder>
 				: <Group >
 					<CardGrid style={{ margin: "4px 0px" }}>
 						{counters.keys.map(({ key, value }) => {

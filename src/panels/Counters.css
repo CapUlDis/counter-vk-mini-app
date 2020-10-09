@@ -3,8 +3,6 @@
     --accent: #4bb34b;
 }
 
-.placeholder_counters {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.Placeholder__text__in {
+    width: 311px;
 }
