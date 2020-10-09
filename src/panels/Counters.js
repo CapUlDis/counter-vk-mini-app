@@ -34,24 +34,11 @@ moment.updateLocale('ru', {
 
 
 const Counters = ({ id, go, service, counters }) => {
-	// const [changed, setChanged] = useState(false);
-	// const [counters, setCounters] = useState({});
-
-	// useEffect(() => {
-	// 	const loadCounters = async function () {
-	// 		setCounters(await bridge.send("VKWebAppStorageGet", { "keys": service.counters }));
-	// 		setChanged(true);
-
-	// 		// Logs
-	// 		console.log(counters);
-	// 	}
-
-	// 	if (service.counters !== 0 && !changed) { loadCounters() }
-	// });
-	// console.log(service);
-	// async function loadCounters() {
-	// 	return await bridge.send("VKWebAppStorageGet", { "keys": service.counters });
-	// }
+	const dayOfNum = (number) => {  
+		let cases = [2, 0, 1, 1, 1, 2]; 
+		let titles = ['день', 'дня', 'дней'];
+		return titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ];  
+	}
 
 	return (
 		<Panel id={id}>
@@ -93,32 +80,35 @@ const Counters = ({ id, go, service, counters }) => {
 						Здесь будут отображаться ваши счетчики.
 					</Placeholder>
 				</Div>
-				: <CardGrid>
-					{counters.keys.map(({ key, value }) => {
-						const counter = value ? JSON.parse(value) : {};
-						const date = moment(counter.date);
-						
-						return (
-							<Card size="l" mode="shadow" key={key} counter={counter}>
-								<div className="CounterCard">
-									{counter.coverType === "color"
-										? <div className="CounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
-										: <div className="CounterCard__cover" style={{ background: `url(${images[parseInt(counter.coverId) - 11].medium}) no-repeat center`, backgroundSize: "cover" }} />
-									}
-									<div className="CounterCard__text">
-										<Title level="3" weight="semibold">{counter.title}</Title>
-										<Title level="3" weight="semibold"></Title>
-										<Caption level="1" weight="regular">{date.format('LL')}</Caption>
-										<Caption level="1" weight="regular"></Caption>
-									</div>
-								</div>
-							</Card>
-						);
-					})}
-				</CardGrid>
+				: <Group >
+					<CardGrid style={{ margin: "4px 0px" }}>
+						{counters.keys.map(({ key, value }) => {
+							const counter = value ? JSON.parse(value) : {};
+							const date = moment(counter.date);
+							let days = null;
+							let status = null;
+							if (counter.howCount === 'to') {
+								let daysDiff = date.diff(moment().startOf('day'), 'days');
+								days = daysDiff !== 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
+								status = date.diff(moment().startOf('day'), 'days') !== 0 ? 'осталось' : '';
+							} else {
+								let daysDiff = moment().diff(date, 'days');
+								days = daysDiff + ' ' + dayOfNum(daysDiff);
+								status = 'прошло';
+							}
+							return (
+								<CounterCard
+									key={key}
+									counter={counter}
+									date={date}
+									days={days}
+									status={status}
+								/>
+							);
+						})}
+					</CardGrid>
+				</Group>
 			}
-			
-
 		</Panel>
 	)
 };

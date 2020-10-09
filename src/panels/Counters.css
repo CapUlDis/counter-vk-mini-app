@@ -8,18 +8,3 @@
     align-items: center;
     justify-content: center;
 }
-
-.CounterCard {
-    height: 189;
-}
-
-.CounterCard__cover {
-    border-radius: 10px 10px 0px 0px;
-    height: 117px;
-    width: 100%;
-}
-
-.CounterCard__text {
-    height: 72px;
-    width: 100%;
-}

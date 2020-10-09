@@ -1,0 +1,26 @@
+.CounterCard {
+    height: 189;
+}
+
+.CounterCard__cover {
+    border-radius: 10px 10px 0px 0px;
+    height: 117px;
+    width: 100%;
+}
+
+.CounterCard__text {
+    width: 100%;
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 13px;
+}
+
+.CounterCard__row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 16px 3px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
