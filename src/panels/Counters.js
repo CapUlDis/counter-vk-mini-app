@@ -137,7 +137,8 @@ const Counters = ({ id, go, service, counters, fetchedUser }) => {
 					initialSlideIndex={slideIndex}
 					style={{ marginTop: "9px" }}
 				>
-					{counters.keys.map(({ key, value }, index) => {
+					{(counters.keys && fetchedUser) &&
+						counters.keys.map(({ key, value }, index) => {
 							const counter = value ? JSON.parse(value) : {};
 							const date = moment(counter.date);
 							let days = null;
@@ -164,7 +165,8 @@ const Counters = ({ id, go, service, counters, fetchedUser }) => {
 									view={VIEW.NORMAL}
 								/>
 							);
-						})}
+						})
+					}
 				</Gallery>
 			</Panel>
 		</View>

@@ -27,7 +27,7 @@ const BigCounterCard = ({ switchCard, view, counter, days, date, status, fetched
         <div className="BigCounterCard__text">
             <Icon28WriteOutline className="BigCounterCard__edit"/>
             <div className="BigCounterCard__row">
-                <Title level="3" weight="semibold" style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>{counter.title}</Title>
+                <Title level="3" weight="semibold" style={{ textOverflow: 'ellipsis', overflow: 'hidden', marginRight: '40px' }}>{counter.title}</Title>
                 <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{date.format('LL')}</Caption>
             </div>
             <div className="BigCounterCard__row">
