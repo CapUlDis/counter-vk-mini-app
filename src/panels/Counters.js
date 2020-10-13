@@ -135,6 +135,7 @@ const Counters = ({ id, go, service, counters, fetchedUser }) => {
 					align="center"
 					className="BigCounters_Gallery"
 					initialSlideIndex={slideIndex}
+					style={{ marginTop: "9px" }}
 				>
 					{counters.keys.map(({ key, value }, index) => {
 							const counter = value ? JSON.parse(value) : {};
