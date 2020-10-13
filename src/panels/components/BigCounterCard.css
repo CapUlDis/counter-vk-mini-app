@@ -1,0 +1,44 @@
+.BigCounterCard {
+    margin: 4px 4px;
+    width: calc(100% - 8px);
+}
+
+.BigCounterCard__cover {
+    border-radius: 10px 10px 0px 0px;
+    height: calc(100vh - var(--panelheader_height_ios) - var(--safe-area-inset-top) - var(--safe-area-inset-bottom) - var(--tabbar_height) - 231px);
+}
+
+.BigCounterCard__text {
+    height: 177px;
+    padding: 16px;
+    position: relative;
+}
+
+.BigCounterCard__row {
+    margin-bottom: 12px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.BigCounterCard__button {
+    background-color: #EBF7EB;
+    color:  #4bb34b;
+}
+
+.BigCounterCard__avatars {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.BigCounterCard__edit {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    color:  #4bb34b;
+}
+
+.BigCounterCard__divButton {
+    display: none;
+}

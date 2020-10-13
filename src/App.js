@@ -47,6 +47,7 @@ const App = () => {
 	const [activeStory, setActiveStory] = useState(STORIES.COUNTERS);
 	const [service, setService] = useState({});
 	const [counters, setCounters] = useState({});
+	const [fetchedUser, setUser] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
 	const [snackbar, setSnackbar] = useState(false);
 	
@@ -72,6 +73,8 @@ const App = () => {
 		
 		async function checkHasSeenItro() {
 			try {
+				setUser(await bridge.send('VKWebAppGetUserInfo'));
+				
 				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
 
 				if (!getObject.keys[0].value) {
@@ -167,9 +170,10 @@ const App = () => {
 				><Icon28MenuOutline/></TabbarItem>
 			</Tabbar>
 		}>
-			<View id={STORIES.COUNTERS} activePanel={STORIES.COUNTERS}>
+			{/* <View id={STORIES.COUNTERS} activePanel={STORIES.COUNTERS}>
 				<Counters id={STORIES.COUNTERS} go={() => go(STORIES.CREATE)} service={service} counters={counters} loadCounters={loadCounters}/>
-			</View>
+			</View> */}
+			<Counters id={STORIES.COUNTERS} go={() => go(STORIES.CREATE)} service={service} counters={counters} loadCounters={loadCounters} fetchedUser={fetchedUser}/>
 			<View id={STORIES.CREATE} activePanel={STORIES.CREATE}>
 				<Create id={STORIES.CREATE} go={() => go(STORIES.COUNTERS)} service={service} setService={setService} loadCounters={loadCounters}/>
 			</View>

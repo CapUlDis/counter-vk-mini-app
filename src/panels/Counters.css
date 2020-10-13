@@ -1,8 +1,18 @@
 :root, body[scheme="space_gray"] { 
     --tabbar_active_icon: #4bb34b;
     --accent: #4bb34b;
+    height: 100%;
 }
 
 .Placeholder__text__in {
     width: 311px;
+}
+
+.BigCounters__Group {
+    margin-top: 12px;
+    
+}
+
+.BigCounters_Gallery {
+    height: 100%;
 }

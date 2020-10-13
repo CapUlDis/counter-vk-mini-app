@@ -7,9 +7,14 @@ import './CounterCard.css'
 import { images, colors } from '../components/img/Covers';
 
 
-const CounterCard = ({ counter, days, date, status }) => (
+const CounterCard = ({ switchCard, view, counter, days, date, status, index }) => (
     <Card size="l" mode="shadow">
-        <div className="CounterCard">
+        <label className="CounterCard">
+            <input
+                className="CounterCard__button"
+                type="button"
+                onClick={() => {switchCard(view, index)}}
+            />
             {counter.coverType === "color"
                 ? <div className="CounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
                 : <div className="CounterCard__cover" style={{ background: `url(${images[parseInt(counter.coverId) - 11].medium}) no-repeat center`, backgroundSize: "cover" }} />
@@ -24,7 +29,7 @@ const CounterCard = ({ counter, days, date, status }) => (
                     <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{status}</Caption>
                 </div>
             </div>
-        </div>
+        </label>
     </Card>
 );
 

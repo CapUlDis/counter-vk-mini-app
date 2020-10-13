@@ -24,3 +24,7 @@
     overflow: hidden;
     white-space: nowrap;
 }
+
+.CounterCard__button {
+    display: none;
+}
