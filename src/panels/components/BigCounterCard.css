@@ -12,10 +12,12 @@
     height: 177px;
     padding: 16px;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .BigCounterCard__row {
-    margin-bottom: 12px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -27,7 +29,6 @@
 }
 
 .BigCounterCard__avatars {
-    margin-bottom: 12px;
     display: flex;
     align-items: center;
 }
