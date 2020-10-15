@@ -100,8 +100,8 @@ const Counters = ({ id, go, service, counters, fetchedUser }) => {
 								let status = null;
 								if (counter.howCount === 'to') {
 									let daysDiff = date.diff(moment().startOf('day'), 'days');
-									days = daysDiff !== 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
-									status = date.diff(moment().startOf('day'), 'days') !== 0 ? 'осталось' : '';
+									days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
+									status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
 								} else {
 									let daysDiff = moment().diff(date, 'days');
 									days = daysDiff + ' ' + dayOfNum(daysDiff);
@@ -145,8 +145,8 @@ const Counters = ({ id, go, service, counters, fetchedUser }) => {
 							let status = null;
 							if (counter.howCount === 'to') {
 								let daysDiff = date.diff(moment().startOf('day'), 'days');
-								days = daysDiff !== 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
-								status = date.diff(moment().startOf('day'), 'days') !== 0 ? 'осталось' : '';
+								days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
+								status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
 							} else {
 								let daysDiff = moment().diff(date, 'days');
 								days = daysDiff + ' ' + dayOfNum(daysDiff);
