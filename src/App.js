@@ -54,7 +54,7 @@ const App = () => {
 	const loadService = async function () {
 		const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
 		setService(JSON.parse(getObject.keys[0].value));
-	}
+	};
 
 	const loadCounters = async function () {
 		if (service.counters.length !== 0) {
@@ -70,26 +70,32 @@ const App = () => {
 				document.body.attributes.setNamedItem(schemeAttribute);
 			}
 		});
-		
-		async function checkHasSeenItro() {
+	}, []);
+
+	useEffect(() => {
+		(async () => {
 			try {
-				setUser(await bridge.send('VKWebAppGetUserInfo'));
-				
 				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
 
 				if (!getObject.keys[0].value) {
 					setPopout(null);
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
-				
-				setService(JSON.parse(getObject.keys[0].value));
 
-				if (!service.hasSeenIntro) {
+				const fetchedService = JSON.parse(getObject.keys[0].value);
+
+				if (!fetchedService.hasSeenIntro) {
 					setPopout(null);
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
-				
-				await loadCounters();
+
+				if (fetchedService.counters.length !== 0) {
+					setCounters(await bridge.send("VKWebAppStorageGet", { "keys": fetchedService.counters }));
+				} 
+
+				setService(fetchedService);
+
+				setUser(await bridge.send('VKWebAppGetUserInfo'));
 
 				return setStep(STEPS.MAIN);
 
@@ -102,12 +108,10 @@ const App = () => {
 					duration={900}
 				>
 					Проблема с получением данных из Storage.
-				</Snackbar>)
+				</Snackbar>);
 			}
-		};
-		
-		if (activePanel === LOADER_INTRO.LOADER) { checkHasSeenItro() }
-	});
+		})();
+	}, []);
 
 	const go = panel => {
 		setActiveStory(panel);
@@ -123,7 +127,11 @@ const App = () => {
 					deletedCounters: []
 				})
 			});
-			setStep(STEPS.MAIN);
+
+			await loadService();
+
+			return setStep(STEPS.MAIN);
+			
 		} catch (error) {
 			setSnackbar(<Snackbar
 				layout='vertical'
@@ -135,7 +143,7 @@ const App = () => {
 				Проблема с отправкой данных в Storage.
 			</Snackbar>)
 		}
-	}
+	};
 
 	if (step === STEPS.LOADER_INTRO) {
 		return (
