@@ -7,8 +7,8 @@ import './CounterCard.css'
 import { images, colors } from '../components/img/Covers';
 
 
-const CounterCard = ({ switchCard, view, counter, days, date, status, index }) => (
-    <Card size="l" mode="shadow">
+const CounterCard = ({ switchCard, view, counter, days, date, status, index, id }) => (
+    <Card size="l" mode="shadow" id={id}>
         <label className="CounterCard">
             <input
                 className="CounterCard__button"

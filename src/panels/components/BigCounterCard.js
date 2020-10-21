@@ -11,36 +11,39 @@ import './BigCounterCard.css'
 import { images, colors } from '../components/img/Covers';
 
 
-const BigCounterCard = ({ switchCard, view, counter, days, date, status, fetchedUser, index }) => (
-    <Card size="l" mode="shadow" className="BigCounterCard">
-        <label>
-            <input
-                className="BigCounterCard__divButton"
-                type="button"
-                onClick={() => {switchCard(view, index)}}
-            />
-            {counter.coverType === "color"
-                ? <div className="BigCounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
-                : <div className="BigCounterCard__cover" style={{ background: `url(${images[parseInt(counter.coverId) - 11].large}) no-repeat center`, backgroundSize: "cover" }} />
-            }
-        </label>
-        <div className="BigCounterCard__text">
-            <Icon28WriteOutline className="BigCounterCard__edit"/>
-            <div className="BigCounterCard__row">
-                <Title level="3" weight="semibold" style={{ textOverflow: 'ellipsis', overflow: 'hidden', marginRight: '40px' }}>{counter.title}</Title>
-                <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{date.format('LL')}</Caption>
+const BigCounterCard = ({ switchCard, view, counter, days, date, status, fetchedUser, index, openShareMenu }) => {
+
+    return (
+        <Card size="l" mode="shadow" className="BigCounterCard">
+            <label>
+                <input
+                    className="BigCounterCard__divButton"
+                    type="button"
+                    onClick={() => {switchCard(view, index)}}
+                />
+                {counter.coverType === "color"
+                    ? <div className="BigCounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
+                    : <div className="BigCounterCard__cover" style={{ background: `url(${images[parseInt(counter.coverId) - 11].large}) no-repeat center`, backgroundSize: "cover" }} />
+                }
+            </label>
+            <div className="BigCounterCard__text">
+                <Icon28WriteOutline className="BigCounterCard__edit"/>
+                <div className="BigCounterCard__row">
+                    <Title level="3" weight="semibold" style={{ textOverflow: 'ellipsis', overflow: 'hidden', marginRight: '40px' }}>{counter.title}</Title>
+                    <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{date.format('LL')}</Caption>
+                </div>
+                <div className="BigCounterCard__row">
+                    <Title level="3" weight="semibold">{days}</Title>
+                    <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{status}</Caption>
+                </div>
+                <div className="BigCounterCard__avatars">
+                    {fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200} size={24}/> : null}
+                    <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)", marginLeft: "8px" }}>Ждете Вы</Caption>
+                </div>
+                <Button size="xl" mode="secondary" className="BigCounterCard__button"before={<Icon24ShareOutline/>} onClick={openShareMenu}>Поделиться</Button>
             </div>
-            <div className="BigCounterCard__row">
-                <Title level="3" weight="semibold">{days}</Title>
-                <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{status}</Caption>
-            </div>
-            <div className="BigCounterCard__avatars">
-                {fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200} size={24}/> : null}
-                <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)", marginLeft: "8px" }}>Ждете Вы</Caption>
-            </div>
-            <Button size="xl" mode="secondary" className="BigCounterCard__button"before={<Icon24ShareOutline/>}>Поделиться</Button>
-        </div>
-    </Card>
-);
+        </Card>
+    );
+};
 
 export default BigCounterCard;

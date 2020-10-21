@@ -16,3 +16,7 @@
 .BigCounters_Gallery {
     height: 100%;
 }
+
+.ShareOutput {
+    display: none;
+}
