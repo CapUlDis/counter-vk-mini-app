@@ -21,6 +21,10 @@ import Catalog from './panels/Catalog';
 import Intro from './panels/Intro';
 
 
+const LINK = {
+	APP: 'http://vk.com/app7582904'
+};
+
 const STORIES = {
 	COUNTERS: 'counters',
 	CREATE: 'create',
@@ -181,7 +185,13 @@ const App = () => {
 			{/* <View id={STORIES.COUNTERS} activePanel={STORIES.COUNTERS}>
 				<Counters id={STORIES.COUNTERS} go={() => go(STORIES.CREATE)} service={service} counters={counters} loadCounters={loadCounters}/>
 			</View> */}
-			<Counters id={STORIES.COUNTERS} go={() => go(STORIES.CREATE)} service={service} counters={counters} loadCounters={loadCounters} fetchedUser={fetchedUser}/>
+			<Counters 
+				id={STORIES.COUNTERS} 
+				go={() => go(STORIES.CREATE)} 
+				service={service} 
+				counters={counters} 
+				fetchedUser={fetchedUser}
+				appLink={LINK.APP}/>
 			<View id={STORIES.CREATE} activePanel={STORIES.CREATE}>
 				<Create id={STORIES.CREATE} go={() => go(STORIES.COUNTERS)} service={service} setService={setService} loadCounters={loadCounters}/>
 			</View>

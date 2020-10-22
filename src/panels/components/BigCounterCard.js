@@ -1,4 +1,6 @@
 import React from "react";
+import html2canvas from 'html2canvas';
+import { usePlatform, IOS } from '@vkontakte/vkui'
 import Card from '@vkontakte/vkui/dist/components/Card/Card';
 import Title from '@vkontakte/vkui/dist/components/Typography/Title/Title';
 import Caption from '@vkontakte/vkui/dist/components/Typography/Caption/Caption';
@@ -6,12 +8,54 @@ import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 import Icon24ShareOutline from '@vkontakte/icons/dist/24/share_outline';
 import Icon28WriteOutline from '@vkontakte/icons/dist/28/write_outline';
+import ActionSheet from '@vkontakte/vkui/dist/components/ActionSheet/ActionSheet';
+import ActionSheetItem from '@vkontakte/vkui/dist/components/ActionSheetItem/ActionSheetItem';
+import Icon28ArticleOutline from '@vkontakte/icons/dist/28/article_outline';
+import Icon28MessageOutline from '@vkontakte/icons/dist/28/message_outline';
+import Icon28StoryOutline from '@vkontakte/icons/dist/28/story_outline';
 
 import './BigCounterCard.css'
 import { images, colors } from '../components/img/Covers';
+import { shareContentByStory } from '../helpers/share';
 
 
-const BigCounterCard = ({ switchCard, view, counter, days, date, status, fetchedUser, index, openShareMenu }) => {
+const VIEW = {
+	NORMAL: 'normal',
+	BIG: 'big'
+};
+
+const BigCounterCard = ({ counterId, switchCard, counter, days, date, status, fetchedUser, index, setPopout, setActivePanel, appLink }) => {
+    const osname = usePlatform();
+    
+    const shareCounterCardByStory = async () => {
+		setActivePanel(VIEW.NORMAL);
+		const counter = document.getElementById(counterId);
+		let imageUrl = null;
+		await html2canvas(counter, { scale: 10, backgroundColor: null, width: "351", onclone: document => {
+			document.getElementById(counterId).style.width = "351px";
+		} }).then(canvas => {
+			imageUrl = canvas.toDataURL("image/png");
+		});
+        shareContentByStory(appLink, imageUrl);
+        setActivePanel(VIEW.BIG);
+    };
+    
+    const openShareMenu = () => {
+		setPopout(
+			<ActionSheet onClose={() => setPopout(null)}>
+				<ActionSheetItem autoclose before={<Icon28StoryOutline/>} onClick={shareCounterCardByStory}>
+					В историю
+				</ActionSheetItem>
+				<ActionSheetItem autoclose before={<Icon28ArticleOutline/>}>
+					На стену
+				</ActionSheetItem>
+				<ActionSheetItem autoclose before={<Icon28MessageOutline/>}>
+					В личные сообщения
+				</ActionSheetItem>
+				{osname === IOS && <ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
+			</ActionSheet>
+		);
+	};
 
     return (
         <Card size="l" mode="shadow" className="BigCounterCard">
@@ -19,7 +63,7 @@ const BigCounterCard = ({ switchCard, view, counter, days, date, status, fetched
                 <input
                     className="BigCounterCard__divButton"
                     type="button"
-                    onClick={() => {switchCard(view, index)}}
+                    onClick={() => {switchCard(VIEW.NORMAL, index)}}
                 />
                 {counter.coverType === "color"
                     ? <div className="BigCounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
