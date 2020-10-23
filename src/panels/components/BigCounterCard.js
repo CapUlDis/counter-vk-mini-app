@@ -16,7 +16,7 @@ import Icon28StoryOutline from '@vkontakte/icons/dist/28/story_outline';
 
 import './BigCounterCard.css'
 import { images, colors } from '../components/img/Covers';
-import { shareContentByStory, shareContentByWall } from '../helpers/share';
+import { shareContentByStory, shareContentByWall, shareContentByMessage } from '../helpers/share';
 
 
 const VIEW = {
@@ -30,29 +30,24 @@ const BigCounterCard = ({ counterId, switchCard, counter, days, date, status, fe
     const shareCounterCardByStory = async () => {
 		setActivePanel(VIEW.NORMAL);
 		const counter = document.getElementById(counterId);
-		let imageUrl = null;
-		await html2canvas(counter, { scale: 10, backgroundColor: null, width: "351", onclone: document => {
+        let imageUrl = null;
+		await html2canvas(counter, { scale: 2, backgroundColor: null, width: '351', onclone: document => {
+            document.getElementById(counterId).style.padding = "0";
             document.getElementById(counterId).style.width = "351px";
             document.getElementById(counterId).style.borderRadius = "10px 10px 10px 10px";
 		} }).then(canvas => {
-			imageUrl = canvas.toDataURL("image/png");
+            imageUrl = canvas.toDataURL("image/png");
 		});
         shareContentByStory(appLink, imageUrl);
         setActivePanel(VIEW.BIG);
     };
 
-    const shareCounterCardByWall = async () => {
-        setActivePanel(VIEW.NORMAL);
-		const counter = document.getElementById(counterId);
-		let imageUrl = null;
-		await html2canvas(counter, { scale: 10, backgroundColor: null, width: "351", onclone: document => {
-            document.getElementById(counterId).style.width = "351px";
-            document.getElementById(counterId).style.borderRadius = "10px 10px 10px 10px";
-		} }).then(canvas => {
-			imageUrl = canvas.toDataURL("image/png");
-        });
-        shareContentByWall(imageUrl, 'Считай количество от или до даты с помощью приложения "Счётчик дней"!', appLink);
-        setActivePanel(VIEW.BIG);
+    const shareCounterAppByWall = async () => {
+        shareContentByWall('Считай количество дней от или до даты с помощью приложения "Счётчики времени"!', appLink);
+    };
+
+    const shareCounterAppByMessage = async () => {
+        shareContentByMessage(appLink);
     };
     
     const openShareMenu = () => {
@@ -61,10 +56,10 @@ const BigCounterCard = ({ counterId, switchCard, counter, days, date, status, fe
 				<ActionSheetItem autoclose before={<Icon28StoryOutline/>} onClick={shareCounterCardByStory}>
 					В историю
 				</ActionSheetItem>
-				<ActionSheetItem autoclose before={<Icon28ArticleOutline/>} onClick={shareCounterCardByWall}>
+				<ActionSheetItem autoclose before={<Icon28ArticleOutline/>} onClick={shareCounterAppByWall}>
 					На стену
 				</ActionSheetItem>
-				<ActionSheetItem autoclose before={<Icon28MessageOutline/>}>
+				<ActionSheetItem autoclose before={<Icon28MessageOutline/>} onClick={shareCounterAppByMessage}>
 					В личные сообщения
 				</ActionSheetItem>
 				{osname === IOS && <ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}

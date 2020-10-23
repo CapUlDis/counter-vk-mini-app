@@ -22,7 +22,7 @@ import Intro from './panels/Intro';
 
 
 const LINK = {
-	APP: 'http://vk.com/app7582904'
+	APP: 'https://vk.com/app7582904'
 };
 
 const STORIES = {

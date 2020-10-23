@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // import bridge from '@vkontakte/vk-bridge';
-import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout';
+// import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';

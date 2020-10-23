@@ -8,6 +8,8 @@ import App from "./App";
 // Init VK  Mini App
 bridge.send("VKWebAppInit");
 
+// bridge.subscribe((e) => console.log(e));
+
 ReactDOM.render(<App />, document.getElementById("root"));
 if (process.env.NODE_ENV === "development") {
   import("./eruda").then(({ default: eruda }) => {}); //runtime download
