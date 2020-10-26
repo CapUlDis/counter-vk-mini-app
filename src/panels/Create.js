@@ -59,9 +59,11 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 
 	const handleCreateClick = async function () {
 		if (!title.trim()) {
+			window.scrollTo(0, 0);
 			return setInputStatuses({ title: 'error', date: 'default', howCount: 'default' });
 		} 
 		if (!date) {
+			window.scrollTo(0, 0);
 			return setInputStatuses({ title: 'default', date: 'error', howCount: 'default' });
 		}
 		setInputStatuses({ title: 'default', date: 'default', howCount: 'default' });
@@ -70,9 +72,11 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 		const userDate = new Date(date);
 		
 		if (today > userDate && howCount === 'to') {
+			window.scrollTo(0, 0);
 			return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
 		}
 		if (today < userDate && howCount === 'from') {
+			window.scrollTo(0, 0);
 			return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
 		}
 
