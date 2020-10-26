@@ -52,6 +52,7 @@ const App = () => {
 	const [service, setService] = useState({});
 	const [counters, setCounters] = useState({});
 	const [fetchedUser, setUser] = useState(null);
+	const [editMode, setEditMode] = useState(false);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
 	const [snackbar, setSnackbar] = useState(false);
 	
@@ -191,9 +192,16 @@ const App = () => {
 				service={service} 
 				counters={counters} 
 				fetchedUser={fetchedUser}
-				appLink={LINK.APP}/>
+				appLink={LINK.APP}
+				setEditMode={setEditMode}/>
 			<View id={STORIES.CREATE} activePanel={STORIES.CREATE}>
-				<Create id={STORIES.CREATE} go={() => go(STORIES.COUNTERS)} service={service} setService={setService} loadCounters={loadCounters}/>
+				<Create 
+					id={STORIES.CREATE} 
+					go={() => go(STORIES.COUNTERS)} 
+					service={service} 
+					setService={setService} 
+					loadCounters={loadCounters}
+					editMode={editMode}/>
 			</View>
 			<View id={STORIES.CATALOG} activePanel={STORIES.CATALOG}>
 				<Catalog id={STORIES.CATALOG}/>

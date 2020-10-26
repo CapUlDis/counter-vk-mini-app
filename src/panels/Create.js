@@ -40,7 +40,6 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 	const [pub, setPub] = useLocalStorage('pub', false);
 	const [coverType, setCoverType] = useLocalStorage('coverType', 'color');
 	const [coverId, setCoverId] = useLocalStorage('coverId','1');
-	// const [deleted, setDeleted] = 
 
 	const ErrorStatusBanner = function() {
 		if (inputStatuses.howCount === 'default') {
