@@ -17,6 +17,7 @@ import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 
 import './Create.css';
 
+import { useLocalStorage } from './helpers/useLocalStorage';
 import RadioCard from './components/RadioCard';
 import { images, colors } from './components/img/Covers';
 
@@ -31,14 +32,14 @@ const STORAGE_KEYS = {
 };
 
 const Create = ({ id, go, service, setService, loadCounters }) => {
-	const [activeCoverTab, setActiveCoverTab] = useState(COVERS.COLORS);
+	const [activeCoverTab, setActiveCoverTab] = useLocalStorage('activeCoverTab', COVERS.COLORS);
 	const [inputStatuses, setInputStatuses] = useState({ title: 'default', date: 'default', howCount: 'default' });
-	const [title, setTitle] = useState('');
-	const [date, setDate] = useState('');
-	const [howCount, setHowCount] = useState('from');
-	const [pub, setPub] = useState(false);
-	const [coverType, setCoverType] = useState('color');
-	const [coverId, setCoverId] = useState('1');
+	const [title, setTitle] = useLocalStorage('title', '');
+	const [date, setDate] = useLocalStorage('date', '')
+	const [howCount, setHowCount] = useLocalStorage('howCount', 'from');
+	const [pub, setPub] = useLocalStorage('pub', false);
+	const [coverType, setCoverType] = useLocalStorage('coverType', 'color');
+	const [coverId, setCoverId] = useLocalStorage('coverId','1');
 	// const [deleted, setDeleted] = 
 
 	const ErrorStatusBanner = function() {
@@ -132,6 +133,7 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 		// Проверочные логи
 		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0}));
 		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
+		window.localStorage.clear();
 	}
 
 	return (
@@ -167,16 +169,17 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 					<Radio 
 						name="howCount" 
 						value="from"
+						checked={howCount === 'from'}
 						onChange={e => {
 							setInputStatuses({ title: 'default', date: 'default', howCount: 'default' });
 							setHowCount(e.target.value);
 						}}
-						defaultChecked
 						>От выбранной даты
 					</Radio>
 					<Radio 
 						name="howCount" 
 						value="to"
+						checked={howCount === 'to'}
 						onChange={e => {
 							setInputStatuses({ title: 'default', date: 'default', howCount: 'default' });
 							setHowCount(e.target.value);
@@ -187,7 +190,7 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 				<Checkbox 
 					top="Дополнительно"
 					name="public"
-					value={pub}
+					checked={pub}
 					onChange={() => setPub(!pub)}
 				>Сделать счетчик публичным
 				</Checkbox>	
