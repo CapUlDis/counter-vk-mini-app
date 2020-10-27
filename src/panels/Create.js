@@ -75,7 +75,7 @@ const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMo
 					title: 'Удалить',
 					autoclose: true,
 					mode: 'destructive',
-					action: () => console.log('tut'),
+					action: () => handleDeleteClick(),
 				}]}
 				onClose={() => setPopout(null)}
 			>
@@ -92,7 +92,25 @@ const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMo
 		});
 	}
 
-	
+	const handleDeleteClick = async () => {
+		const index = service.counters.indexOf(editMode.counterId);
+		service.counters.splice(index, 1);
+		service.deletedCounters.push(editMode.counterId);
+
+		await saveService(service);
+		setService(service);
+		
+		await loadCounters();
+
+		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0}));
+		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
+
+		window.localStorage.clear();
+		setEditMode(false);
+
+		go();
+		return window.scrollTo(0, 0);
+	}
 
 	const handleCreateSaveClick = async function () {
 		if (!title.trim()) {
