@@ -14,6 +14,7 @@ import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import CellButton from '@vkontakte/vkui/dist/components/CellButton/CellButton';
 import FormStatus from '@vkontakte/vkui/dist/components/FormStatus/FormStatus';
+import Alert from '@vkontakte/vkui/dist/components/Alert/Alert';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 
@@ -33,7 +34,7 @@ const STORAGE_KEYS = {
 	SERVICE: 'serviceCounters',
 };
 
-const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMode }) => {
+const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMode, setPopout }) => {
 	if (editMode) { 
 		window.localStorage.clear();
 	};
@@ -46,6 +47,7 @@ const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMo
 	const [pub, setPub] = useLocalStorage('pub',  !editMode ? false : editMode.pub);
 	const [coverType, setCoverType] = useLocalStorage('coverType', !editMode ? COVERS.COLORS : editMode.coverType);
 	const [coverId, setCoverId] = useLocalStorage('coverId', !editMode ? '1' : editMode.coverId);
+	// const [popout, setPopout] = useState(null);
 	
 	const ErrorStatusBanner = function() {
 		if (inputStatuses.howCount === 'default') {
@@ -62,12 +64,35 @@ const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMo
 		);
 	}
 
+	const openDeleteDialogue = () => {
+		setPopout(
+			<Alert
+				actions={[{
+					title: 'Отмена',
+					autoclose: true,
+					mode: 'cancel'
+					}, {
+					title: 'Удалить',
+					autoclose: true,
+					mode: 'destructive',
+					action: () => console.log('tut'),
+				}]}
+				onClose={() => setPopout(null)}
+			>
+				<h2>Удаление счетчика</h2>
+				<p>Вы уверены, что хотите удалить этот счетчик?</p>
+			</Alert>
+		);
+	}
+
 	const saveService = async function (serviceObject) {
 		await bridge.send('VKWebAppStorageSet', {
 			key: STORAGE_KEYS.SERVICE,
 			value: JSON.stringify(serviceObject)
 		});
 	}
+
+	
 
 	const handleCreateSaveClick = async function () {
 		if (!title.trim()) {
@@ -160,7 +185,7 @@ const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMo
 			<FormLayout>
 				<ErrorStatusBanner/>
 				{editMode &&
-					<CellButton before={<Icon28DeleteOutline/>} mode="danger">
+					<CellButton before={<Icon28DeleteOutline/>} mode="danger" onClick={openDeleteDialogue}>
 						Удалить счётчик
 					</CellButton>
 				}

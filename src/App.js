@@ -102,6 +102,8 @@ const App = () => {
 
 				setUser(await bridge.send('VKWebAppGetUserInfo'));
 
+				setPopout(null);
+
 				return setStep(STEPS.MAIN);
 
 			} catch (error) {
@@ -205,7 +207,7 @@ const App = () => {
 				fetchedUser={fetchedUser}
 				appLink={LINK.APP}
 				setEditMode={setEditMode}/>
-			<View id={STORIES.CREATE} activePanel={STORIES.CREATE}>
+			<View id={STORIES.CREATE} activePanel={STORIES.CREATE} popout={popout}>
 				<Create 
 					id={STORIES.CREATE} 
 					go={() => go(STORIES.COUNTERS)} 
@@ -213,7 +215,8 @@ const App = () => {
 					setService={setService} 
 					loadCounters={loadCounters}
 					editMode={editMode}
-					setEditMode={setEditMode}/>
+					setEditMode={setEditMode}
+					setPopout={setPopout}/>
 			</View>
 			<View id={STORIES.CATALOG} activePanel={STORIES.CATALOG}>
 				<Catalog id={STORIES.CATALOG}/>
