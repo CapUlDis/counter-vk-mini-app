@@ -147,7 +147,8 @@ const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMo
 		// Проверочные логи
 		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0}));
 		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
-		return go();
+		go();
+		return window.scrollTo(0, document.body.scrollHeight);
 	}
 
 	return (
