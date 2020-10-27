@@ -167,13 +167,17 @@ const App = () => {
 				onClick={() => {
 					setEditMode(false);
 					setActiveStory(STORIES.COUNTERS);
+					window.scrollTo(0, 0);
 				}}
 				selected={activeStory === STORIES.COUNTERS}
 				data-story={STORIES.COUNTERS}
 				text="Счетчики"
 				><Icon28RecentOutline/></TabbarItem>
 				<TabbarItem
-				onClick={() => setActiveStory(STORIES.CREATE)}
+				onClick={() => {
+					setActiveStory(STORIES.CREATE);
+					window.scrollTo(0, 0);
+				}}
 				selected={activeStory === STORIES.CREATE}
 				data-story={STORIES.CREATE}
 				text="Создать"
@@ -182,6 +186,7 @@ const App = () => {
 				onClick={() => {
 					setEditMode(false);
 					setActiveStory(STORIES.CATALOG);
+					window.scrollTo(0, 0);
 				}}
 				selected={activeStory === STORIES.CATALOG}
 				data-story={STORIES.CATALOG}

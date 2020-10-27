@@ -62,7 +62,14 @@ const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMo
 		);
 	}
 
-	const handleCreateClick = async function () {
+	const saveService = async function (serviceObject) {
+		await bridge.send('VKWebAppStorageSet', {
+			key: STORAGE_KEYS.SERVICE,
+			value: JSON.stringify(serviceObject)
+		});
+	}
+
+	const handleCreateSaveClick = async function () {
 		if (!title.trim()) {
 			window.scrollTo(0, 0);
 			return setInputStatuses({ title: 'error', date: 'default', howCount: 'default' });
@@ -85,13 +92,6 @@ const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMo
 			return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
 		}
 
-		async function saveService(serviceObject) {
-			await bridge.send('VKWebAppStorageSet', {
-				key: STORAGE_KEYS.SERVICE,
-				value: JSON.stringify(serviceObject)
-			});
-		}
-
 		async function saveNewCounter(counterKey) {
 			await bridge.send('VKWebAppStorageSet', {
 				key: counterKey,
@@ -110,9 +110,12 @@ const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMo
 		if (editMode) {
 			await saveNewCounter(editMode.counterId);
 			await loadCounters();
+
 			window.localStorage.clear();
 			setEditMode(false);
-			return go();
+
+			go();
+			return window.scrollTo(0, 0);
 		}
 
 		if (service.deletedCounters.length === 0) {
@@ -255,7 +258,7 @@ const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMo
 					}
 				</FormLayoutGroup>
 				<FixedLayout vertical='bottom'>
-					<Button className='CreateButton' mode='commerce' size='xl' onClick={handleCreateClick}>
+					<Button className='CreateButton' mode='commerce' size='xl' onClick={handleCreateSaveClick}>
 						{!editMode ? 'Создать счётчик' : 'Сохранить изменения'}
 					</Button>
 				</FixedLayout>
