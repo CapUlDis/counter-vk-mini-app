@@ -36,7 +36,7 @@ moment.updateLocale('ru', {
 });
 
 
-const Counters = ({ id, go, service, counters, fetchedUser, appLink }) => {
+const Counters = ({ id, go, service, counters, fetchedUser, appLink, setEditMode }) => {
 	const [activePanel, setActivePanel] = useState(VIEW.NORMAL);
 	const [slideIndex, setSlideIndex] = useState(0);
 	const [popout, setPopout] = useState(null);
@@ -169,6 +169,8 @@ const Counters = ({ id, go, service, counters, fetchedUser, appLink }) => {
 									setPopout={setPopout}
 									setActivePanel={setActivePanel}
 									appLink={appLink}
+									setEditMode={setEditMode}
+									go={go}
 								/>
 							);
 						})

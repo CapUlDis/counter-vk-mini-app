@@ -24,7 +24,7 @@ const VIEW = {
 	BIG: 'big'
 };
 
-const BigCounterCard = ({ counterId, switchCard, counter, days, date, status, fetchedUser, index, setPopout, setActivePanel, appLink }) => {
+const BigCounterCard = ({ counterId, switchCard, counter, days, date, status, fetchedUser, index, setPopout, setActivePanel, appLink, setEditMode, go }) => {
     const osname = usePlatform();
     
     const shareCounterCardByStory = async () => {
@@ -81,7 +81,13 @@ const BigCounterCard = ({ counterId, switchCard, counter, days, date, status, fe
                 }
             </label>
             <div className="BigCounterCard__text">
-                <Icon28WriteOutline className="BigCounterCard__edit"/>
+                <Icon28WriteOutline 
+                    className="BigCounterCard__edit" 
+                    onClick={() => {
+                        counter.counterId = counterId;
+                        setEditMode(counter);
+                        go();
+                }}/>
                 <div className="BigCounterCard__row">
                     <Title level="3" weight="semibold" style={{ textOverflow: 'ellipsis', overflow: 'hidden', marginRight: '40px' }}>{counter.title}</Title>
                     <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{date.format('LL')}</Caption>

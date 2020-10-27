@@ -164,7 +164,10 @@ const App = () => {
 		<Epic activeStory={activeStory} tabbar={
 			<Tabbar>
 				<TabbarItem
-				onClick={() => setActiveStory(STORIES.COUNTERS)}
+				onClick={() => {
+					setEditMode(false);
+					setActiveStory(STORIES.COUNTERS);
+				}}
 				selected={activeStory === STORIES.COUNTERS}
 				data-story={STORIES.COUNTERS}
 				text="Счетчики"
@@ -176,7 +179,10 @@ const App = () => {
 				text="Создать"
 				><Icon28AddCircleOutline/></TabbarItem>
 				<TabbarItem
-				onClick={() => setActiveStory(STORIES.CATALOG)}
+				onClick={() => {
+					setEditMode(false);
+					setActiveStory(STORIES.CATALOG);
+				}}
 				selected={activeStory === STORIES.CATALOG}
 				data-story={STORIES.CATALOG}
 				text="Каталог"
@@ -201,7 +207,8 @@ const App = () => {
 					service={service} 
 					setService={setService} 
 					loadCounters={loadCounters}
-					editMode={editMode}/>
+					editMode={editMode}
+					setEditMode={setEditMode}/>
 			</View>
 			<View id={STORIES.CATALOG} activePanel={STORIES.CATALOG}>
 				<Catalog id={STORIES.CATALOG}/>

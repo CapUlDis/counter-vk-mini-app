@@ -12,8 +12,10 @@ import Tabs from '@vkontakte/vkui/dist/components/Tabs/Tabs';
 import TabsItem from '@vkontakte/vkui/dist/components/TabsItem/TabsItem';
 import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
+import CellButton from '@vkontakte/vkui/dist/components/CellButton/CellButton';
 import FormStatus from '@vkontakte/vkui/dist/components/FormStatus/FormStatus';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
+import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 
 import './Create.css';
 
@@ -23,24 +25,28 @@ import { images, colors } from './components/img/Covers';
 
 
 const COVERS = {
-	COLORS: 'colors',
-	THEMES: 'themes'
+	COLORS: 'color',
+	THEMES: 'theme'
 };
 
 const STORAGE_KEYS = {
 	SERVICE: 'serviceCounters',
 };
 
-const Create = ({ id, go, service, setService, loadCounters }) => {
-	const [activeCoverTab, setActiveCoverTab] = useLocalStorage('activeCoverTab', COVERS.COLORS);
-	const [inputStatuses, setInputStatuses] = useState({ title: 'default', date: 'default', howCount: 'default' });
-	const [title, setTitle] = useLocalStorage('title', '');
-	const [date, setDate] = useLocalStorage('date', '')
-	const [howCount, setHowCount] = useLocalStorage('howCount', 'from');
-	const [pub, setPub] = useLocalStorage('pub', false);
-	const [coverType, setCoverType] = useLocalStorage('coverType', 'color');
-	const [coverId, setCoverId] = useLocalStorage('coverId','1');
+const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMode }) => {
+	if (editMode) { 
+		window.localStorage.clear();
+	};
 
+	const [activeCoverTab, setActiveCoverTab] = useLocalStorage('activeCoverTab', !editMode ? COVERS.COLORS : editMode.coverType);
+	const [inputStatuses, setInputStatuses] = useState({ title: 'default', date: 'default', howCount: 'default' });
+	const [title, setTitle] = useLocalStorage('title', !editMode ? '' : editMode.title);
+	const [date, setDate] = useLocalStorage('date', !editMode ? '' : editMode.date)
+	const [howCount, setHowCount] = useLocalStorage('howCount', !editMode ? 'from' : editMode.howCount);
+	const [pub, setPub] = useLocalStorage('pub',  !editMode ? false : editMode.pub);
+	const [coverType, setCoverType] = useLocalStorage('coverType', !editMode ? COVERS.COLORS : editMode.coverType);
+	const [coverId, setCoverId] = useLocalStorage('coverId', !editMode ? '1' : editMode.coverId);
+	
 	const ErrorStatusBanner = function() {
 		if (inputStatuses.howCount === 'default') {
 			return null;
@@ -86,15 +92,11 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 			});
 		}
 
-		// async function getService() {
-		// 	const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
-		// 	return JSON.parse(getObject.keys[0].value);
-		// }
-
 		async function saveNewCounter(counterKey) {
 			await bridge.send('VKWebAppStorageSet', {
 				key: counterKey,
 				value: JSON.stringify({
+					counterId: counterKey,
 					title,
 					date,
 					howCount,
@@ -105,7 +107,13 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 			});
 		}
 
-		console.log(service);
+		if (editMode) {
+			await saveNewCounter(editMode.counterId);
+			await loadCounters();
+			window.localStorage.clear();
+			setEditMode(false);
+			return go();
+		}
 
 		if (service.deletedCounters.length === 0) {
 			const counterKey = `counter${service.counters.length + 1}`;
@@ -131,22 +139,27 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}))
 		}
 		
-		go();
+		window.localStorage.clear();
 
 		// Проверочные логи
 		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0}));
 		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
-		window.localStorage.clear();
+		return go();
 	}
 
 	return (
 		<Panel id={id}>
 			<PanelHeader 
 				left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
-				separator={false}>Создать
+				separator={false}>{!editMode ? 'Создать' : 'Редактировать'}
 			</PanelHeader>
 			<FormLayout>
 				<ErrorStatusBanner/>
+				{editMode &&
+					<CellButton before={<Icon28DeleteOutline/>} mode="danger">
+						Удалить счётчик
+					</CellButton>
+				}
 				<Input
 					type="text"
 					top="Название"
@@ -210,7 +223,7 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 							Тематическая
 						</TabsItem>
 					</Tabs>
-					{activeCoverTab === 'colors'
+					{activeCoverTab === 'color'
 						? <div className="CoversGrid">
 							<div className="RadioCards">
 								{ colors.map(({ id, style }) => 
@@ -243,7 +256,7 @@ const Create = ({ id, go, service, setService, loadCounters }) => {
 				</FormLayoutGroup>
 				<FixedLayout vertical='bottom'>
 					<Button className='CreateButton' mode='commerce' size='xl' onClick={handleCreateClick}>
-						Создать счётчик
+						{!editMode ? 'Создать счётчик' : 'Сохранить изменения'}
 					</Button>
 				</FixedLayout>
 			</FormLayout>
