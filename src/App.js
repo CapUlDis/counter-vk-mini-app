@@ -39,10 +39,15 @@ const STEPS = {
 const LOADER_INTRO = {
 	INTRO: 'intro',
 	LOADER: 'loader'
-}
+};
 
 const STORAGE_KEYS = {
 	SERVICE: 'serviceCounters',
+};
+
+const COUNTERS_PANELS = {
+	NORMAL: 'normal',
+	BIG: 'big'
 };
 
 const App = () => {
@@ -55,6 +60,9 @@ const App = () => {
 	const [editMode, setEditMode] = useState(false);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
 	const [snackbar, setSnackbar] = useState(false);
+
+	const [activePanelCounters, setActivePanelCounters] = useState(COUNTERS_PANELS.NORMAL);
+	const [slideIndexCounters, setSlideIndexCounters] = useState(0);
 	
 	const loadService = async function () {
 		const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
@@ -124,6 +132,13 @@ const App = () => {
 		setActiveStory(panel);
 	};
 
+	const goBackFromEditMode = index => {
+		setActiveStory(STORIES.COUNTERS);
+		setActivePanelCounters(COUNTERS_PANELS.BIG);
+		setSlideIndexCounters(index);
+		setEditMode(false);
+	};
+
 	const viewIntro = async function () {
 		try {
 			await bridge.send('VKWebAppStorageSet', {
@@ -155,8 +170,7 @@ const App = () => {
 	if (step === STEPS.LOADER_INTRO) {
 		return (
 			<View activePanel={activePanel} popout={popout}>
-				<Panel id={LOADER_INTRO.LOADER} >
-				</Panel>
+				<Panel id={LOADER_INTRO.LOADER}/>
 				<Intro id={LOADER_INTRO.INTRO} go={viewIntro} snackbarError={snackbar}/>
 			</View>
 		);
@@ -201,7 +215,11 @@ const App = () => {
 			</View> */}
 			<Counters 
 				id={STORIES.COUNTERS} 
-				go={() => go(STORIES.CREATE)} 
+				go={() => go(STORIES.CREATE)}
+				activePanel={activePanelCounters}
+				setActivePanel={setActivePanelCounters}
+				slideIndex={slideIndexCounters}
+				setSlideIndex={setSlideIndexCounters}
 				service={service} 
 				counters={counters} 
 				fetchedUser={fetchedUser}
@@ -210,7 +228,8 @@ const App = () => {
 			<View id={STORIES.CREATE} activePanel={STORIES.CREATE} popout={popout}>
 				<Create 
 					id={STORIES.CREATE} 
-					go={() => go(STORIES.COUNTERS)} 
+					go={() => go(STORIES.COUNTERS)}
+					goBackFromEditMode={goBackFromEditMode} 
 					service={service} 
 					setService={setService} 
 					loadCounters={loadCounters}

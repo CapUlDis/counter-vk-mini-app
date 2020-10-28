@@ -15,7 +15,7 @@ import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import CellButton from '@vkontakte/vkui/dist/components/CellButton/CellButton';
 import FormStatus from '@vkontakte/vkui/dist/components/FormStatus/FormStatus';
 import Alert from '@vkontakte/vkui/dist/components/Alert/Alert';
-import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
+import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 
 import './Create.css';
@@ -34,7 +34,7 @@ const STORAGE_KEYS = {
 	SERVICE: 'serviceCounters',
 };
 
-const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMode, setPopout }) => {
+const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters, editMode, setEditMode, setPopout }) => {
 	if (editMode) { 
 		window.localStorage.clear();
 	};
@@ -197,7 +197,7 @@ const Create = ({ id, go, service, setService, loadCounters, editMode, setEditMo
 	return (
 		<Panel id={id}>
 			<PanelHeader 
-				left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
+				left={editMode && <PanelHeaderButton><Icon24Back fill='#4bb34b' onClick={() => { goBackFromEditMode(editMode.index) }}/></PanelHeaderButton>}
 				separator={false}>{!editMode ? 'Создать' : 'Редактировать'}
 			</PanelHeader>
 			<FormLayout>

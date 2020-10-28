@@ -12,6 +12,7 @@ import Gallery from '@vkontakte/vkui/dist/components/Gallery/Gallery';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import Icon56AddCircleOutline from '@vkontakte/icons/dist/56/add_circle_outline';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
+import Icon24Back from '@vkontakte/icons/dist/24/back';
 
 import './Counters.css';
 import CounterCard from './components/CounterCard';
@@ -36,9 +37,7 @@ moment.updateLocale('ru', {
 });
 
 
-const Counters = ({ id, go, service, counters, fetchedUser, appLink, setEditMode }) => {
-	const [activePanel, setActivePanel] = useState(VIEW.NORMAL);
-	const [slideIndex, setSlideIndex] = useState(0);
+const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideIndex, service, counters, fetchedUser, appLink, setEditMode }) => {
 	const [popout, setPopout] = useState(null);
 
 	const dayOfNum = (number) => {  
@@ -130,7 +129,7 @@ const Counters = ({ id, go, service, counters, fetchedUser, appLink, setEditMode
 			</Panel>
 			<Panel id={VIEW.BIG}>
 				<PanelHeader 
-					left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
+					left={<PanelHeaderButton><Icon24Back fill='#4bb34b' onClick={() => setActivePanel(VIEW.NORMAL)}/></PanelHeaderButton>}
 					separator={false}
 					>Счетчики
 				</PanelHeader>
