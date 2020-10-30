@@ -102,7 +102,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 		
 		await loadCounters();
 
-		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0}));
+		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
 		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
 
 		window.localStorage.clear();
@@ -188,7 +188,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 		window.localStorage.clear();
 
 		// Проверочные логи
-		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 20, "offset": 0}));
+		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
 		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
 		go();
 		return window.scrollTo(0, document.body.scrollHeight);

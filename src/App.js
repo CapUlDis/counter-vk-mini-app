@@ -228,7 +228,10 @@ const App = () => {
 			<View id={STORIES.CREATE} activePanel={STORIES.CREATE} popout={popout}>
 				<Create 
 					id={STORIES.CREATE} 
-					go={() => go(STORIES.COUNTERS)}
+					go={() => {
+						setActivePanelCounters(COUNTERS_PANELS.NORMAL);
+						go(STORIES.COUNTERS);
+					}}
 					goBackFromEditMode={goBackFromEditMode} 
 					service={service} 
 					setService={setService} 
