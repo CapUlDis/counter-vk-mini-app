@@ -84,7 +84,6 @@ const BigCounterCard = ({ counterId, switchCard, counter, days, date, status, fe
                 <Icon28WriteOutline 
                     className="BigCounterCard__edit" 
                     onClick={() => {
-                        counter.counterId = counterId;
                         counter.index = index;
                         setEditMode(counter);
                         go();

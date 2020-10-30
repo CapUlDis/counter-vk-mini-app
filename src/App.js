@@ -14,6 +14,7 @@ import Icon28MenuOutline from '@vkontakte/icons/dist/28/menu_outline';
 import Icon24Error from '@vkontakte/icons/dist/24/error';
 
 import '@vkontakte/vkui/dist/vkui.css';
+import { standardCounters } from './components/standardCounters';
 
 import Counters from './panels/Counters';
 import Create from './panels/Create';
@@ -146,7 +147,9 @@ const App = () => {
 				value: JSON.stringify({
 					hasSeenIntro: true,
 					counters: [],
-					deletedCounters: []
+					deletedCounters: [],
+					standardCounters,
+					catalog: standardCounters.map(() => true)
 				})
 			});
 
