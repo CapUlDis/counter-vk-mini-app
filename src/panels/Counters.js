@@ -65,20 +65,19 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 						className='CreateButton' 
 						mode='commerce' 
 						size='xl' 
-						// onClick={() => {
-						// 	async function delService() {
-						// 		await bridge.send('VKWebAppStorageSet', {
-						// 			key: 'serviceCounters',
-						// 			value: JSON.stringify({
-						// 				hasSeenIntro: false,
-						// 				counters: [],
-						// 				deletedCounters: []
-						// 			})
-						// 		});
-						// 	}
-						// 	delService();
-						// }}
-						onClick={pickCounter}
+						onClick={() => {
+							async function delService() {
+								await bridge.send('VKWebAppStorageSet', {
+									key: 'serviceCounters',
+									value: JSON.stringify({
+										hasSeenIntro: false,
+										counters: [],
+										deletedCounters: []
+									})
+								});
+							}
+							delService();
+						}}
 						>
 						Стереть service
 					</Button>

@@ -145,7 +145,8 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 					howCount,
 					pub,
 					coverType,
-					coverId
+					coverId,
+					standard: false
 				})
 			});
 		}
