@@ -7,18 +7,20 @@ import './CounterCard.css'
 import { images, colors } from '../components/img/Covers';
 
 
-const CounterCard = ({ switchCard, view, counter, days, date, status, index, id }) => (
-    <Card size="l" mode="shadow" id={id}>
-        <label className="CounterCard">
-            <input
-                className="CounterCard__button"
-                type="button"
-                onClick={() => {switchCard(view, index)}}
-            />
-            {counter.coverType === "color"
-                ? <div className="CounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
-                : <div className="CounterCard__cover" style={{ background: `url(${images[parseInt(counter.coverId) - 11].medium}) no-repeat center`, backgroundSize: "cover" }} />
-            }
+const CounterCard = ({ switchCard, view, counter, days, date, status, index, id }, props) => {
+    return (
+        <Card size="l" mode="shadow" id={id}>
+            <label className="CounterCard">
+                <input
+                    className="CounterCard__button"
+                    type="button"
+                    onClick={() => {switchCard(view, index)}}
+                />
+                {counter.coverType === "color"
+                    ? <div className="CounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
+                    : <div className="CounterCard__cover" style={{ background: `url(${images[parseInt(counter.coverId) - 11].medium}) no-repeat center`, backgroundSize: "cover" }} />
+                }
+            </label>
             <div className="CounterCard__text">
                 <div className="CounterCard__row">
                     <Title level="3" weight="semibold" style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>{counter.title}</Title>
@@ -29,8 +31,9 @@ const CounterCard = ({ switchCard, view, counter, days, date, status, index, id 
                     <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{status}</Caption>
                 </div>
             </div>
-        </label>
-    </Card>
-);
+            {props.children}
+        </Card>
+    );
+}
 
 export default CounterCard;

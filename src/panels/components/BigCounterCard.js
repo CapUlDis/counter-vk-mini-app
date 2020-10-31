@@ -81,13 +81,15 @@ const BigCounterCard = ({ counterId, switchCard, counter, days, date, status, fe
                 }
             </label>
             <div className="BigCounterCard__text">
-                <Icon28WriteOutline 
+                {!counter.standard &&
+                    <Icon28WriteOutline 
                     className="BigCounterCard__edit" 
                     onClick={() => {
                         counter.index = index;
                         setEditMode(counter);
                         go();
-                }}/>
+                    }}/>
+                }
                 <div className="BigCounterCard__row">
                     <Title level="3" weight="semibold" style={{ textOverflow: 'ellipsis', overflow: 'hidden', marginRight: '40px' }}>{counter.title}</Title>
                     <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{date.format('LL')}</Caption>
@@ -96,11 +98,13 @@ const BigCounterCard = ({ counterId, switchCard, counter, days, date, status, fe
                     <Title level="3" weight="semibold">{days}</Title>
                     <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{status}</Caption>
                 </div>
-                <div className="BigCounterCard__avatars">
-                    {fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200} size={24}/> : null}
-                    <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)", marginLeft: "8px" }}>Ждете Вы</Caption>
-                </div>
-                <Button size="xl" mode="secondary" className="BigCounterCard__button"before={<Icon24ShareOutline/>} onClick={openShareMenu}>Поделиться</Button>
+                {!counter.standard &&
+                    <div className="BigCounterCard__avatars">
+                        {fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200} size={24}/> : null}
+                        <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)", marginLeft: "8px" }}>Ждете Вы</Caption>
+                    </div>
+                }
+                <Button size="xl" mode="secondary" className="BigCounterCard__button"before={!counter.standard && <Icon24ShareOutline/>} onClick={!counter.standard && openShareMenu}>{!counter.standard ? 'Поделиться' : 'Присоединиться'}</Button>
             </div>
         </Card>
     );

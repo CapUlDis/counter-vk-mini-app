@@ -213,9 +213,6 @@ const App = () => {
 				><Icon28MenuOutline/></TabbarItem>
 			</Tabbar>
 		}>
-			{/* <View id={STORIES.COUNTERS} activePanel={STORIES.COUNTERS}>
-				<Counters id={STORIES.COUNTERS} go={() => go(STORIES.CREATE)} service={service} counters={counters} loadCounters={loadCounters}/>
-			</View> */}
 			<Counters 
 				id={STORIES.COUNTERS} 
 				go={() => go(STORIES.CREATE)}
@@ -243,9 +240,9 @@ const App = () => {
 					setEditMode={setEditMode}
 					setPopout={setPopout}/>
 			</View>
-			<View id={STORIES.CATALOG} activePanel={STORIES.CATALOG}>
-				<Catalog id={STORIES.CATALOG}/>
-			</View>
+			<Catalog 
+				id={STORIES.CATALOG}
+				service={service}/>
 		</Epic>
 	);
 }
