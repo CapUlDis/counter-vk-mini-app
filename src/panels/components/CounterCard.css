@@ -10,16 +10,14 @@
 
 .CounterCard__text {
     width: 100%;
-    padding-top: 15px;
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 13px;
+    padding: 16px;
+    box-sizing: border-box;
 }
 
 .CounterCard__row {
     display: flex;
     justify-content: space-between;
-    margin: 0px 16px 3px;
+    margin: 0px 0px 3px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -27,4 +25,10 @@
 
 .CounterCard__button {
     display: none;
+}
+
+.Button__join {
+    margin-top: 9px;
+    background-color: #EBF7EB;
+    color:  #4bb34b;
 }

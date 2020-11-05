@@ -7,7 +7,7 @@ import './CounterCard.css'
 import { images, colors } from '../components/img/Covers';
 
 
-const CounterCard = ({ switchCard, view, counter, days, date, status, index, id }, props) => {
+const CounterCard = ({ switchCard, view, counter, days, date, status, index, id, ...props }) => {
     return (
         <Card size="l" mode="shadow" id={id}>
             <label className="CounterCard">
@@ -30,8 +30,8 @@ const CounterCard = ({ switchCard, view, counter, days, date, status, index, id 
                     <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{date.format('LL')}</Caption>
                     <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{status}</Caption>
                 </div>
+                {props.children}
             </div>
-            {props.children}
         </Card>
     );
 }

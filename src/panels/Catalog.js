@@ -88,7 +88,7 @@ const Catalog = ({ id, service }) => {
 									switchCard={switchCard}
 									view={VIEW.BIG}
 								>
-									<Button size="xl" mode="secondary" className="CounterCard__button">Присоединиться</Button>
+									<Button size="xl" mode="secondary" className="Button__join">Присоединиться</Button>
 								</CounterCard>
 							)})
 						}
