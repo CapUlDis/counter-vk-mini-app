@@ -135,8 +135,7 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 									switchCard={switchCard}
 									view={VIEW.BIG}
 								>
-									<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter, ind: index })}
-										>Присоединиться</Button>
+									<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter, ind: index })}>Присоединиться</Button>
 								</CounterCard>
 							)})
 						}
@@ -182,8 +181,9 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 									status={status}
 									switchCard={switchCard}
 									setActivePanel={setActivePanel}
-									joinClick={() => handleJoinClick({ counter: standCounter, ind: index })}
-								/>
+								>
+									<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter, ind: index })}>Присоединиться</Button>
+								</BigCounterCard>
 							);
 						})
 						
