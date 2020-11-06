@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-// import bridge from '@vkontakte/vk-bridge';
-// import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout';
+import html2canvas from 'html2canvas';
+import { usePlatform, IOS } from '@vkontakte/vkui'
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -10,13 +10,21 @@ import Group from '@vkontakte/vkui/dist/components/Group/Group';
 import CardGrid from '@vkontakte/vkui/dist/components/CardGrid/CardGrid';
 import Gallery from '@vkontakte/vkui/dist/components/Gallery/Gallery';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
+import ActionSheet from '@vkontakte/vkui/dist/components/ActionSheet/ActionSheet';
+import ActionSheetItem from '@vkontakte/vkui/dist/components/ActionSheetItem/ActionSheetItem';
+import Icon28ArticleOutline from '@vkontakte/icons/dist/28/article_outline';
+import Icon28MessageOutline from '@vkontakte/icons/dist/28/message_outline';
+import Icon28StoryOutline from '@vkontakte/icons/dist/28/story_outline';
 import Icon56AddCircleOutline from '@vkontakte/icons/dist/56/add_circle_outline';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
+import Icon24ShareOutline from '@vkontakte/icons/dist/24/share_outline';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 
 import './Counters.css';
 import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
+import { shareContentByStory, shareContentByWall, shareContentByMessage } from './helpers/share';
+
 
 const VIEW = {
 	NORMAL: 'normal',
@@ -39,6 +47,30 @@ moment.updateLocale('ru', {
 
 const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideIndex, service, counters, fetchedUser, appLink, setEditMode }) => {
 	const [popout, setPopout] = useState(null);
+	const osname = usePlatform();
+    
+    const shareCounterCardByStory = async ({ counterId }) => {
+		setActivePanel(VIEW.NORMAL);
+		const counter = document.getElementById(counterId);
+        let imageUrl = null;
+		await html2canvas(counter, { scale: 2, backgroundColor: null, width: '351', onclone: document => {
+            document.getElementById(counterId).style.padding = "0";
+            document.getElementById(counterId).style.width = "351px";
+            document.getElementById(counterId).style.borderRadius = "10px 10px 10px 10px";
+		} }).then(canvas => {
+            imageUrl = canvas.toDataURL("image/png");
+		});
+        shareContentByStory(appLink, imageUrl);
+        setActivePanel(VIEW.BIG);
+    };
+
+    const shareCounterAppByWall = async () => {
+        shareContentByWall('Считай количество дней от или до даты с помощью приложения "Счётчики времени"!', appLink);
+    };
+
+    const shareCounterAppByMessage = async () => {
+        shareContentByMessage(appLink);
+    };
 
 	const dayOfNum = (number) => {  
 		let cases = [2, 0, 1, 1, 1, 2]; 
@@ -49,6 +81,23 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 	const switchCard = (panel, index) => {
 		setSlideIndex(index);
 		setActivePanel(panel);
+	};
+
+	const openShareMenu = ({ counterId }) => {
+		setPopout(
+			<ActionSheet onClose={() => setPopout(null)}>
+				<ActionSheetItem autoclose before={<Icon28StoryOutline/>} onClick={() => shareCounterCardByStory({ counterId })}>
+					В историю
+				</ActionSheetItem>
+				<ActionSheetItem autoclose before={<Icon28ArticleOutline/>} onClick={() => shareCounterAppByWall({ counterId })}>
+					На стену
+				</ActionSheetItem>
+				<ActionSheetItem autoclose before={<Icon28MessageOutline/>} onClick={() => shareCounterAppByMessage({ counterId })}>
+					В личные сообщения
+				</ActionSheetItem>
+				{osname === IOS && <ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
+			</ActionSheet>
+		);
 	};
 
 	return (
@@ -156,7 +205,6 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 							}
 							return (
 								<BigCounterCard key={key}
-									counterId={key}
 									index={index}
 									counter={counter}
 									date={date}
@@ -164,12 +212,11 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 									status={status}
 									fetchedUser={fetchedUser}
 									switchCard={switchCard}
-									setPopout={setPopout}
-									setActivePanel={setActivePanel}
-									appLink={appLink}
 									setEditMode={setEditMode}
 									go={go}
-								/>
+								>
+									<Button size="xl" mode="secondary" className="BigCounterCard__button"before={<Icon24ShareOutline/>} onClick={() => openShareMenu({ counterId: key })}>Поделиться</Button>
+								</BigCounterCard>
 							);
 						})
 					}
