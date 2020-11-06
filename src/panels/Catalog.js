@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import bridge from '@vkontakte/vk-bridge';
 import View from '@vkontakte/vkui/dist/components/View/View';
-
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton';
@@ -14,6 +14,9 @@ import Icon24Back from '@vkontakte/icons/dist/24/back';
 import './Counters.css';
 import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
+import { saveNewCounter, saveService } from '../components/storage';
+import { standardCounters } from '../components/standardCounters';
+
 
 const moment = require('moment');
 require('moment/locale/ru');
@@ -34,7 +37,7 @@ const VIEW = {
 	BIG: 'big'
 };
 
-const Catalog = ({ id, service }) => {
+const Catalog = ({ service, loadCounters, setService, go }) => {
 	const [activePanel, setActivePanel] = useState(VIEW.NORMAL);
 	const [slideIndex, setSlideIndex] = useState(0);
 
@@ -50,6 +53,47 @@ const Catalog = ({ id, service }) => {
 	};
 
 	// console.log(service.standardCounters);
+
+	const handleJoinClick = async ({ counter, ind }) => {
+		try {
+
+			if (service.deletedCounters.length === 0) {
+				const counterKey = `counter${service.counters.length + 1}`;
+				await saveNewCounter(counterKey, counter);
+				service.counters.push(counterKey);
+				service.catalog[ind] = false;
+				
+				await saveService(service);
+				setService(service);
+				
+				await loadCounters();
+				// Проверочные логи
+				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
+			} else {
+				const counterKey = service.deletedCounters.shift()
+				await saveNewCounter(counterKey, counter);
+				service.counters.push(counterKey);
+				service.catalog[ind] = false;
+	
+				await saveService(service);
+				setService(service);
+				
+				await loadCounters();
+				// Проверочные логи
+				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
+			}
+	
+			// Проверочные логи
+			console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
+			console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
+			
+			go();
+			return window.scrollTo(0, document.body.scrollHeight);
+		
+		} catch (error) {
+			console.log(error);
+		}
+	};
 	
 	return (
 		<View activePanel={activePanel}>
@@ -61,7 +105,10 @@ const Catalog = ({ id, service }) => {
 				</PanelHeader>
 				<Group>
 					<CardGrid style={{ margin: "4px 0px" }}>
-						{service.standardCounters.map((elem, index) => {
+						{standardCounters.map((elem, index) => {
+							if (!service.catalog[index]) {
+								return null;
+							}
 							const standCounter = elem;
 							standCounter.index = index;
 							const date = moment(standCounter.date);
@@ -88,7 +135,8 @@ const Catalog = ({ id, service }) => {
 									switchCard={switchCard}
 									view={VIEW.BIG}
 								>
-									<Button size="xl" mode="secondary" className="Button__join">Присоединиться</Button>
+									<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter, ind: index })}
+										>Присоединиться</Button>
 								</CounterCard>
 							)})
 						}
@@ -108,7 +156,7 @@ const Catalog = ({ id, service }) => {
 					initialSlideIndex={slideIndex}
 					style={{ marginTop: "9px" }}
 				>
-					{service.standardCounters.map((elem, index) => {
+					{standardCounters.map((elem, index) => {
 							const standCounter = elem;
 							standCounter.index = index;
 							const date = moment(standCounter.date);
@@ -134,6 +182,7 @@ const Catalog = ({ id, service }) => {
 									status={status}
 									switchCard={switchCard}
 									setActivePanel={setActivePanel}
+									joinClick={() => handleJoinClick({ counter: standCounter, ind: index })}
 								/>
 							);
 						})

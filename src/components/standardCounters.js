@@ -49,13 +49,23 @@ export const standardCounters = [
         standard: true
     },
     {
+        counterId: 'standCounter8',
+        title: title8,
+        date: date8,
+        howCount: 'to',
+        pub: true,
+        coverType: 'theme',
+        coverId: '18',
+        standard: true
+    },
+    {
         counterId: 'standCounter2',
         title: title2,
         date: date2,
         howCount: 'to',
         pub: true,
-        coverType: 'color',
-        coverId: '6',
+        coverType: 'theme',
+        coverId: '19',
         standard: true
     },
     {
@@ -106,16 +116,6 @@ export const standardCounters = [
         pub: true,
         coverType: 'color',
         coverId: '3',
-        standard: true
-    },
-    {
-        counterId: 'standCounter8',
-        title: title8,
-        date: date8,
-        howCount: 'to',
-        pub: true,
-        coverType: 'theme',
-        coverId: '18',
         standard: true
     },
     {

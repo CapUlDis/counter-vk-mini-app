@@ -52,13 +52,14 @@ const COUNTERS_PANELS = {
 };
 
 const App = () => {
-	const [step, setStep] = useState(STEPS.LOADER_INTRO);
-	const [activePanel, setActivePanel] = useState(LOADER_INTRO.LOADER);
-	const [activeStory, setActiveStory] = useState(STORIES.COUNTERS);
 	const [service, setService] = useState({});
 	const [counters, setCounters] = useState({});
 	const [fetchedUser, setUser] = useState(null);
 	const [editMode, setEditMode] = useState(false);
+
+	const [step, setStep] = useState(STEPS.LOADER_INTRO);
+	const [activePanel, setActivePanel] = useState(LOADER_INTRO.LOADER);
+	const [activeStory, setActiveStory] = useState(STORIES.COUNTERS);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
 	const [snackbar, setSnackbar] = useState(false);
 
@@ -89,15 +90,28 @@ const App = () => {
 	useEffect(() => {
 		(async () => {
 			try {
-				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
+				// await bridge.send('VKWebAppStorageSet', {
+				// 	key: 'serviceCounters',
+				// 	value: JSON.stringify({
+				// 		hasSeenIntro: false,
+				// 		counters: [],
+				// 		deletedCounters: []
+				// 	})
+				// });
+				console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
+				console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 50, "offset": 0}));
+				console.log(standardCounters);
 
+				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
+				
 				if (!getObject.keys[0].value) {
 					setPopout(null);
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
-
+				// console.log('tut');
+				
 				const fetchedService = JSON.parse(getObject.keys[0].value);
-
+				
 				if (!fetchedService.hasSeenIntro) {
 					setPopout(null);
 					return setActivePanel(LOADER_INTRO.INTRO);
@@ -125,6 +139,7 @@ const App = () => {
 				>
 					Проблема с получением данных из Storage.
 				</Snackbar>);
+				console.log(error);
 			}
 		})();
 	}, []);
@@ -148,7 +163,6 @@ const App = () => {
 					hasSeenIntro: true,
 					counters: [],
 					deletedCounters: [],
-					standardCounters,
 					catalog: standardCounters.map(() => true)
 				})
 			});
@@ -242,7 +256,10 @@ const App = () => {
 			</View>
 			<Catalog 
 				id={STORIES.CATALOG}
-				service={service}/>
+				service={service}
+				setService={setService}
+				loadCounters={loadCounters}
+				go={() => go(STORIES.COUNTERS)}/>
 		</Epic>
 	);
 }
