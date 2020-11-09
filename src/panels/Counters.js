@@ -18,6 +18,8 @@ import Icon28StoryOutline from '@vkontakte/icons/dist/28/story_outline';
 import Icon56AddCircleOutline from '@vkontakte/icons/dist/56/add_circle_outline';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 import Icon24ShareOutline from '@vkontakte/icons/dist/24/share_outline';
+import Icon28WriteOutline from '@vkontakte/icons/dist/28/write_outline';
+import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 
 import './Counters.css';
@@ -221,9 +223,20 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 										status={status}
 										fetchedUser={fetchedUser}
 										switchCard={switchCard}
-										setEditMode={setEditMode}
-										go={go}
-										openDeleteDialogue={openDeleteDialogue}
+										right={!counter.standard 
+											? <Icon28WriteOutline 
+												className="BigCounterCard__edit" 
+												onClick={() => {
+													counter.index = index;
+													setEditMode(counter);
+													go();
+												}}
+											/>
+											: <Icon28DeleteOutline
+												className="BigCounterCard__edit" 
+												onClick={() => openDeleteDialogue({ counterId: counter.counterId, standard: counter.standard})}
+											/>
+										}
 									>
 										<Button size="xl" mode="secondary" className="BigCounterCard__button"before={<Icon24ShareOutline/>} onClick={() => openShareMenu({ counterId: key })}>Поделиться</Button>
 									</BigCounterCard>

@@ -3,8 +3,6 @@ import Card from '@vkontakte/vkui/dist/components/Card/Card';
 import Title from '@vkontakte/vkui/dist/components/Typography/Title/Title';
 import Caption from '@vkontakte/vkui/dist/components/Typography/Caption/Caption';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
-import Icon28WriteOutline from '@vkontakte/icons/dist/28/write_outline';
-import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 
 import './BigCounterCard.css'
 import { images, colors } from '../components/img/Covers';
@@ -15,7 +13,7 @@ const VIEW = {
 	BIG: 'big'
 };
 
-const BigCounterCard = ({ switchCard, counter, days, date, status, fetchedUser, index, setEditMode, go, openDeleteDialogue, ...props }) => (
+const BigCounterCard = ({ switchCard, counter, days, date, status, fetchedUser, index, ...props }) => (
     <Card size="l" mode="shadow" className="BigCounterCard">
         <label>
             <input
@@ -29,20 +27,7 @@ const BigCounterCard = ({ switchCard, counter, days, date, status, fetchedUser, 
             }
         </label>
         <div className="BigCounterCard__text">
-            {!counter.standard 
-                ? <Icon28WriteOutline 
-                    className="BigCounterCard__edit" 
-                    onClick={() => {
-                        counter.index = index;
-                        setEditMode(counter);
-                        go();
-                    }}
-                />
-                : <Icon28DeleteOutline
-                    className="BigCounterCard__edit" 
-                    onClick={() => openDeleteDialogue({ counterId: counter.counterId, standard: counter.standard})}
-                />
-            }
+            {props.right}
             <div className="BigCounterCard__row">
                 <Title level="3" weight="semibold" style={{ textOverflow: 'ellipsis', overflow: 'hidden', marginRight: '40px' }}>{counter.title}</Title>
                 <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{date.format('LL')}</Caption>
@@ -58,7 +43,6 @@ const BigCounterCard = ({ switchCard, counter, days, date, status, fetchedUser, 
                 </div>
             }
             {props.children}
-            {/* <Button size="xl" mode="secondary" className="BigCounterCard__button"before={!counter.standard && <Icon24ShareOutline/>} onClick={!counter.standard && openShareMenu}>{!counter.standard ? 'Поделиться' : 'Присоединиться'}</Button> */}
         </div>
     </Card>
 );
