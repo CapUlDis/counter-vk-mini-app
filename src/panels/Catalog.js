@@ -112,7 +112,6 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 								return null;
 							}
 							const standCounter = elem;
-							standCounter.index = index;
 							const date = moment(standCounter.date);
 							let days = null;
 							let status = null;
@@ -129,7 +128,7 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 								<CounterCard
 									key={standCounter.counterId}
 									id={standCounter.counterId}
-									index={index}
+									index={standCounter.standard}
 									counter={standCounter}
 									date={date}
 									days={days}
@@ -159,7 +158,6 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 				>
 					{standardCounters.map((elem, index) => {
 							const standCounter = elem;
-							standCounter.index = index;
 							const date = moment(standCounter.date);
 							let days = null;
 							let status = null;
@@ -176,7 +174,7 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 								<BigCounterCard 
 									key={standCounter.counterId}
 									counterId={standCounter.counterId}
-									index={index}
+									index={standCounter.standard}
 									counter={standCounter}
 									date={date}
 									days={days}

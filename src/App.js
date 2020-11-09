@@ -249,6 +249,7 @@ const App = () => {
 				<TabbarItem
 				onClick={() => {
 					setEditMode(false);
+					setActivePanelCounters(COUNTERS_PANELS.NORMAL);
 					setActiveStory(STORIES.COUNTERS);
 					window.scrollTo(0, 0);
 				}}
