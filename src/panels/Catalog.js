@@ -60,7 +60,7 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 			if (service.deletedCounters.length === 0) {
 				const counterKey = `counter${service.counters.length + 1}`;
 				counter.counterId = counterKey;
-				await saveNewCounter(counterKey, counter);
+				await saveNewCounter({ counterKey: counterKey, counterObj: counter });
 				service.counters.push(counterKey);
 				service.catalog[ind] = false;
 				
@@ -73,7 +73,7 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 			} else {
 				const counterKey = service.deletedCounters.shift();
 				counter.counterId = counterKey;
-				await saveNewCounter(counterKey, counter);
+				await saveNewCounter({ counterKey: counterKey, counterObj: counter });
 				service.counters.push(counterKey);
 				service.catalog[ind] = false;
 	

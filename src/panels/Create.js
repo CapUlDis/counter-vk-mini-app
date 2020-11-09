@@ -22,7 +22,7 @@ import './Create.css';
 import { useLocalStorage } from './helpers/useLocalStorage';
 import RadioCard from './components/RadioCard';
 import { images, colors } from './components/img/Covers';
-import { saveService } from '../components/storage';
+import { saveService, saveNewCounter } from '../components/storage';
 
 
 const COVERS = {
@@ -88,25 +88,23 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 				return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
 			}
 
-			async function saveNewCounter(counterKey) {
-				await bridge.send('VKWebAppStorageSet', {
-					key: counterKey,
-					value: JSON.stringify({
-						counterId: counterKey,
-						title,
-						date,
-						howCount,
-						pub,
-						coverType,
-						coverId,
-						standard: false
-					})
-				});
-			}
+			const counterObj = {
+				counterId: editMode? editMode.counterId : null,
+				title,
+				date,
+				howCount,
+				pub,
+				coverType,
+				coverId,
+				standard: false
+			};
 
 			if (editMode) {
-				await saveNewCounter(editMode.counterId);
+				await saveNewCounter({ counterKey: editMode.counterId, counterObj });
 				await loadCounters();
+
+				// Проверочные логи
+				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [editMode.counterId]}));
 
 				window.localStorage.clear();
 				setEditMode(false);
@@ -117,7 +115,8 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 
 			if (service.deletedCounters.length === 0) {
 				const counterKey = `counter${service.counters.length + 1}`;
-				await saveNewCounter(counterKey);
+				counterObj.counterId = counterKey;
+				await saveNewCounter({ counterKey: counterKey, counterObj });
 				service.counters.push(counterKey);
 				
 				await saveService(service);
@@ -127,8 +126,9 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 				// Проверочные логи
 				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 			} else {
-				const counterKey = service.deletedCounters.shift()
-				await saveNewCounter(counterKey);
+				const counterKey = service.deletedCounters.shift();
+				counterObj.counterId = counterKey;
+				await saveNewCounter({ counterKey: counterKey, counterObj });
 				service.counters.push(counterKey);
 
 				await saveService(service);
@@ -136,7 +136,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 				
 				await loadCounters();
 				// Проверочные логи
-				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}))
+				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 			}
 			
 			window.localStorage.clear();

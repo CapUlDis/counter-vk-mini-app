@@ -17,7 +17,7 @@ async function getService() {
     return JSON.parse(getObject.keys[0].value);
 }
 
-async function saveNewCounter(counterKey, counterObj) {
+async function saveNewCounter({ counterKey, counterObj }) {
     await bridge.send('VKWebAppStorageSet', {
         key: counterKey,
         value: JSON.stringify(counterObj)
