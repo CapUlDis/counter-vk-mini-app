@@ -107,6 +107,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 
 				// Проверочные логи
 				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [editMode.counterId]}));
+				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
 
 				window.localStorage.clear();
 				setEditMode(false);
@@ -137,11 +138,10 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 
 			// Проверочные логи
 			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
-			console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
 			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
 
 			go();
-			
+
 			return window.scrollTo(0, document.body.scrollHeight);
 
 		} catch(error) {

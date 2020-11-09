@@ -52,41 +52,30 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 		setActivePanel(panel);
 	};
 
-	// console.log(service.standardCounters);
-
 	const handleJoinClick = async ({ counter, ind }) => {
 		try {
+			let counterKey = null;
 
 			if (service.deletedCounters.length === 0) {
-				const counterKey = `counter${service.counters.length + 1}`;
+				counterKey = `counter${service.counters.length + 1}`;
 				counter.counterId = counterKey;
-				await saveNewCounter({ counterKey: counterKey, counterObj: counter });
 				service.counters.push(counterKey);
 				service.catalog[ind] = false;
-				
-				await saveService(service);
-				setService(service);
-				
-				await loadCounters();
-				// Проверочные логи
-				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 			} else {
-				const counterKey = service.deletedCounters.shift();
+				counterKey = service.deletedCounters.shift();
 				counter.counterId = counterKey;
-				await saveNewCounter({ counterKey: counterKey, counterObj: counter });
 				service.counters.push(counterKey);
 				service.catalog[ind] = false;
-	
-				await saveService(service);
-				setService(service);
-				
-				await loadCounters();
-				// Проверочные логи
-				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 			}
-	
+			
+			await saveNewCounter({ counterKey: counterKey, counterObj: counter });
+
+			await saveService(service);
+			setService(service);
+			
+			await loadCounters();
 			// Проверочные логи
-			console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
+			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 			console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 			
 			go();
