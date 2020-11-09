@@ -314,7 +314,10 @@ const App = () => {
 				service={service}
 				setService={setService}
 				loadCounters={loadCounters}
-				go={() => go(STORIES.COUNTERS)}
+				go={() => {
+					setActivePanelCounters(COUNTERS_PANELS.NORMAL);
+					go(STORIES.COUNTERS);
+				}}
 				popout={popout}/>
 		</Epic>
 	);
