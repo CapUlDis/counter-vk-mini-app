@@ -101,7 +101,7 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 		<View activePanel={activePanel}>
 			<Panel id={VIEW.NORMAL}>
 				<PanelHeader 
-					left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
+					// left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
 					separator={false}
 					>Каталог
 				</PanelHeader>

@@ -105,7 +105,7 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 		<View id={id} activePanel={activePanel} popout={popout}> 
 			<Panel id={VIEW.NORMAL}>
 				<PanelHeader 
-					left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
+					// left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
 					separator={false}
 					>Счетчики
 				</PanelHeader>
