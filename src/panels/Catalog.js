@@ -59,6 +59,7 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 
 			if (service.deletedCounters.length === 0) {
 				const counterKey = `counter${service.counters.length + 1}`;
+				counter.counterId = counterKey;
 				await saveNewCounter(counterKey, counter);
 				service.counters.push(counterKey);
 				service.catalog[ind] = false;
@@ -70,7 +71,8 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 				// Проверочные логи
 				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 			} else {
-				const counterKey = service.deletedCounters.shift()
+				const counterKey = service.deletedCounters.shift();
+				counter.counterId = counterKey;
 				await saveNewCounter(counterKey, counter);
 				service.counters.push(counterKey);
 				service.catalog[ind] = false;

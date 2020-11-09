@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import html2canvas from 'html2canvas';
 import { usePlatform, IOS } from '@vkontakte/vkui'
 import View from '@vkontakte/vkui/dist/components/View/View';
@@ -45,8 +45,7 @@ moment.updateLocale('ru', {
 });
 
 
-const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideIndex, service, counters, fetchedUser, appLink, setEditMode }) => {
-	const [popout, setPopout] = useState(null);
+const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideIndex, service, counters, fetchedUser, appLink, setEditMode, openDeleteDialogue, popout, setPopout }) => {
 	const osname = usePlatform();
     
     const shareCounterCardByStory = async ({ counterId }) => {
@@ -181,46 +180,58 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 					separator={false}
 					>Счетчики
 				</PanelHeader>
-				<Gallery
-					slideWidth="90%"
-					align="center"
-					className="BigCounters_Gallery"
-					initialSlideIndex={slideIndex}
-					style={{ marginTop: "9px" }}
-				>
-					{(counters.keys && fetchedUser) &&
-						counters.keys.map(({ key, value }, index) => {
-							const counter = value ? JSON.parse(value) : {};
-							const date = moment(counter.date);
-							let days = null;
-							let status = null;
-							if (counter.howCount === 'to') {
-								let daysDiff = date.diff(moment().startOf('day'), 'days');
-								days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
-								status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
-							} else {
-								let daysDiff = moment().diff(date, 'days');
-								days = daysDiff + ' ' + dayOfNum(daysDiff);
-								status = 'прошло';
-							}
-							return (
-								<BigCounterCard key={key}
-									index={index}
-									counter={counter}
-									date={date}
-									days={days}
-									status={status}
-									fetchedUser={fetchedUser}
-									switchCard={switchCard}
-									setEditMode={setEditMode}
-									go={go}
-								>
-									<Button size="xl" mode="secondary" className="BigCounterCard__button"before={<Icon24ShareOutline/>} onClick={() => openShareMenu({ counterId: key })}>Поделиться</Button>
-								</BigCounterCard>
-							);
-						})
-					}
-				</Gallery>
+				{service.counters.length === 0
+					? <Placeholder 
+						icon={<Icon56AddCircleOutline/>}
+						header="Создайте счетчик"
+						action={<Button size="l" mode="commerce" onClick={go}>Создать счетчик</Button>}
+						stretched>
+						<div className="Placeholder__text__in">
+							Здесь будут отображаться ваши счетчики.
+						</div>
+					</Placeholder>
+					: <Gallery
+						slideWidth="90%"
+						align="center"
+						className="BigCounters_Gallery"
+						initialSlideIndex={slideIndex}
+						style={{ marginTop: "9px" }}
+					>
+						{(counters.keys && fetchedUser) &&
+							counters.keys.map(({ key, value }, index) => {
+								const counter = value ? JSON.parse(value) : {};
+								const date = moment(counter.date);
+								let days = null;
+								let status = null;
+								if (counter.howCount === 'to') {
+									let daysDiff = date.diff(moment().startOf('day'), 'days');
+									days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
+									status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
+								} else {
+									let daysDiff = moment().diff(date, 'days');
+									days = daysDiff + ' ' + dayOfNum(daysDiff);
+									status = 'прошло';
+								}
+								return (
+									<BigCounterCard key={key}
+										index={index}
+										counter={counter}
+										date={date}
+										days={days}
+										status={status}
+										fetchedUser={fetchedUser}
+										switchCard={switchCard}
+										setEditMode={setEditMode}
+										go={go}
+										openDeleteDialogue={openDeleteDialogue}
+									>
+										<Button size="xl" mode="secondary" className="BigCounterCard__button"before={<Icon24ShareOutline/>} onClick={() => openShareMenu({ counterId: key })}>Поделиться</Button>
+									</BigCounterCard>
+								);
+							})
+						}
+					</Gallery>
+				}
 			</Panel>
 		</View>
 	)

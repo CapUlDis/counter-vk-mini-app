@@ -14,7 +14,6 @@ import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import CellButton from '@vkontakte/vkui/dist/components/CellButton/CellButton';
 import FormStatus from '@vkontakte/vkui/dist/components/FormStatus/FormStatus';
-import Alert from '@vkontakte/vkui/dist/components/Alert/Alert';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 
@@ -34,7 +33,7 @@ const STORAGE_KEYS = {
 	SERVICE: 'serviceCounters',
 };
 
-const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters, editMode, setEditMode, setPopout }) => {
+const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters, editMode, setEditMode, openDeleteDialogue}) => {
 	if (editMode) { 
 		window.localStorage.clear();
 	};
@@ -64,27 +63,6 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 		);
 	}
 
-	const openDeleteDialogue = () => {
-		setPopout(
-			<Alert
-				actions={[{
-					title: 'Отмена',
-					autoclose: true,
-					mode: 'cancel'
-					}, {
-					title: 'Удалить',
-					autoclose: true,
-					mode: 'destructive',
-					action: () => handleDeleteClick(),
-				}]}
-				onClose={() => setPopout(null)}
-			>
-				<h2>Удаление счетчика</h2>
-				<p>Вы уверены, что хотите удалить этот счетчик?</p>
-			</Alert>
-		);
-	}
-
 	const saveService = async function (serviceObject) {
 		await bridge.send('VKWebAppStorageSet', {
 			key: STORAGE_KEYS.SERVICE,
@@ -92,107 +70,91 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 		});
 	}
 
-	const handleDeleteClick = async () => {
-		const index = service.counters.indexOf(editMode.counterId);
-		service.counters.splice(index, 1);
-		service.deletedCounters.push(editMode.counterId);
-
-		await saveService(service);
-		setService(service);
-		
-		await loadCounters();
-
-		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
-		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
-
-		window.localStorage.clear();
-		setEditMode(false);
-
-		go();
-		return window.scrollTo(0, 0);
-	}
-
 	const handleCreateSaveClick = async function () {
-		if (!title.trim()) {
-			window.scrollTo(0, 0);
-			return setInputStatuses({ title: 'error', date: 'default', howCount: 'default' });
-		} 
-		if (!date) {
-			window.scrollTo(0, 0);
-			return setInputStatuses({ title: 'default', date: 'error', howCount: 'default' });
-		}
-		setInputStatuses({ title: 'default', date: 'default', howCount: 'default' });
-		
-		const today = new Date();
-		const userDate = new Date(date);
-		
-		if (today > userDate && howCount === 'to') {
-			window.scrollTo(0, 0);
-			return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
-		}
-		if (today < userDate && howCount === 'from') {
-			window.scrollTo(0, 0);
-			return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
-		}
+		try {
+			if (!title.trim()) {
+				window.scrollTo(0, 0);
+				return setInputStatuses({ title: 'error', date: 'default', howCount: 'default' });
+			} 
+			if (!date) {
+				window.scrollTo(0, 0);
+				return setInputStatuses({ title: 'default', date: 'error', howCount: 'default' });
+			}
+			setInputStatuses({ title: 'default', date: 'default', howCount: 'default' });
+			
+			const today = new Date();
+			const userDate = new Date(date);
+			
+			if (today > userDate && howCount === 'to') {
+				window.scrollTo(0, 0);
+				return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
+			}
+			if (today < userDate && howCount === 'from') {
+				window.scrollTo(0, 0);
+				return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
+			}
 
-		async function saveNewCounter(counterKey) {
-			await bridge.send('VKWebAppStorageSet', {
-				key: counterKey,
-				value: JSON.stringify({
-					counterId: counterKey,
-					title,
-					date,
-					howCount,
-					pub,
-					coverType,
-					coverId,
-					standard: false
-				})
-			});
-		}
+			async function saveNewCounter(counterKey) {
+				await bridge.send('VKWebAppStorageSet', {
+					key: counterKey,
+					value: JSON.stringify({
+						counterId: counterKey,
+						title,
+						date,
+						howCount,
+						pub,
+						coverType,
+						coverId,
+						standard: false
+					})
+				});
+			}
 
-		if (editMode) {
-			await saveNewCounter(editMode.counterId);
-			await loadCounters();
+			if (editMode) {
+				await saveNewCounter(editMode.counterId);
+				await loadCounters();
 
+				window.localStorage.clear();
+				setEditMode(false);
+
+				go();
+				return window.scrollTo(0, 0);
+			}
+
+			if (service.deletedCounters.length === 0) {
+				const counterKey = `counter${service.counters.length + 1}`;
+				await saveNewCounter(counterKey);
+				service.counters.push(counterKey);
+				
+				await saveService(service);
+				setService(service);
+				
+				await loadCounters();
+				// Проверочные логи
+				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
+			} else {
+				const counterKey = service.deletedCounters.shift()
+				await saveNewCounter(counterKey);
+				service.counters.push(counterKey);
+
+				await saveService(service);
+				setService(service);
+				
+				await loadCounters();
+				// Проверочные логи
+				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}))
+			}
+			
 			window.localStorage.clear();
-			setEditMode(false);
 
+			// Проверочные логи
+			console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
+			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
 			go();
-			return window.scrollTo(0, 0);
+			return window.scrollTo(0, document.body.scrollHeight);
+		} catch(error) {
+			console.log(error);
 		}
-
-		if (service.deletedCounters.length === 0) {
-			const counterKey = `counter${service.counters.length + 1}`;
-			await saveNewCounter(counterKey);
-			service.counters.push(counterKey);
-			
-			await saveService(service);
-			setService(service);
-			
-			await loadCounters();
-			// Проверочные логи
-			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
-		} else {
-			const counterKey = service.deletedCounters.shift()
-			await saveNewCounter(counterKey);
-			service.counters.push(counterKey);
-
-			await saveService(service);
-			setService(service);
-			
-			await loadCounters();
-			// Проверочные логи
-			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}))
-		}
-		
-		window.localStorage.clear();
-
-		// Проверочные логи
-		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
-		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
-		go();
-		return window.scrollTo(0, document.body.scrollHeight);
 	}
 
 	return (
@@ -204,7 +166,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 			<FormLayout>
 				<ErrorStatusBanner/>
 				{editMode &&
-					<CellButton before={<Icon28DeleteOutline/>} mode="danger" onClick={openDeleteDialogue}>
+					<CellButton before={<Icon28DeleteOutline/>} mode="danger" onClick={() => openDeleteDialogue({ counterId: editMode.counterId })}>
 						Удалить счётчик
 					</CellButton>
 				}

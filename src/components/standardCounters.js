@@ -46,7 +46,7 @@ export const standardCounters = [
         pub: true,
         coverType: 'theme',
         coverId: '12',
-        standard: true
+        standard: '0'
     },
     {
         counterId: 'standCounter8',
@@ -56,7 +56,7 @@ export const standardCounters = [
         pub: true,
         coverType: 'theme',
         coverId: '18',
-        standard: true
+        standard: '1'
     },
     {
         counterId: 'standCounter2',
@@ -66,7 +66,7 @@ export const standardCounters = [
         pub: true,
         coverType: 'theme',
         coverId: '19',
-        standard: true
+        standard: '2'
     },
     {
         counterId: 'standCounter3',
@@ -76,7 +76,7 @@ export const standardCounters = [
         pub: true,
         coverType: 'theme',
         coverId: '15',
-        standard: true
+        standard: '3'
     },
     {
         counterId: 'standCounter4',
@@ -86,7 +86,7 @@ export const standardCounters = [
         pub: true,
         coverType: 'theme',
         coverId: '11',
-        standard: true
+        standard: '4'
     },
     {
         counterId: 'standCounter5',
@@ -96,7 +96,7 @@ export const standardCounters = [
         pub: true,
         coverType: 'theme',
         coverId: '13',
-        standard: true
+        standard: '5'
     },
     {
         counterId: 'standCounter6',
@@ -106,7 +106,7 @@ export const standardCounters = [
         pub: true,
         coverType: 'color',
         coverId: '1',
-        standard: true
+        standard: '6'
     },
     {
         counterId: 'standCounter7',
@@ -116,7 +116,7 @@ export const standardCounters = [
         pub: true,
         coverType: 'color',
         coverId: '3',
-        standard: true
+        standard: '7'
     },
     {
         counterId: 'standCounter9',
@@ -126,6 +126,6 @@ export const standardCounters = [
         pub: true,
         coverType: 'theme',
         coverId: '14',
-        standard: true
+        standard: '8'
     },
 ];

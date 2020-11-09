@@ -8,6 +8,7 @@ import TabbarItem from '@vkontakte/vkui/dist/components/TabbarItem/TabbarItem';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import Snackbar from '@vkontakte/vkui/dist/components/Snackbar/Snackbar';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
+import Alert from '@vkontakte/vkui/dist/components/Alert/Alert';
 import Icon28RecentOutline from '@vkontakte/icons/dist/28/recent_outline';
 import Icon28AddCircleOutline from '@vkontakte/icons/dist/28/add_circle_outline';
 import Icon28MenuOutline from '@vkontakte/icons/dist/28/menu_outline';
@@ -15,6 +16,7 @@ import Icon24Error from '@vkontakte/icons/dist/24/error';
 
 import '@vkontakte/vkui/dist/vkui.css';
 import { standardCounters } from './components/standardCounters';
+import { saveService } from './components/storage';
 
 import Counters from './panels/Counters';
 import Create from './panels/Create';
@@ -184,6 +186,54 @@ const App = () => {
 		}
 	};
 
+	const openDeleteDialogue = ({ counterId, standard }) => {
+		setPopout(
+			<Alert
+				actions={[{
+					title: 'Отмена',
+					autoclose: true,
+					mode: 'cancel'
+					}, {
+					title: 'Удалить',
+					autoclose: true,
+					mode: 'destructive',
+					action: () => handleDeleteClick({ counterId, standard }),
+				}]}
+				onClose={() => setPopout(null)}
+			>
+				<h2>Удаление счетчика</h2>
+				<p>Вы уверены, что хотите удалить этот счетчик?</p>
+			</Alert>
+		);
+	};
+
+	const handleDeleteClick = async ({ counterId, standard }) => {
+		const index = service.counters.indexOf(counterId);
+		service.counters.splice(index, 1);
+		service.deletedCounters.push(counterId);
+
+		if (standard) {
+			service.catalog[standard] = true;
+		}
+
+		await saveService(service);
+		setService(service);
+		
+		await loadCounters();
+
+		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
+		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
+
+		window.localStorage.clear();
+		setEditMode(false);
+
+		setSlideIndexCounters(index - 1);
+
+		setActiveStory(STORIES.COUNTERS);
+
+	};
+
+
 	if (step === STEPS.LOADER_INTRO) {
 		return (
 			<View activePanel={activePanel} popout={popout}>
@@ -234,11 +284,14 @@ const App = () => {
 				setActivePanel={setActivePanelCounters}
 				slideIndex={slideIndexCounters}
 				setSlideIndex={setSlideIndexCounters}
+				openDeleteDialogue={openDeleteDialogue}
 				service={service} 
 				counters={counters} 
 				fetchedUser={fetchedUser}
 				appLink={LINK.APP}
-				setEditMode={setEditMode}/>
+				setEditMode={setEditMode}
+				popout={popout}
+				setPopout={setPopout}/>
 			<View id={STORIES.CREATE} activePanel={STORIES.CREATE} popout={popout}>
 				<Create 
 					id={STORIES.CREATE} 
@@ -246,6 +299,7 @@ const App = () => {
 						setActivePanelCounters(COUNTERS_PANELS.NORMAL);
 						go(STORIES.COUNTERS);
 					}}
+					openDeleteDialogue={openDeleteDialogue}
 					goBackFromEditMode={goBackFromEditMode} 
 					service={service} 
 					setService={setService} 
@@ -259,7 +313,8 @@ const App = () => {
 				service={service}
 				setService={setService}
 				loadCounters={loadCounters}
-				go={() => go(STORIES.COUNTERS)}/>
+				go={() => go(STORIES.COUNTERS)}
+				popout={popout}/>
 		</Epic>
 	);
 }
