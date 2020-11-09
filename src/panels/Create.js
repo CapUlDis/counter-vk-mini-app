@@ -20,18 +20,14 @@ import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 import './Create.css';
 
 import { useLocalStorage } from './helpers/useLocalStorage';
-import RadioCard from './components/RadioCard';
 import { images, colors } from './components/img/Covers';
 import { saveService, saveNewCounter } from '../components/storage';
+import RadioCard from './components/RadioCard';
 
 
 const COVERS = {
 	COLORS: 'color',
 	THEMES: 'theme'
-};
-
-const STORAGE_KEYS = {
-	SERVICE: 'serviceCounters',
 };
 
 const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters, editMode, setEditMode, openDeleteDialogue}) => {
@@ -107,7 +103,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 
 				// Проверочные логи
 				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [editMode.counterId]}));
-				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
+				console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 
 				window.localStorage.clear();
 				setEditMode(false);
@@ -138,7 +134,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 
 			// Проверочные логи
 			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
-			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
+			console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 
 			go();
 
