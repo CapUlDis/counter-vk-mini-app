@@ -16,7 +16,7 @@ import Icon28ArticleOutline from '@vkontakte/icons/dist/28/article_outline';
 import Icon28MessageOutline from '@vkontakte/icons/dist/28/message_outline';
 import Icon28StoryOutline from '@vkontakte/icons/dist/28/story_outline';
 import Icon56AddCircleOutline from '@vkontakte/icons/dist/56/add_circle_outline';
-import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
+// import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 import Icon24ShareOutline from '@vkontakte/icons/dist/24/share_outline';
 import Icon28WriteOutline from '@vkontakte/icons/dist/28/write_outline';
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';

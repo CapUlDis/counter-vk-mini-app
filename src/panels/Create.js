@@ -22,6 +22,7 @@ import './Create.css';
 import { useLocalStorage } from './helpers/useLocalStorage';
 import RadioCard from './components/RadioCard';
 import { images, colors } from './components/img/Covers';
+import { saveService } from '../components/storage';
 
 
 const COVERS = {
@@ -61,13 +62,6 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 				}
 			</FormStatus>
 		);
-	}
-
-	const saveService = async function (serviceObject) {
-		await bridge.send('VKWebAppStorageSet', {
-			key: STORAGE_KEYS.SERVICE,
-			value: JSON.stringify(serviceObject)
-		});
 	}
 
 	const handleCreateSaveClick = async function () {

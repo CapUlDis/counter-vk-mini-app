@@ -8,7 +8,7 @@ import Group from '@vkontakte/vkui/dist/components/Group/Group';
 import CardGrid from '@vkontakte/vkui/dist/components/CardGrid/CardGrid';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import Gallery from '@vkontakte/vkui/dist/components/Gallery/Gallery';
-import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
+// import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 
 import './Counters.css';
