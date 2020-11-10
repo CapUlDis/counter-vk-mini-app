@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import bridge from '@vkontakte/vk-bridge';
+import _ from 'lodash';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton';
@@ -84,8 +85,6 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 				return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
 			}
 
-			let counterKey = null;
-
 			const counterObj = {
 				counterId: editMode? editMode.counterId : null,
 				title,
@@ -112,22 +111,25 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 				return window.scrollTo(0, 0);
 			}
 
-			if (service.deletedCounters.length === 0) {
-				counterKey = `counter${service.counters.length + 1}`;
+			let counterKey = null;
+			let cloneService = _.cloneDeep(service);
+
+			if (cloneService.deletedCounters.length === 0) {
+				counterKey = `counter${cloneService.counters.length + 1}`;
 				counterObj.counterId = counterKey;
-				service.counters.push(counterKey);
+				cloneService.counters.push(counterKey);
 			} else {
-				counterKey = service.deletedCounters.shift();
+				counterKey = cloneService.deletedCounters.shift();
 				counterObj.counterId = counterKey;
-				service.counters.push(counterKey);
+				cloneService.counters.push(counterKey);
 			}
 
 			await saveNewCounter({ counterKey: counterKey, counterObj });
 			
-			await saveService(service);
-			setService(service);
+			setService(cloneService);
+			await saveService(cloneService);
 			
-			await loadCounters();
+			await loadCounters(cloneService);
 
 			
 			window.localStorage.clear();

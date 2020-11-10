@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import bridge from '@vkontakte/vk-bridge';
+import _ from 'lodash';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Epic from '@vkontakte/vkui/dist/components/Epic/Epic';
@@ -68,14 +69,14 @@ const App = () => {
 	const [activePanelCounters, setActivePanelCounters] = useState(COUNTERS_PANELS.NORMAL);
 	const [slideIndexCounters, setSlideIndexCounters] = useState(0);
 	
-	const loadService = async function () {
+	const loadService = async () => {
 		const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
 		setService(JSON.parse(getObject.keys[0].value));
 	};
 
-	const loadCounters = async function () {
-		if (service.counters.length !== 0) {
-			setCounters(await bridge.send("VKWebAppStorageGet", { "keys": service.counters }));
+	const loadCounters = async (serviceObj) => {
+		if (serviceObj.counters.length !== 0) {
+			setCounters(await bridge.send("VKWebAppStorageGet", { "keys": serviceObj.counters }));
 		}
 	};
 
@@ -208,18 +209,20 @@ const App = () => {
 	};
 
 	const handleDeleteClick = async ({ counterId, standard }) => {
-		const index = service.counters.indexOf(counterId);
-		service.counters.splice(index, 1);
-		service.deletedCounters.push(counterId);
+		const cloneService = _.cloneDeep(service);
+
+		const index = cloneService.counters.indexOf(counterId);
+		cloneService.counters.splice(index, 1);
+		cloneService.deletedCounters.push(counterId);
 
 		if (standard) {
-			service.catalog[standard] = true;
+			cloneService.catalog[standard] = true;
 		}
 
-		await saveService(service);
-		setService(service);
+		await saveService(cloneService);
+		setService(cloneService);
 		
-		await loadCounters();
+		await loadCounters(cloneService);
 
 		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
 		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));

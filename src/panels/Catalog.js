@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import bridge from '@vkontakte/vk-bridge';
+import _ from 'lodash';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -55,25 +56,26 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 	const handleJoinClick = async ({ counter, ind }) => {
 		try {
 			let counterKey = null;
+			let cloneService = _.cloneDeep(service);
 
-			if (service.deletedCounters.length === 0) {
-				counterKey = `counter${service.counters.length + 1}`;
+			if (cloneService.deletedCounters.length === 0) {
+				counterKey = `counter${cloneService.counters.length + 1}`;
 				counter.counterId = counterKey;
-				service.counters.push(counterKey);
-				service.catalog[ind] = false;
+				cloneService.counters.push(counterKey);
+				cloneService.catalog[ind] = false;
 			} else {
-				counterKey = service.deletedCounters.shift();
+				counterKey = cloneService.deletedCounters.shift();
 				counter.counterId = counterKey;
-				service.counters.push(counterKey);
-				service.catalog[ind] = false;
+				cloneService.counters.push(counterKey);
+				cloneService.catalog[ind] = false;
 			}
 			
 			await saveNewCounter({ counterKey: counterKey, counterObj: counter });
 
-			await saveService(service);
-			setService(service);
+			await saveService(cloneService);
+			setService(cloneService);
 			
-			await loadCounters();
+			await loadCounters(cloneService);
 			// Проверочные логи
 			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 			console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
