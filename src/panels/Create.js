@@ -254,13 +254,13 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 						</div>
 					}
 				</FormLayoutGroup>
-				<FixedLayout vertical='bottom'>
-					<Button className='CreateButton' mode='commerce' size='xl' onClick={handleCreateSaveClick}>
-						{!editMode ? 'Создать счётчик' : 'Сохранить изменения'}
-					</Button>
-				</FixedLayout>
+				
 			</FormLayout>
-			
+			<FixedLayout vertical='bottom'>
+				<Button className='CreateButton' mode='commerce' size='xl' onClick={handleCreateSaveClick}>
+					{!editMode ? 'Создать счётчик' : 'Сохранить изменения'}
+				</Button>
+			</FixedLayout>
 		</Panel>
 	)
 };

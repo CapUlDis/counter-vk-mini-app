@@ -18,4 +18,5 @@
 
 .CreateButton {
     margin: 0 12px 12px 12px;
+    width: calc(100% - 24px);
 }
