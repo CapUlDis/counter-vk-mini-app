@@ -145,6 +145,8 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 					align="center"
 					className="BigCounters_Gallery"
 					initialSlideIndex={slideIndex}
+					slideIndex={slideIndex}
+					onChange={slideIndex => setSlideIndex({ slideIndex })}
 					style={{ marginTop: "9px" }}
 				>
 					{standardCounters.map((elem, index) => {
