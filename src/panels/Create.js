@@ -98,7 +98,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 
 			if (editMode) {
 				await saveNewCounter({ counterKey: editMode.counterId, counterObj });
-				await loadCounters();
+				await loadCounters(service);
 
 				// Проверочные логи
 				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [editMode.counterId]}));
