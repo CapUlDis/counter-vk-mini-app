@@ -38,9 +38,15 @@ const VIEW = {
 	BIG: 'big'
 };
 
-const Catalog = ({ service, loadCounters, setService, go }) => {
-	const [activePanel, setActivePanel] = useState(VIEW.NORMAL);
-	const [slideIndex, setSlideIndex] = useState(0);
+const Catalog = ({ 
+	service, 
+	loadCounters, 
+	setService,
+	activePanel,
+	setActivePanel,
+	slideIndex,
+	setSlideIndex,
+	go }) => {
 
 	const dayOfNum = (number) => {  
 		let cases = [2, 0, 1, 1, 1, 2]; 
@@ -149,38 +155,39 @@ const Catalog = ({ service, loadCounters, setService, go }) => {
 					onChange={slideIndex => setSlideIndex({ slideIndex })}
 					style={{ marginTop: "9px" }}
 				>
-					{standardCounters.map((elem, index) => {
-							const standCounter = elem;
-							const date = moment(standCounter.date);
-							let days = null;
-							let status = null;
-							if (standCounter.howCount === 'to') {
-								let daysDiff = date.diff(moment().startOf('day'), 'days');
-								days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
-								status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
-							} else {
-								let daysDiff = moment().diff(date, 'days');
-								days = daysDiff + ' ' + dayOfNum(daysDiff);
-								status = 'прошло';
-							}
-							return (
-								<BigCounterCard 
-									key={standCounter.counterId}
-									counterId={standCounter.counterId}
-									index={standCounter.standard}
-									counter={standCounter}
-									date={date}
-									days={days}
-									status={status}
-									switchCard={switchCard}
-									setActivePanel={setActivePanel}
-								>
-									<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter, ind: index })}>Присоединиться</Button>
-								</BigCounterCard>
-							);
-						})
-						
-					}
+					{standardCounters.reduce((result, elem, index) => {
+						if (!service.catalog[index]) return result;
+
+						const standCounter = elem;
+						const date = moment(standCounter.date);
+						let days = null;
+						let status = null;
+						if (standCounter.howCount === 'to') {
+							let daysDiff = date.diff(moment().startOf('day'), 'days');
+							days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
+							status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
+						} else {
+							let daysDiff = moment().diff(date, 'days');
+							days = daysDiff + ' ' + dayOfNum(daysDiff);
+							status = 'прошло';
+						}
+						result.push(
+							<BigCounterCard 
+								key={standCounter.counterId}
+								counterId={standCounter.counterId}
+								index={standCounter.standard}
+								counter={standCounter}
+								date={date}
+								days={days}
+								status={status}
+								switchCard={switchCard}
+								setActivePanel={setActivePanel}
+							>
+								<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter, ind: index })}>Присоединиться</Button>
+							</BigCounterCard>
+						);
+						return result;
+					}, [])}
 				</Gallery>
 			</Panel>
 		</View>

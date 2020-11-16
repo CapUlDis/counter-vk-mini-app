@@ -49,7 +49,7 @@ const STORAGE_KEYS = {
 	SERVICE: 'serviceCounters',
 };
 
-const COUNTERS_PANELS = {
+const VIEW = {
 	NORMAL: 'normal',
 	BIG: 'big'
 };
@@ -59,6 +59,7 @@ const App = () => {
 	const [counters, setCounters] = useState({});
 	const [fetchedUser, setUser] = useState(null);
 	const [editMode, setEditMode] = useState(false);
+	const [sharedCounter, setSharedCounter] = useState(false);
 
 	const [step, setStep] = useState(STEPS.LOADER_INTRO);
 	const [activePanel, setActivePanel] = useState(LOADER_INTRO.LOADER);
@@ -66,8 +67,12 @@ const App = () => {
 	const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
 	const [snackbar, setSnackbar] = useState(false);
 
-	const [activePanelCounters, setActivePanelCounters] = useState(COUNTERS_PANELS.NORMAL);
+	const [activePanelCounters, setActivePanelCounters] = useState(VIEW.NORMAL);
 	const [slideIndexCounters, setSlideIndexCounters] = useState(0);
+	
+	const [activePanelCatalog, setActivePanelCatalog] = useState(VIEW.NORMAL);
+	const [slideIndexCatalog, setSlideIndexCatalog] = useState(0);
+	
 	
 	const loadService = async () => {
 		const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
@@ -76,7 +81,12 @@ const App = () => {
 
 	const loadCounters = async (serviceObj) => {
 		if (serviceObj.counters.length !== 0) {
-			setCounters(await bridge.send("VKWebAppStorageGet", { "keys": serviceObj.counters }));
+			const storageArray = await bridge.send("VKWebAppStorageGet", { "keys": serviceObj.counters });
+			const countersArray = storageArray.keys.map(({ value }) => {
+				return value ? JSON.parse(value) : {};
+			});
+			setCounters(countersArray);
+			return countersArray;
 		}
 	};
 
@@ -105,6 +115,21 @@ const App = () => {
 				console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 50, "offset": 0}));
 				console.log(standardCounters);
 
+				let fetchedSharedCounter = false;
+
+				if (window.location.hash.substr(0)) {
+					try {
+						const base64 = window.location.hash.substr(0);
+						const str = Buffer.from(base64, 'base64').toString();
+						fetchedSharedCounter = JSON.parse(str);
+						setSharedCounter(fetchedSharedCounter);
+					} catch (error) {
+						console.log(error);
+					}
+				}
+
+				console.log(fetchedSharedCounter);
+
 				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
 				
 				if (!getObject.keys[0].value) {
@@ -120,15 +145,35 @@ const App = () => {
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
 
-				if (fetchedService.counters.length !== 0) {
-					setCounters(await bridge.send("VKWebAppStorageGet", { "keys": fetchedService.counters }));
-				} 
+				let fetchedCounters = await loadCounters(fetchedService);
 
 				setService(fetchedService);
 
 				setUser(await bridge.send('VKWebAppGetUserInfo'));
 
 				setPopout(null);
+
+				if (fetchedSharedCounter) {
+					if (!fetchedSharedCounter.standard) {
+
+					}
+
+					if (!fetchedService.catalog[fetchedSharedCounter.standard]) {
+						let index = fetchedCounters.findIndex(counter => {
+							if (counter.standard === fetchedSharedCounter.standard) {
+								return true;
+							}
+						});
+						setStep(STEPS.MAIN);
+						setActivePanelCounters(VIEW.BIG);
+						return setSlideIndexCounters(index);
+					} else {
+						setStep(STEPS.MAIN);
+						setActiveStory(STORIES.CATALOG);
+
+					}
+					
+				}
 
 				return setStep(STEPS.MAIN);
 
@@ -153,7 +198,7 @@ const App = () => {
 
 	const goBackFromEditMode = index => {
 		setActiveStory(STORIES.COUNTERS);
-		setActivePanelCounters(COUNTERS_PANELS.BIG);
+		setActivePanelCounters(VIEW.BIG);
 		setSlideIndexCounters(index);
 		setEditMode(false);
 	};
@@ -252,7 +297,7 @@ const App = () => {
 				<TabbarItem
 				onClick={() => {
 					setEditMode(false);
-					setActivePanelCounters(COUNTERS_PANELS.NORMAL);
+					setActivePanelCounters(VIEW.NORMAL);
 					setActiveStory(STORIES.COUNTERS);
 					window.scrollTo(0, 0);
 				}}
@@ -295,12 +340,13 @@ const App = () => {
 				appLink={LINK.APP}
 				setEditMode={setEditMode}
 				popout={popout}
-				setPopout={setPopout}/>
+				setPopout={setPopout}
+				sharedCounter={setSharedCounter}/>
 			<View id={STORIES.CREATE} activePanel={STORIES.CREATE} popout={popout}>
 				<Create 
 					id={STORIES.CREATE} 
 					go={() => {
-						setActivePanelCounters(COUNTERS_PANELS.NORMAL);
+						setActivePanelCounters(VIEW.NORMAL);
 						go(STORIES.COUNTERS);
 					}}
 					openDeleteDialogue={openDeleteDialogue}
@@ -316,9 +362,13 @@ const App = () => {
 				id={STORIES.CATALOG}
 				service={service}
 				setService={setService}
+				activePanel={activePanelCatalog}
+				setActivePanel={setActivePanelCatalog}
+				slideIndex={slideIndexCatalog}
+				setSlideIndex={setSlideIndexCatalog}
 				loadCounters={loadCounters}
 				go={() => {
-					setActivePanelCounters(COUNTERS_PANELS.NORMAL);
+					setActivePanelCounters(VIEW.NORMAL);
 					go(STORIES.COUNTERS);
 				}}
 				popout={popout}/>

@@ -47,22 +47,41 @@ moment.updateLocale('ru', {
 });
 
 
-const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideIndex, service, counters, fetchedUser, appLink, setEditMode, openDeleteDialogue, popout, setPopout }) => {
+const Counters = ({ 
+	id, 
+	go, 
+	activePanel, 
+	setActivePanel, 
+	slideIndex, 
+	setSlideIndex, 
+	service, 
+	counters, 
+	fetchedUser, 
+	appLink, 
+	setEditMode, 
+	openDeleteDialogue, 
+	popout, 
+	setPopout, 
+	sharedCounter 
+}) => {
 	const osname = usePlatform();
     
-    const shareCounterCardByStory = async ({ counterId }) => {
-		setActivePanel(VIEW.NORMAL);
-		const counter = document.getElementById(counterId);
-        let imageUrl = null;
-		await html2canvas(counter, { scale: 2, backgroundColor: null, width: '351', onclone: document => {
-            document.getElementById(counterId).style.padding = "0";
-            document.getElementById(counterId).style.width = "351px";
-            document.getElementById(counterId).style.borderRadius = "10px 10px 10px 10px";
-		} }).then(canvas => {
-            imageUrl = canvas.toDataURL("image/png");
-		});
-        shareContentByStory(appLink, imageUrl);
-        setActivePanel(VIEW.BIG);
+    const shareCounterCardByStory = async ({ counter }) => {
+		console.log(counter);
+		console.log(appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64"));
+
+		// setActivePanel(VIEW.NORMAL);
+		// const counter = document.getElementById(counterObj.counterId);
+        // let imageUrl = null;
+		// await html2canvas(counter, { scale: 2, backgroundColor: null, width: '351', onclone: document => {
+        //     document.getElementById(counterObj.counterId).style.padding = "0";
+        //     document.getElementById(counterObj.counterId).style.width = "351px";
+        //     document.getElementById(counterObj.counterId).style.borderRadius = "10px 10px 10px 10px";
+		// } }).then(canvas => {
+        //     imageUrl = canvas.toDataURL("image/png");
+		// });
+        // shareContentByStory(appLink, imageUrl);
+        // setActivePanel(VIEW.BIG);
     };
 
     const shareCounterAppByWall = async () => {
@@ -84,18 +103,18 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 		setActivePanel(panel);
 	};
 
-	const openShareMenu = ({ counterId }) => {
+	const openShareMenu = ({ counter }) => {
 		setPopout(
 			<ActionSheet onClose={() => setPopout(null)}>
-				<ActionSheetItem autoclose before={<Icon28StoryOutline/>} onClick={() => shareCounterCardByStory({ counterId })}>
+				<ActionSheetItem autoclose before={<Icon28StoryOutline/>} onClick={() => shareCounterCardByStory({ counter })}>
 					В историю
 				</ActionSheetItem>
-				<ActionSheetItem autoclose before={<Icon28ArticleOutline/>} onClick={() => shareCounterAppByWall({ counterId })}>
+				<ActionSheetItem autoclose before={<Icon28ArticleOutline/>} onClick={() => shareCounterAppByWall({ counter })}>
 					На стену
 				</ActionSheetItem>
-				<ActionSheetItem autoclose before={<Icon28MessageOutline/>} onClick={() => shareCounterAppByMessage({ counterId })}>
+				{/* <ActionSheetItem autoclose before={<Icon28MessageOutline/>} onClick={() => shareCounterAppByMessage({ counterId })}>
 					В личные сообщения
-				</ActionSheetItem>
+				</ActionSheetItem> */}
 				{osname === IOS && <ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
 			</ActionSheet>
 		);
@@ -144,8 +163,7 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 					</Placeholder>
 					: <Group >
 						<CardGrid style={{ margin: "4px 0px" }}>
-							{counters.keys.map(({ key, value }, index) => {
-								const counter = value ? JSON.parse(value) : {};
+							{counters.map((counter, index) => {
 								const date = moment(counter.date);
 								let days = null;
 								let status = null;
@@ -160,8 +178,8 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 								}
 								return (
 									<CounterCard
-										key={key}
-										id={key}
+										key={counter.counterId}
+										id={counter.counterId}
 										index={index}
 										counter={counter}
 										date={date}
@@ -200,9 +218,8 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 						onChange={slideIndex => setSlideIndex({ slideIndex })}
 						style={{ marginTop: "9px" }}
 					>
-						{(counters.keys && fetchedUser) &&
-							counters.keys.map(({ key, value }, index) => {
-								const counter = value ? JSON.parse(value) : {};
+						{(counters && fetchedUser) &&
+							counters.map((counter, index) => {
 								const date = moment(counter.date);
 								let days = null;
 								let status = null;
@@ -216,7 +233,7 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 									status = 'прошло';
 								}
 								return (
-									<BigCounterCard key={key}
+									<BigCounterCard key={counter.counterId}
 										index={index}
 										counter={counter}
 										date={date}
@@ -239,7 +256,7 @@ const Counters = ({ id, go, activePanel, setActivePanel, slideIndex, setSlideInd
 											/>
 										}
 									>
-										<Button size="xl" mode="secondary" className="BigCounterCard__button"before={<Icon24ShareOutline/>} onClick={() => openShareMenu({ counterId: key })}>Поделиться</Button>
+										<Button size="xl" mode="secondary" className="BigCounterCard__button"before={<Icon24ShareOutline/>} onClick={() => openShareMenu({ counter })}>Поделиться</Button>
 									</BigCounterCard>
 								);
 							})
