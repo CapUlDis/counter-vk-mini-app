@@ -155,7 +155,23 @@ const App = () => {
 
 				if (fetchedSharedCounter) {
 					if (!fetchedSharedCounter.standard) {
+						let index = fetchedCounters.findIndex(counter => {
+							if (counter.title === fetchedSharedCounter.title &&
+								counter.date === fetchedSharedCounter.date &&
+								counter.howCount === fetchedSharedCounter.howCount &&
+								counter.coverType === fetchedSharedCounter.coverType &&
+								counter.coverId === fetchedSharedCounter.coverId) {
+								return true;
+							}
+						});
 
+						if (index !== -1) {
+							setStep(STEPS.MAIN);
+							setActivePanelCounters(VIEW.BIG);
+							return setSlideIndexCounters(index);
+						}
+
+						
 					}
 
 					if (!fetchedService.catalog[fetchedSharedCounter.standard]) {
