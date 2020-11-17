@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import bridge from '@vkontakte/vk-bridge';
-import _ from 'lodash';
+import _, { result } from 'lodash';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -104,11 +104,9 @@ const Catalog = ({
 				</PanelHeader>
 				<Group>
 					<CardGrid style={{ margin: "4px 0px" }}>
-						{standardCounters.map((elem, index) => {
-							if (!service.catalog[index]) {
-								return null;
-							}
-							const standCounter = elem;
+						{standardCounters.reduce((result, standCounter, index) => {
+							if (!service.catalog[index]) return result;
+
 							const date = moment(standCounter.date);
 							let days = null;
 							let status = null;
@@ -121,11 +119,11 @@ const Catalog = ({
 								days = daysDiff + ' ' + dayOfNum(daysDiff);
 								status = 'прошло';
 							}
-							return (
+							result.push(
 								<CounterCard
 									key={standCounter.counterId}
 									id={standCounter.counterId}
-									index={standCounter.standard}
+									index={result.length}
 									counter={standCounter}
 									date={date}
 									days={days}
@@ -135,8 +133,9 @@ const Catalog = ({
 								>
 									<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter, ind: index })}>Присоединиться</Button>
 								</CounterCard>
-							)})
-						}
+							);
+							return result;
+						}, [])}
 					</CardGrid>
 				</Group>
 			</Panel>
@@ -150,15 +149,13 @@ const Catalog = ({
 					slideWidth="90%"
 					align="center"
 					className="BigCounters_Gallery"
-					initialSlideIndex={slideIndex}
 					slideIndex={slideIndex}
 					onChange={slideIndex => setSlideIndex({ slideIndex })}
 					style={{ marginTop: "9px" }}
 				>
-					{standardCounters.reduce((result, elem, index) => {
+					{standardCounters.reduce((result, standCounter, index) => {
 						if (!service.catalog[index]) return result;
 
-						const standCounter = elem;
 						const date = moment(standCounter.date);
 						let days = null;
 						let status = null;
@@ -175,7 +172,7 @@ const Catalog = ({
 							<BigCounterCard 
 								key={standCounter.counterId}
 								counterId={standCounter.counterId}
-								index={standCounter.standard}
+								index={result.length}
 								counter={standCounter}
 								date={date}
 								days={days}

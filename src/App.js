@@ -168,7 +168,7 @@ const App = () => {
 						setActivePanelCounters(VIEW.BIG);
 						return setSlideIndexCounters(index);
 					} else {
-						let index = fetchedSharedCounter.standard;
+						let index = parseInt(fetchedSharedCounter.standard);
 						for (let i = 0; i <= fetchedSharedCounter.standard; i++) {
 							if (!fetchedService.catalog[i]) {
 								index--;
