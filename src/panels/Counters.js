@@ -1,6 +1,6 @@
 import React from 'react';
 import html2canvas from 'html2canvas';
-import { usePlatform, IOS } from '@vkontakte/vkui'
+import { usePlatform, IOS, ANDROID } from '@vkontakte/vkui'
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -12,6 +12,9 @@ import Gallery from '@vkontakte/vkui/dist/components/Gallery/Gallery';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import ActionSheet from '@vkontakte/vkui/dist/components/ActionSheet/ActionSheet';
 import ActionSheetItem from '@vkontakte/vkui/dist/components/ActionSheetItem/ActionSheetItem';
+import ModalRoot from '@vkontakte/vkui/dist/components/ModalRoot/ModalRoot';
+import ModalPage from '@vkontakte/vkui/dist/components/ModalPage/ModalPage';
+import ModalPageHeader from '@vkontakte/vkui/dist/components/ModalPageHeader/ModalPageHeader';
 import Icon28ArticleOutline from '@vkontakte/icons/dist/28/article_outline';
 import Icon28MessageOutline from '@vkontakte/icons/dist/28/message_outline';
 import Icon28StoryOutline from '@vkontakte/icons/dist/28/story_outline';
@@ -21,10 +24,13 @@ import Icon24ShareOutline from '@vkontakte/icons/dist/24/share_outline';
 import Icon28WriteOutline from '@vkontakte/icons/dist/28/write_outline';
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
+import Icon24Cancel from '@vkontakte/icons/dist/24/cancel';
+import Icon24Done from '@vkontakte/icons/dist/24/done';
 
 import './Counters.css';
 import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
+import { saveNewCounter, saveService } from '../components/storage';
 import { shareContentByStory, shareContentByWall, shareContentByMessage } from './helpers/share';
 
 
@@ -46,6 +52,11 @@ moment.updateLocale('ru', {
     }
 });
 
+// const modal = (
+	
+// );
+
+
 
 const Counters = ({ 
 	id, 
@@ -62,7 +73,10 @@ const Counters = ({
 	openDeleteDialogue, 
 	popout, 
 	setPopout, 
-	sharedCounter 
+	activeModal,
+	setActiveModal,
+	sharedCounter,
+	handleJoinClick
 }) => {
 	const osname = usePlatform();
     
@@ -121,36 +135,61 @@ const Counters = ({
 	};
 
 	return (
-		<View id={id} activePanel={activePanel} popout={popout}> 
+		<View 
+			id={id} 
+			activePanel={activePanel} 
+			popout={popout} 
+			modal={
+				<ModalRoot activeModal={activeModal} onClose={() => setActiveModal(null)}>
+					<ModalPage 
+						id="sharedCounter"
+						onClose={() => setActiveModal(null)}
+						settlingHeight={100}
+						header={
+							<ModalPageHeader
+								noShadow
+								right={<PanelHeaderButton onClick={() => setActiveModal(null)}>{osname === IOS ? 'Отмена' : <Icon24Cancel />}</PanelHeaderButton>}
+							>
+								Добавить счетчик
+							</ModalPageHeader>
+						}
+					>
+						<CardGrid style={{ margin: "4px 0px" }}>
+							{(() => {
+								const date = moment(sharedCounter.date);
+								let days = null;
+								let status = null;
+								if (sharedCounter.howCount === 'to') {
+									let daysDiff = date.diff(moment().startOf('day'), 'days');
+									days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
+									status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
+								} else {
+									let daysDiff = moment().diff(date, 'days');
+									days = daysDiff + ' ' + dayOfNum(daysDiff);
+									status = 'прошло';
+								}
+								return (
+									<BigCounterCard 
+										counter={sharedCounter}
+										date={date}
+										days={days}
+										status={status}
+									>
+										<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: sharedCounter })} >Присоединиться</Button>
+									</BigCounterCard>
+								);
+							})()}
+						</CardGrid>
+					</ModalPage>
+				</ModalRoot>
+			}
+		> 
 			<Panel id={VIEW.NORMAL}>
 				<PanelHeader 
 					// left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
 					separator={false}
 					>Счетчики
 				</PanelHeader>
-				{/* Кнопка для проверок */}
-				{/* <FixedLayout vertical='top'>
-					<Button 
-						className='CreateButton' 
-						mode='commerce' 
-						size='xl' 
-						onClick={() => {
-							async function delService() {
-								await bridge.send('VKWebAppStorageSet', {
-									key: 'serviceCounters',
-									value: JSON.stringify({
-										hasSeenIntro: false,
-										counters: [],
-										deletedCounters: []
-									})
-								});
-							}
-							delService();
-						}}
-						>
-						Стереть service
-					</Button>
-				</FixedLayout> */}
 				{service.counters.length === 0
 					? <Placeholder 
 						icon={<Icon56AddCircleOutline/>}

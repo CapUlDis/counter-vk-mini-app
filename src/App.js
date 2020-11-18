@@ -17,7 +17,7 @@ import Icon24Error from '@vkontakte/icons/dist/24/error';
 
 import '@vkontakte/vkui/dist/vkui.css';
 import { standardCounters } from './components/standardCounters';
-import { saveService } from './components/storage';
+import { saveService, saveNewCounter } from './components/storage';
 
 import Counters from './panels/Counters';
 import Create from './panels/Create';
@@ -60,6 +60,7 @@ const App = () => {
 	const [fetchedUser, setUser] = useState(null);
 	const [editMode, setEditMode] = useState(false);
 	const [sharedCounter, setSharedCounter] = useState(false);
+	const [activeModal, setActiveModal] = useState(null);
 
 	const [step, setStep] = useState(STEPS.LOADER_INTRO);
 	const [activePanel, setActivePanel] = useState(LOADER_INTRO.LOADER);
@@ -169,9 +170,11 @@ const App = () => {
 							setStep(STEPS.MAIN);
 							setActivePanelCounters(VIEW.BIG);
 							return setSlideIndexCounters(index);
-						}
+						} 
 
-						
+						setStep(STEPS.MAIN);
+						return setActiveModal("sharedCounter");
+
 					}
 
 					if (!fetchedService.catalog[fetchedSharedCounter.standard]) {
@@ -304,6 +307,35 @@ const App = () => {
 
 	};
 
+	const handleJoinClick = async ({ counter }) => {
+		try {
+			let counterKey = null;
+			let cloneService = _.cloneDeep(service);
+
+			if (cloneService.deletedCounters.length === 0) {
+				counterKey = `counter${cloneService.counters.length + 1}`;
+			} else {
+				counterKey = cloneService.deletedCounters.shift();
+			}
+
+			counter.counterId = counterKey;
+			cloneService.counters.push(counterKey);
+
+			await saveNewCounter({ counterKey: counterKey, counterObj: counter });
+
+			await saveService(cloneService);
+			setService(cloneService);
+			
+			await loadCounters(cloneService);
+
+			setActiveModal(null)
+			return window.scrollTo(0, document.body.scrollHeight);
+
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 
 	if (step === STEPS.LOADER_INTRO) {
 		return (
@@ -364,7 +396,10 @@ const App = () => {
 				setEditMode={setEditMode}
 				popout={popout}
 				setPopout={setPopout}
-				sharedCounter={setSharedCounter}/>
+				sharedCounter={sharedCounter}
+				activeModal={activeModal}
+				setActiveModal={setActiveModal}
+				handleJoinClick={handleJoinClick}/>
 			<View id={STORIES.CREATE} activePanel={STORIES.CREATE} popout={popout}>
 				<Create 
 					id={STORIES.CREATE} 
