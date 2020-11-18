@@ -36,7 +36,7 @@ const BigCounterCard = ({ switchCard, counter, days, date, status, fetchedUser, 
                 <Title level="3" weight="semibold">{days}</Title>
                 <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)" }}>{status}</Caption>
             </div>
-            {!counter.standard &&
+            {fetchedUser &&
                 <div className="BigCounterCard__avatars">
                     {fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200} size={24}/> : null}
                     <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)", marginLeft: "8px" }}>Ждете Вы</Caption>
