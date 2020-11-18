@@ -66,15 +66,13 @@ const Catalog = ({
 
 			if (cloneService.deletedCounters.length === 0) {
 				counterKey = `counter${cloneService.counters.length + 1}`;
-				counter.counterId = counterKey;
-				cloneService.counters.push(counterKey);
-				cloneService.catalog[ind] = false;
 			} else {
 				counterKey = cloneService.deletedCounters.shift();
-				counter.counterId = counterKey;
-				cloneService.counters.push(counterKey);
-				cloneService.catalog[ind] = false;
 			}
+
+			counter.counterId = counterKey;
+			cloneService.counters.push(counterKey);
+			cloneService.catalog[ind] = false;
 			
 			await saveNewCounter({ counterKey: counterKey, counterObj: counter });
 
