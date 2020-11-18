@@ -16,11 +16,13 @@ const VIEW = {
 const BigCounterCard = ({ switchCard, counter, days, date, status, fetchedUser, index, ...props }) => (
     <Card size="l" mode="shadow" className="BigCounterCard">
         <label>
-            <input
-                className="BigCounterCard__divButton"
-                type="button"
-                onClick={() => {switchCard(VIEW.NORMAL, index)}}
-            />
+            {switchCard &&
+                <input
+                    className="BigCounterCard__divButton"
+                    type="button"
+                    onClick={() => {switchCard(VIEW.NORMAL, index)}}
+                />
+            }
             {counter.coverType === "color"
                 ? <div className="BigCounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
                 : <div className="BigCounterCard__cover" style={{ background: `url(${images[parseInt(counter.coverId) - 11].large}) no-repeat center`, backgroundSize: "cover" }} />
