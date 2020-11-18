@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import bridge from '@vkontakte/vk-bridge';
-import _, { result } from 'lodash';
+import React from 'react';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -15,7 +13,6 @@ import Icon24Back from '@vkontakte/icons/dist/24/back';
 import './Counters.css';
 import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
-import { saveNewCounter, saveService } from '../components/storage';
 import { standardCounters } from '../components/standardCounters';
 
 
@@ -40,13 +37,12 @@ const VIEW = {
 
 const Catalog = ({ 
 	service, 
-	loadCounters, 
-	setService,
 	activePanel,
 	setActivePanel,
 	slideIndex,
 	setSlideIndex,
-	go }) => {
+	handleJoinClick
+	}) => {
 
 	const dayOfNum = (number) => {  
 		let cases = [2, 0, 1, 1, 1, 2]; 
@@ -59,39 +55,6 @@ const Catalog = ({
 		setActivePanel(panel);
 	};
 
-	const handleJoinClick = async ({ counter, ind }) => {
-		try {
-			let counterKey = null;
-			let cloneService = _.cloneDeep(service);
-
-			if (cloneService.deletedCounters.length === 0) {
-				counterKey = `counter${cloneService.counters.length + 1}`;
-			} else {
-				counterKey = cloneService.deletedCounters.shift();
-			}
-
-			counter.counterId = counterKey;
-			cloneService.counters.push(counterKey);
-			cloneService.catalog[ind] = false;
-			
-			await saveNewCounter({ counterKey: counterKey, counterObj: counter });
-
-			await saveService(cloneService);
-			setService(cloneService);
-			
-			await loadCounters(cloneService);
-			// Проверочные логи
-			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
-			console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
-			
-			go();
-			return window.scrollTo(0, document.body.scrollHeight);
-		
-		} catch (error) {
-			console.log(error);
-		}
-	};
-	
 	return (
 		<View activePanel={activePanel}>
 			<Panel id={VIEW.NORMAL}>
@@ -129,7 +92,7 @@ const Catalog = ({
 									switchCard={switchCard}
 									view={VIEW.BIG}
 								>
-									<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter, ind: index })}>Присоединиться</Button>
+									<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter })}>Присоединиться</Button>
 								</CounterCard>
 							);
 							return result;
@@ -178,7 +141,7 @@ const Catalog = ({
 								switchCard={switchCard}
 								setActivePanel={setActivePanel}
 							>
-								<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter, ind: index })}>Присоединиться</Button>
+								<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter })}>Присоединиться</Button>
 							</BigCounterCard>
 						);
 						return result;

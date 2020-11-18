@@ -164,6 +164,7 @@ const App = () => {
 								counter.coverId === fetchedSharedCounter.coverId) {
 								return true;
 							}
+							return false;
 						});
 
 						if (index !== -1) {
@@ -182,6 +183,7 @@ const App = () => {
 							if (counter.standard === fetchedSharedCounter.standard) {
 								return true;
 							}
+							return false;
 						});
 						setStep(STEPS.MAIN);
 						setActivePanelCounters(VIEW.BIG);
@@ -320,6 +322,9 @@ const App = () => {
 
 			counter.counterId = counterKey;
 			cloneService.counters.push(counterKey);
+			if (counter.standard) {
+				cloneService.catalog[counter.standard] = false;
+			}
 
 			await saveNewCounter({ counterKey: counterKey, counterObj: counter });
 
@@ -327,8 +332,13 @@ const App = () => {
 			setService(cloneService);
 			
 			await loadCounters(cloneService);
+			// Проверочные логи
+			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
+			console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 
-			setActiveModal(null)
+			setActiveModal(null);
+			setActivePanelCounters(VIEW.NORMAL);
+			setActiveStory(STORIES.COUNTERS);
 			return window.scrollTo(0, document.body.scrollHeight);
 
 		} catch (error) {
@@ -419,16 +429,11 @@ const App = () => {
 			<Catalog 
 				id={STORIES.CATALOG}
 				service={service}
-				setService={setService}
 				activePanel={activePanelCatalog}
 				setActivePanel={setActivePanelCatalog}
 				slideIndex={slideIndexCatalog}
 				setSlideIndex={setSlideIndexCatalog}
-				loadCounters={loadCounters}
-				go={() => {
-					setActivePanelCounters(VIEW.NORMAL);
-					go(STORIES.COUNTERS);
-				}}
+				handleJoinClick={handleJoinClick}
 				popout={popout}/>
 		</Epic>
 	);
