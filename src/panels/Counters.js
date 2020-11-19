@@ -1,6 +1,6 @@
 import React from 'react';
 import html2canvas from 'html2canvas';
-import { usePlatform, IOS, ANDROID } from '@vkontakte/vkui'
+import { usePlatform, IOS } from '@vkontakte/vkui'
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -25,12 +25,10 @@ import Icon28WriteOutline from '@vkontakte/icons/dist/28/write_outline';
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon24Cancel from '@vkontakte/icons/dist/24/cancel';
-import Icon24Done from '@vkontakte/icons/dist/24/done';
 
 import './Counters.css';
 import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
-import { saveNewCounter, saveService } from '../components/storage';
 import { shareContentByStory, shareContentByWall, shareContentByMessage } from './helpers/share';
 
 
@@ -81,29 +79,30 @@ const Counters = ({
 	const osname = usePlatform();
     
     const shareCounterCardByStory = async ({ counter }) => {
-		console.log(counter);
-		console.log(appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64"));
+		const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
 
-		// setActivePanel(VIEW.NORMAL);
-		// const counter = document.getElementById(counterObj.counterId);
-        // let imageUrl = null;
-		// await html2canvas(counter, { scale: 2, backgroundColor: null, width: '351', onclone: document => {
-        //     document.getElementById(counterObj.counterId).style.padding = "0";
-        //     document.getElementById(counterObj.counterId).style.width = "351px";
-        //     document.getElementById(counterObj.counterId).style.borderRadius = "10px 10px 10px 10px";
-		// } }).then(canvas => {
-        //     imageUrl = canvas.toDataURL("image/png");
-		// });
-        // shareContentByStory(appLink, imageUrl);
-        // setActivePanel(VIEW.BIG);
+		setActivePanel(VIEW.NORMAL);
+		const counterDOM = document.getElementById(counter.counterId);
+        let imageUrl = null;
+		await html2canvas(counterDOM, { scale: 2, backgroundColor: null, width: '351', onclone: document => {
+            document.getElementById(counter.counterId).style.padding = "0";
+            document.getElementById(counter.counterId).style.width = "351px";
+            document.getElementById(counter.counterId).style.borderRadius = "10px 10px 10px 10px";
+		} }).then(canvas => {
+            imageUrl = canvas.toDataURL("image/png");
+		});
+        shareContentByStory(link, imageUrl);
+        setActivePanel(VIEW.BIG);
     };
 
-    const shareCounterAppByWall = async () => {
-        shareContentByWall('Считай количество дней от или до даты с помощью приложения "Счётчики времени"!', appLink);
+    const shareCounterAppByWall = async ({ counter }) => {
+		const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
+        shareContentByWall('Считай количество дней от или до даты с помощью приложения "Счётчики времени"!', link);
     };
 
-    const shareCounterAppByMessage = async () => {
-        shareContentByMessage(appLink);
+    const shareCounterAppByMessage = async ({ counter }) => {
+		const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
+        shareContentByMessage(link);
     };
 
 	const dayOfNum = (number) => {  
@@ -126,9 +125,9 @@ const Counters = ({
 				<ActionSheetItem autoclose before={<Icon28ArticleOutline/>} onClick={() => shareCounterAppByWall({ counter })}>
 					На стену
 				</ActionSheetItem>
-				{/* <ActionSheetItem autoclose before={<Icon28MessageOutline/>} onClick={() => shareCounterAppByMessage({ counterId })}>
+				<ActionSheetItem autoclose before={<Icon28MessageOutline/>} onClick={() => shareCounterAppByMessage({ counter })}>
 					В личные сообщения
-				</ActionSheetItem> */}
+				</ActionSheetItem>
 				{osname === IOS && <ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
 			</ActionSheet>
 		);
