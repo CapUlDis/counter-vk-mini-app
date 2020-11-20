@@ -9,7 +9,7 @@
     text-align: center;
     margin-left: 8px;
     margin-right: 8px;
-    margin-bottom: 46px;
+    margin-bottom: 53px;
 }
 
 .RadioCard__in2 {
@@ -17,7 +17,7 @@
     border-radius: 6px;
 }
 
-.CreateButton {
-    margin: 0 12px 12px 12px;
-    width: calc(100% - 24px);
+.DivCreateButton {
+    background: var(--background_content);
+    padding: 12px 12px;
 }

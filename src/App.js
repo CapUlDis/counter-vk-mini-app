@@ -358,7 +358,7 @@ const App = () => {
 
 	return (
 		<Epic activeStory={activeStory} tabbar={
-			<Tabbar>
+			<Tabbar shadow={activeStory === STORIES.CREATE ? false : true}>
 				<TabbarItem
 				onClick={() => {
 					setEditMode(false);

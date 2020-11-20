@@ -15,6 +15,7 @@ import FixedLayout from '@vkontakte/vkui/dist/components/FixedLayout/FixedLayout
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import CellButton from '@vkontakte/vkui/dist/components/CellButton/CellButton';
 import FormStatus from '@vkontakte/vkui/dist/components/FormStatus/FormStatus';
+import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 
@@ -257,9 +258,11 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 				
 			</FormLayout>
 			<FixedLayout vertical='bottom'>
-				<Button className='CreateButton' mode='commerce' size='xl' onClick={handleCreateSaveClick}>
-					{!editMode ? 'Создать счётчик' : 'Сохранить изменения'}
-				</Button>
+				<Div className='DivCreateButton'>
+					<Button className='CreateButton' mode='commerce' size='xl' onClick={handleCreateSaveClick}>
+						{!editMode ? 'Создать счётчик' : 'Сохранить изменения'}
+					</Button>
+				</Div>
 			</FixedLayout>
 		</Panel>
 	)
