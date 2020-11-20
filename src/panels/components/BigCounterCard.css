@@ -1,11 +1,11 @@
 .BigCounterCard {
-    margin: 12px 6px;
+    margin: 9px 6px;
     width: calc(100% - 12px);
 }
 
 .BigCounterCard__cover {
     border-radius: 10px 10px 0px 0px;
-    height: calc(100vh - var(--panelheader_height_ios) - var(--safe-area-inset-top) - var(--safe-area-inset-bottom) - var(--tabbar_height) - 247px);
+    height: calc(100vh - var(--panelheader_height_ios) - var(--safe-area-inset-top) - var(--safe-area-inset-bottom) - var(--tabbar_height) - 241px);
 }
 
 .BigCounterCard__text {
