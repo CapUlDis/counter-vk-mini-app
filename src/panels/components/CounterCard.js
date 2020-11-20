@@ -9,8 +9,8 @@ import { images, colors } from '../components/img/Covers';
 
 const CounterCard = ({ switchCard, view, counter, days, date, status, index, id, ...props }) => {
     return (
-        <Card size="l" mode="shadow" id={id}>
-            <label className="CounterCard">
+        <Card size="l" mode="shadow" id={id} className="CounterCard">
+            <label className="CounterCard__label">
                 <input
                     className="CounterCard__button"
                     type="button"

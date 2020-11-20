@@ -200,7 +200,7 @@ const Counters = ({
 						</div>
 					</Placeholder>
 					: <Group >
-						<CardGrid style={{ margin: "4px 0px" }}>
+						<CardGrid style={{ margin: "8px 0px" }}>
 							{counters.map((counter, index) => {
 								const date = moment(counter.date);
 								let days = null;

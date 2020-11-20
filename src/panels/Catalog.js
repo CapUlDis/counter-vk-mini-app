@@ -64,7 +64,7 @@ const Catalog = ({
 					>Каталог
 				</PanelHeader>
 				<Group>
-					<CardGrid style={{ margin: "4px 0px" }}>
+					<CardGrid style={{ margin: "8px 0px" }}>
 						{standardCounters.reduce((result, standCounter, index) => {
 							if (!service.catalog[index]) return result;
 

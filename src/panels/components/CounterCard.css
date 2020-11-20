@@ -1,4 +1,8 @@
 .CounterCard {
+    margin: 6px 0px;
+}
+
+.CounterCard__label {
     height: 189;
 }
 
