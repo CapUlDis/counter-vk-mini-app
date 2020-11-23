@@ -117,14 +117,12 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 
 			if (cloneService.deletedCounters.length === 0) {
 				counterKey = `counter${cloneService.counters.length + 1}`;
-				counterObj.counterId = counterKey;
-				cloneService.counters.push(counterKey);
 			} else {
 				counterKey = cloneService.deletedCounters.shift();
-				counterObj.counterId = counterKey;
-				cloneService.counters.push(counterKey);
 			}
 
+			counterObj.counterId = counterKey;
+			cloneService.counters.push(counterKey);
 			await saveNewCounter({ counterKey: counterKey, counterObj });
 			
 			setService(cloneService);
