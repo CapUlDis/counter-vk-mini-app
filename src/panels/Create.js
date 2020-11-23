@@ -169,7 +169,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 					status={inputStatuses.title}
 					placeholder="Введите название"
 					onChange={e => setTitle(e.target.value)}
-					maxLength="17"
+					maxLength="40"
 				/>
 				<Input
 					type="date"
