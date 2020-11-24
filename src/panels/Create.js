@@ -102,8 +102,8 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 				await loadCounters(service);
 
 				// Проверочные логи
-				console.log(await bridge.send("VKWebAppStorageGet", {"keys": [editMode.counterId]}));
-				console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
+				// console.log(await bridge.send("VKWebAppStorageGet", {"keys": [editMode.counterId]}));
+				// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 
 				window.localStorage.clear();
 				setEditMode(false);
@@ -134,8 +134,8 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 			window.localStorage.clear();
 
 			// Проверочные логи
-			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
-			console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
+			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
+			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 
 			go();
 

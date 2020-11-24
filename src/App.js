@@ -91,15 +91,15 @@ const App = () => {
 		}
 	};
 
-	useEffect(() => {
-		bridge.subscribe(({ detail: { type, data }}) => {
-			if (type === 'VKWebAppUpdateConfig') {
-				const schemeAttribute = document.createAttribute('scheme');
-				schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
-				document.body.attributes.setNamedItem(schemeAttribute);
-			}
-		});
-	}, []);
+	// useEffect(() => {
+	// 	bridge.subscribe(({ detail: { type, data }}) => {
+	// 		if (type === 'VKWebAppUpdateConfig') {
+	// 			const schemeAttribute = document.createAttribute('scheme');
+	// 			schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
+	// 			document.body.attributes.setNamedItem(schemeAttribute);
+	// 		}
+	// 	});
+	// }, []);
 
 	useEffect(() => {
 		(async () => {
@@ -112,9 +112,9 @@ const App = () => {
 				// 		deletedCounters: []
 				// 	})
 				// });
-				console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
-				console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 50, "offset": 0}));
-				console.log(standardCounters);
+				// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
+				// console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 50, "offset": 0}));
+				// console.log(standardCounters);
 
 				let fetchedSharedCounter = false;
 
@@ -129,7 +129,7 @@ const App = () => {
 					}
 				}
 
-				console.log(fetchedSharedCounter);
+				// console.log(fetchedSharedCounter);
 
 				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
 				
@@ -297,8 +297,8 @@ const App = () => {
 		
 		await loadCounters(cloneService);
 
-		console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
-		console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
+		// console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
+		// console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
 
 		window.localStorage.clear();
 		setEditMode(false);
@@ -332,9 +332,9 @@ const App = () => {
 			setService(cloneService);
 			
 			await loadCounters(cloneService);
-			// Проверочные логи
-			console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
-			console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
+			// // Проверочные логи
+			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
+			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 
 			setActiveModal(null);
 			setActivePanelCounters(VIEW.NORMAL);
