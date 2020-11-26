@@ -91,16 +91,6 @@ const App = () => {
 		}
 	};
 
-	// useEffect(() => {
-	// 	bridge.subscribe(({ detail: { type, data }}) => {
-	// 		if (type === 'VKWebAppUpdateConfig') {
-	// 			const schemeAttribute = document.createAttribute('scheme');
-	// 			schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
-	// 			document.body.attributes.setNamedItem(schemeAttribute);
-	// 		}
-	// 	});
-	// }, []);
-
 	useEffect(() => {
 		(async () => {
 			try {
@@ -332,7 +322,7 @@ const App = () => {
 			setService(cloneService);
 			
 			await loadCounters(cloneService);
-			// // Проверочные логи
+			// Проверочные логи
 			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 
