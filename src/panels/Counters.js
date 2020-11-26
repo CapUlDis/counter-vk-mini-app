@@ -1,5 +1,6 @@
 import React from 'react';
 import html2canvas from 'html2canvas';
+import bridge from "@vkontakte/vk-bridge";
 import { usePlatform, IOS } from '@vkontakte/vkui'
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
@@ -29,6 +30,7 @@ import Icon24Cancel from '@vkontakte/icons/dist/24/cancel';
 import './Counters.css';
 import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
+import { images, colors } from './components/img/Covers';
 import { shareContentByStory, shareContentByWall, shareContentByMessage } from './helpers/share';
 
 
@@ -80,19 +82,72 @@ const Counters = ({
     
     const shareCounterCardByStory = async ({ counter }) => {
 		const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
+		const date = moment(counter.date);
+		let days = null;
+		let status = null;
+		if (counter.howCount === 'to') {
+			let daysDiff = date.diff(moment().startOf('day'), 'days');
+			days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
+			status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
+		} else {
+			let daysDiff = moment().diff(date, 'days');
+			days = daysDiff + ' ' + dayOfNum(daysDiff);
+			status = 'прошло';
+		}
+		
 
-		setActivePanel(VIEW.NORMAL);
-		const counterDOM = document.getElementById(counter.counterId);
-        let imageUrl = null;
-		await html2canvas(counterDOM, { scale: 2, backgroundColor: null, width: '351', onclone: document => {
-            document.getElementById(counter.counterId).style.padding = "0";
-            document.getElementById(counter.counterId).style.width = "351px";
-            document.getElementById(counter.counterId).style.borderRadius = "10px 10px 10px 10px";
-		} }).then(canvas => {
-            imageUrl = canvas.toDataURL("image/png");
-		});
-        shareContentByStory(link, imageUrl);
-        setActivePanel(VIEW.BIG);
+		// setActivePanel(VIEW.NORMAL);
+		// const counterDOM = document.getElementById(counter.counterId);
+        // let imageUrl = null;
+		// await html2canvas(counterDOM, { scale: 2, backgroundColor: null, width: '351', onclone: document => {
+		// 	document.getElementById(counter.counterId).style.right = "171px";
+        //     document.getElementById(counter.counterId).style.width = "351px";
+        //     document.getElementById(counter.counterId).style.borderRadius = "10px 10px 10px 10px";
+		// } }).then(canvas => {
+        //     imageUrl = canvas.toDataURL("image/png");
+		// });
+		// console.log(imageUrl);
+        // shareContentByStory(link, imageUrl);
+		// setActivePanel(VIEW.BIG);
+
+		// const colorScheme = await bridge.subscribe(({ detail: { type, data }}) => {
+		// 	if (type === 'VKWebAppUpdateConfig') {
+		// 		console.log(data.scheme);
+		// 		return data.scheme;
+		// 	}
+		// });
+		console.log(document.body.getAttribute('scheme'));
+		
+		const canvas = document.createElement("canvas");
+		canvas.height = 189;
+		canvas.width = 351;
+
+		const ctx = canvas.getContext("2d");
+		ctx.fillStyle = document.body.getAttribute('scheme') === 'bright_light' ? '#ffffff' : '#19191a';
+		ctx.fillRect(0, 0, 351, 189);
+
+		if (counter.coverType === 'color') {
+			ctx.fillStyle = colors[parseInt(counter.coverId) - 1].simple;
+			ctx.fillRect(0, 0, 351, 117);
+		} else {
+			const image = new Image();
+			image.src = images[parseInt(counter.coverId) - 11].medium;
+			ctx.drawImage(image, 0, 0, 351, 117);
+		}
+
+		ctx.font = 'bold 17px "TT Commons", -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif';
+		ctx.fillStyle = document.body.getAttribute('scheme') === 'bright_light' ? '#000000' : '#E1E3E6';
+		ctx.fillText(counter.title, 16, 149);
+		ctx.textAlign = 'end';
+		ctx.fillText(days, 335, 149);
+		
+		ctx.font = '13px "TT Commons", -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif';
+		ctx.fillStyle = '#818C99';
+		ctx.fillText(status, 335, 169);
+		ctx.textAlign = 'start';
+		ctx.fillText(date.format('LL'), 16, 169);
+
+		console.log(canvas.toDataURL("image/png"));
     };
 
     const shareCounterAppByWall = async ({ counter }) => {

@@ -43,16 +43,16 @@ import CandleLarge from  './large/candle_large.jpg';
 
 
 const colors = [
-    { id: '1', title: 'blue', style: 'linear-gradient(72.51deg, #5D9DE7 0%, #6FB1FF 100%)' },
-    { id: '2', title: 'magenta', style: 'linear-gradient(72.7deg, #AB67F0 0%, #C18AF6 100%)' },
-    { id: '3', title: 'red', style: 'linear-gradient(72.51deg, #FE3548 0%, #FF727F 100%)' },
-    { id: '4', title: 'cyan', style: 'linear-gradient(72.7deg, #67C2C3 0%, #9AE4E6 100%)' },
-    { id: '5', title: 'orange', style: 'linear-gradient(135deg, #FF9142 0%, #E7750C 100%)' },
-    { id: '6', title: 'green', style: 'linear-gradient(135deg, #50C750 0%, #32B332 100%)' },
-    { id: '7', title: 'gray', style: 'linear-gradient(135deg, #B1B6BD 0%, #99A2AD 100%)' },
-    { id: '8', title: 'yellow', style: 'linear-gradient(135deg, #FFB73D 0%, #FFA000 100%)' },
-    { id: '9', title: 'pink', style: 'linear-gradient(135deg, #FDACCC 0%, #F37AC1 100%)' },
-    { id: '10', title: 'black', style: 'linear-gradient(135deg, #626466 0%, #444647 100%)' }
+    { id: '1', title: 'blue', style: 'linear-gradient(72.51deg, #5D9DE7 0%, #6FB1FF 100%)', simple: '#6FB1FF' },
+    { id: '2', title: 'magenta', style: 'linear-gradient(72.7deg, #AB67F0 0%, #C18AF6 100%)', simple: '#C18AF6' },
+    { id: '3', title: 'red', style: 'linear-gradient(72.51deg, #FE3548 0%, #FF727F 100%)', simple: '#FF727F' },
+    { id: '4', title: 'cyan', style: 'linear-gradient(72.7deg, #67C2C3 0%, #9AE4E6 100%)', simple: '#9AE4E6' },
+    { id: '5', title: 'orange', style: 'linear-gradient(135deg, #FF9142 0%, #E7750C 100%)', simple: '#E7750C' },
+    { id: '6', title: 'green', style: 'linear-gradient(135deg, #50C750 0%, #32B332 100%)', simple: '#32B332' },
+    { id: '7', title: 'gray', style: 'linear-gradient(135deg, #B1B6BD 0%, #99A2AD 100%)', simple: '#99A2AD' },
+    { id: '8', title: 'yellow', style: 'linear-gradient(135deg, #FFB73D 0%, #FFA000 100%)', simple: '#FFA000' },
+    { id: '9', title: 'pink', style: 'linear-gradient(135deg, #FDACCC 0%, #F37AC1 100%)', simple: '#F37AC1' },
+    { id: '10', title: 'black', style: 'linear-gradient(135deg, #626466 0%, #444647 100%)', simple: '#444647' }
 ];
 
 const images = [
