@@ -16,8 +16,6 @@ bridge.subscribe(({ detail: { type, data }}) => {
   }
 });
 
-bridge.send("VKWebAppShowNativeAds", {ad_format:"preloader"});
-
 // bridge.subscribe((e) => console.log(e));
 
 ReactDOM.render(<App />, document.getElementById("root"));

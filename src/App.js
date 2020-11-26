@@ -61,6 +61,7 @@ const App = () => {
 	const [editMode, setEditMode] = useState(false);
 	const [sharedCounter, setSharedCounter] = useState(false);
 	const [activeModal, setActiveModal] = useState(null);
+	const [userHasSeenAdd, setUserHasSeenAdd] = useState(false);
 
 	const [step, setStep] = useState(STEPS.LOADER_INTRO);
 	const [activePanel, setActivePanel] = useState(LOADER_INTRO.LOADER);
@@ -209,6 +210,13 @@ const App = () => {
 			}
 		})();
 	}, []);
+
+	const showAdd = () => {
+		if (!userHasSeenAdd) {
+			bridge.send("VKWebAppShowNativeAds", {ad_format:"preloader"});
+			setUserHasSeenAdd(true);
+		}
+	};
 
 	const go = panel => {
 		setActiveStory(panel);
@@ -362,6 +370,7 @@ const App = () => {
 				><Icon28RecentOutline/></TabbarItem>
 				<TabbarItem
 				onClick={() => {
+					showAdd();
 					setActiveStory(STORIES.CREATE);
 					window.scrollTo(0, 0);
 				}}
@@ -371,6 +380,7 @@ const App = () => {
 				><Icon28AddCircleOutline/></TabbarItem>
 				<TabbarItem
 				onClick={() => {
+					showAdd();
 					setEditMode(false);
 					setActiveStory(STORIES.CATALOG);
 					window.scrollTo(0, 0);
