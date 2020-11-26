@@ -92,7 +92,15 @@ const Catalog = ({
 									switchCard={switchCard}
 									view={VIEW.BIG}
 								>
-									<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter })}>Присоединиться</Button>
+									<Button 
+										size="xl" 
+										mode="secondary" 
+										className="Button__join" 
+										onClick={() => handleJoinClick({ counter: standCounter })}
+										style={{ backgroundColor: document.body.getAttribute('scheme') === 'bright_light' ? '#EBF7EB' : 'rgba(98, 119, 98, 0.25)' }}
+									>
+										Присоединиться
+									</Button>
 								</CounterCard>
 							);
 							return result;
@@ -141,7 +149,15 @@ const Catalog = ({
 								switchCard={switchCard}
 								setActivePanel={setActivePanel}
 							>
-								<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: standCounter })}>Присоединиться</Button>
+								<Button 
+									size="xl" 
+									mode="secondary" 
+									className="Button__join" 
+									style={{ backgroundColor: document.body.getAttribute('scheme') === 'bright_light' ? '#EBF7EB' : 'rgba(98, 119, 98, 0.25)' }}
+									onClick={() => handleJoinClick({ counter: standCounter })}
+								>
+									Присоединиться
+								</Button>
 							</BigCounterCard>
 						);
 						return result;

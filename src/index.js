@@ -16,7 +16,7 @@ bridge.subscribe(({ detail: { type, data }}) => {
   }
 });
 
-bridge.send("VKWebAppShowNativeAds", {ad_format:"preloader"})
+bridge.send("VKWebAppShowNativeAds", {ad_format:"preloader"});
 
 // bridge.subscribe((e) => console.log(e));
 

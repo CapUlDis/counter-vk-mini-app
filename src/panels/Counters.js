@@ -346,7 +346,16 @@ const Counters = ({
 											/>
 										}
 									>
-										<Button size="xl" mode="secondary" className="BigCounterCard__button"before={<Icon24ShareOutline/>} onClick={() => openShareMenu({ counter })}>Поделиться</Button>
+										<Button 
+											size="xl" 
+											mode="secondary" 
+											className="BigCounterCard__button"
+											style={{ backgroundColor: document.body.getAttribute('scheme') === 'bright_light' ? '#EBF7EB' : 'rgba(98, 119, 98, 0.25)' }}
+											before={<Icon24ShareOutline/>} 
+											onClick={() => openShareMenu({ counter })}
+										>
+											Поделиться
+										</Button>
 									</BigCounterCard>
 								);
 							})
