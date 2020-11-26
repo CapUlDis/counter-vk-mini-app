@@ -1,6 +1,5 @@
 import React from 'react';
-import html2canvas from 'html2canvas';
-import bridge from "@vkontakte/vk-bridge";
+// import bridge from "@vkontakte/vk-bridge";
 import { usePlatform, IOS } from '@vkontakte/vkui'
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
@@ -52,11 +51,6 @@ moment.updateLocale('ru', {
     }
 });
 
-// const modal = (
-	
-// );
-
-
 
 const Counters = ({ 
 	id, 
@@ -79,6 +73,17 @@ const Counters = ({
 	handleJoinClick
 }) => {
 	const osname = usePlatform();
+
+	const dayOfNum = (number) => {  
+		let cases = [2, 0, 1, 1, 1, 2]; 
+		let titles = ['день', 'дня', 'дней'];
+		return titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ];  
+	};
+
+	const switchCard = (panel, index) => {
+		setSlideIndex(index);
+		setActivePanel(panel);
+	};
     
     const shareCounterCardByStory = async ({ counter }) => {
 		const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
@@ -94,60 +99,63 @@ const Counters = ({
 			days = daysDiff + ' ' + dayOfNum(daysDiff);
 			status = 'прошло';
 		}
-		
 
-		// setActivePanel(VIEW.NORMAL);
-		// const counterDOM = document.getElementById(counter.counterId);
-        // let imageUrl = null;
-		// await html2canvas(counterDOM, { scale: 2, backgroundColor: null, width: '351', onclone: document => {
-		// 	document.getElementById(counter.counterId).style.right = "171px";
-        //     document.getElementById(counter.counterId).style.width = "351px";
-        //     document.getElementById(counter.counterId).style.borderRadius = "10px 10px 10px 10px";
-		// } }).then(canvas => {
-        //     imageUrl = canvas.toDataURL("image/png");
-		// });
-		// console.log(imageUrl);
-        // shareContentByStory(link, imageUrl);
-		// setActivePanel(VIEW.BIG);
-
-		// const colorScheme = await bridge.subscribe(({ detail: { type, data }}) => {
-		// 	if (type === 'VKWebAppUpdateConfig') {
-		// 		console.log(data.scheme);
-		// 		return data.scheme;
-		// 	}
-		// });
-		console.log(document.body.getAttribute('scheme'));
-		
+		// Задаём параметры изображения и канваса
+		const height = 378;
+		const width = 702;
+		const coverH = 234;
+		const textX = 32;
+		const textBigY = 64 + coverH;
+		const textSmallY = 40 + textBigY;
+		const maxWidthTitleText = 460;
 		const canvas = document.createElement("canvas");
-		canvas.height = 189;
-		canvas.width = 351;
-
+		canvas.height = height;
+		canvas.width = width;
 		const ctx = canvas.getContext("2d");
+		// Скругляем углы канваса
+		ctx.beginPath();
+		const x = 0;
+		const y = 0;
+		const radius = 20;
+		ctx.moveTo(x, y + radius);
+		ctx.lineTo(x, y + height - radius);
+		ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
+		ctx.lineTo(x + width - radius, y + height);
+		ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+		ctx.lineTo(x + width, y + radius);
+		ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
+		ctx.lineTo(x + radius, y);
+		ctx.quadraticCurveTo(x, y, x, y + radius);
+		ctx.closePath();
+		ctx.clip();
+		// Делаем фон в зависимости от темы
 		ctx.fillStyle = document.body.getAttribute('scheme') === 'bright_light' ? '#ffffff' : '#19191a';
-		ctx.fillRect(0, 0, 351, 189);
-
+		ctx.fillRect(0, 0, width, height);
+		// Рисуем обложку
 		if (counter.coverType === 'color') {
 			ctx.fillStyle = colors[parseInt(counter.coverId) - 1].simple;
-			ctx.fillRect(0, 0, 351, 117);
+			ctx.fillRect(0, 0, width, coverH);
 		} else {
 			const image = new Image();
 			image.src = images[parseInt(counter.coverId) - 11].medium;
-			ctx.drawImage(image, 0, 0, 351, 117);
+			ctx.drawImage(image, 0, 0, width, coverH);
 		}
-
-		ctx.font = 'bold 17px "TT Commons", -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif';
+		// Рисуем Заголовок
+		ctx.font = 'bold 34px "TT Commons", -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif';
 		ctx.fillStyle = document.body.getAttribute('scheme') === 'bright_light' ? '#000000' : '#E1E3E6';
-		ctx.fillText(counter.title, 16, 149);
+		ctx.fillText(counter.title, textX, textBigY, maxWidthTitleText);
+		// Рисуем количество дней
 		ctx.textAlign = 'end';
-		ctx.fillText(days, 335, 149);
-		
-		ctx.font = '13px "TT Commons", -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif';
+		ctx.fillText(days, width - textX, textBigY);
+		// Рисуем статус
+		ctx.font = '26px "TT Commons", -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif';
 		ctx.fillStyle = '#818C99';
-		ctx.fillText(status, 335, 169);
+		ctx.fillText(status, width - textX, textSmallY);
+		// Рисуем дату
 		ctx.textAlign = 'start';
-		ctx.fillText(date.format('LL'), 16, 169);
-
-		console.log(canvas.toDataURL("image/png"));
+		ctx.fillText(date.format('LL'), textX, textSmallY);
+		// Заряжаем картинку в сторис
+		shareContentByStory(link, canvas.toDataURL("image/png"));
     };
 
     const shareCounterAppByWall = async ({ counter }) => {
@@ -159,17 +167,6 @@ const Counters = ({
 		const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
         shareContentByMessage(link);
     };
-
-	const dayOfNum = (number) => {  
-		let cases = [2, 0, 1, 1, 1, 2]; 
-		let titles = ['день', 'дня', 'дней'];
-		return titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ];  
-	};
-
-	const switchCard = (panel, index) => {
-		setSlideIndex(index);
-		setActivePanel(panel);
-	};
 
 	const openShareMenu = ({ counter }) => {
 		setPopout(

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import bridge from '@vkontakte/vk-bridge';
+// import bridge from '@vkontakte/vk-bridge';
 import _ from 'lodash';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';

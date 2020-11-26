@@ -72,11 +72,5 @@ const images = [
     { id: '24', title: 'candle', small: CandleSmall, medium: CandleMedium, large: CandleLarge },
 ];
 
-
-
-// function imageLoader() {
-//     return images;
-// }
-
 export { images, colors };
 
