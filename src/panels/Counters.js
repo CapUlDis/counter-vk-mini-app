@@ -31,6 +31,7 @@ import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
 import { images, colors } from './components/img/Covers';
 import { shareContentByStory, shareContentByWall, shareContentByMessage } from './helpers/share';
+import { isItDesktop } from './helpers/utils';
 
 
 const VIEW = {
@@ -73,6 +74,8 @@ const Counters = ({
 	handleJoinClick
 }) => {
 	const osname = usePlatform();
+
+	isItDesktop();
 
 	const dayOfNum = (number) => {  
 		let cases = [2, 0, 1, 1, 1, 2]; 
@@ -171,9 +174,11 @@ const Counters = ({
 	const openShareMenu = ({ counter }) => {
 		setPopout(
 			<ActionSheet onClose={() => setPopout(null)}>
-				<ActionSheetItem autoclose before={<Icon28StoryOutline/>} onClick={() => shareCounterCardByStory({ counter })}>
-					В историю
-				</ActionSheetItem>
+				{!isItDesktop() &&
+					<ActionSheetItem autoclose before={<Icon28StoryOutline/>} onClick={() => shareCounterCardByStory({ counter })}>
+						В историю
+					</ActionSheetItem>
+				}
 				<ActionSheetItem autoclose before={<Icon28ArticleOutline/>} onClick={() => shareCounterAppByWall({ counter })}>
 					На стену
 				</ActionSheetItem>
