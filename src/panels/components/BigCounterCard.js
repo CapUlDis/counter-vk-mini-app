@@ -8,19 +8,14 @@ import './BigCounterCard.css'
 import { images, colors } from '../components/img/Covers';
 
 
-const VIEW = {
-	NORMAL: 'normal',
-	BIG: 'big'
-};
-
-const BigCounterCard = ({ switchCard, counter, days, date, status, fetchedUser, index, ...props }) => (
+const BigCounterCard = ({ switchCard, counter, days, date, status, fetchedUser, ...props }) => (
     <Card size="l" mode="shadow" className="BigCounterCard">
         <label>
             {switchCard &&
                 <input
                     className="BigCounterCard__divButton"
                     type="button"
-                    onClick={() => {switchCard(VIEW.NORMAL, index)}}
+                    onClick={switchCard}
                 />
             }
             {counter.coverType === "color"

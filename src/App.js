@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useRouter } from '@happysanta/router';
 import bridge from '@vkontakte/vk-bridge';
 import _ from 'lodash';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
@@ -18,6 +19,22 @@ import Icon24Error from '@vkontakte/icons/dist/24/error';
 import '@vkontakte/vkui/dist/vkui.css';
 import { standardCounters } from './components/standardCounters';
 import { saveService, saveNewCounter } from './components/storage';
+import {
+	VIEW_COUNTERS,
+	VIEW_CREATE,
+	VIEW_CATALOG,
+	PANEL_COUNTERS,
+	PANEL_COUNTERS_BIG,
+	PANEL_CREATE,
+	PANEL_CATALOG,
+	PANEL_CATALOG_BIG,
+	MODAL_PAGE,
+	POPOUT_LOADER,
+	POPOUT_DELETE,
+	PAGE_COUNTERS,
+	PAGE_CREATE,
+	PAGE_CATALOG
+} from './routers';
 
 import Counters from './panels/Counters';
 import Create from './panels/Create';
@@ -55,6 +72,9 @@ const VIEW = {
 };
 
 const App = () => {
+	const location = useLocation();
+	const router = useRouter();
+
 	const [service, setService] = useState({});
 	const [counters, setCounters] = useState({});
 	const [fetchedUser, setUser] = useState(null);
@@ -258,14 +278,62 @@ const App = () => {
 		}
 	};
 
+	// const popout = (() => {
+	// 	if (location.getPopupId() === POPOUT_LOADER) {
+	// 		return <ScreenSpinner size='large'/>
+	// 	}
+
+	// 	if (location.getPopupId() === POPOUT_DELETE) {
+	// 		return (
+	// 			<Alert
+	// 				actions={[{
+	// 					title: 'Отмена',
+	// 					autoclose: true,
+	// 					mode: 'cancel'
+	// 					}, {
+	// 					title: 'Удалить',
+	// 					autoclose: true,
+	// 					mode: 'destructive',
+	// 					action: () => handleDeleteClick({ counterId, standard }),
+	// 				}]}
+	// 				onClose={() => router.popPage()}
+	// 			>
+	// 				<h2>Удаление счетчика</h2>
+	// 				<p>Вы уверены, что хотите удалить этот счетчик?</p>
+	// 			</Alert>
+	// 		);
+	// 	}
+	// })();
+
 	const openDeleteDialogue = ({ counterId, standard }) => {
+
+		if (location.getPopupId() === POPOUT_DELETE) {
+			return (
+				<Alert
+					actions={[{
+						title: 'Отмена',
+						autoclose: true,
+						mode: 'cancel'
+						}, {
+						title: 'Удалить',
+						autoclose: true,
+						mode: 'destructive',
+						action: () => handleDeleteClick({ counterId, standard }),
+					}]}
+					onClose={() => router.popPage()}
+				>
+					<h2>Удаление счетчика</h2>
+					<p>Вы уверены, что хотите удалить этот счетчик?</p>
+				</Alert>
+			);
+		}
 		setPopout(
 			<Alert
 				actions={[{
 					title: 'Отмена',
 					autoclose: true,
 					mode: 'cancel'
-					}, {
+				}, {
 					title: 'Удалить',
 					autoclose: true,
 					mode: 'destructive',
@@ -335,8 +403,9 @@ const App = () => {
 			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 
 			setActiveModal(null);
-			setActivePanelCounters(VIEW.NORMAL);
-			setActiveStory(STORIES.COUNTERS);
+			// setActivePanelCounters(VIEW.NORMAL);
+			// setActiveStory(STORIES.COUNTERS);
+			router.pushPage(PAGE_COUNTERS);
 			return window.scrollTo(0, document.body.scrollHeight);
 
 		} catch (error) {
@@ -355,44 +424,52 @@ const App = () => {
 	}
 
 	return (
-		<Epic activeStory={activeStory} tabbar={
-			<Tabbar shadow={activeStory === STORIES.CREATE ? false : true}>
+		<Epic activeStory={location.getViewId()} tabbar={
+			<Tabbar shadow={location.getViewId() === VIEW_CREATE ? false : true}>
 				<TabbarItem
-				onClick={() => {
-					setEditMode(false);
-					setActivePanelCounters(VIEW.NORMAL);
-					setActiveStory(STORIES.COUNTERS);
-					window.scrollTo(0, 0);
-				}}
-				selected={activeStory === STORIES.COUNTERS}
-				data-story={STORIES.COUNTERS}
-				text="Счетчики"
-				><Icon28RecentOutline/></TabbarItem>
+					onClick={() => {
+						setEditMode(false);
+						// setActivePanelCounters(VIEW.NORMAL);
+						// setActiveStory(STORIES.COUNTERS);
+						router.pushPage(PAGE_COUNTERS);
+						window.scrollTo(0, 0);
+					}}
+					selected={location.getViewId() === VIEW_COUNTERS}
+					data-story={VIEW_COUNTERS}
+					text="Счетчики"
+				>
+					<Icon28RecentOutline/>
+				</TabbarItem>
 				<TabbarItem
-				onClick={() => {
-					showAdd();
-					setActiveStory(STORIES.CREATE);
-					window.scrollTo(0, 0);
-				}}
-				selected={activeStory === STORIES.CREATE}
-				data-story={STORIES.CREATE}
-				text="Создать"
-				><Icon28AddCircleOutline/></TabbarItem>
+					onClick={() => {
+						showAdd();
+						// setActiveStory(STORIES.CREATE);
+						router.pushPage(PAGE_CREATE);
+						window.scrollTo(0, 0);
+					}}
+					selected={location.getViewId() === VIEW_CREATE}
+					data-story={VIEW_CREATE}
+					text="Создать"
+				>
+					<Icon28AddCircleOutline/>
+				</TabbarItem>
 				<TabbarItem
-				onClick={() => {
-					showAdd();
-					setEditMode(false);
-					setActiveStory(STORIES.CATALOG);
-					window.scrollTo(0, 0);
-				}}
-				selected={activeStory === STORIES.CATALOG}
-				data-story={STORIES.CATALOG}
-				text="Каталог"
-				><Icon28MenuOutline/></TabbarItem>
+					onClick={() => {
+						showAdd();
+						setEditMode(false);
+						// setActiveStory(STORIES.CATALOG);
+						router.pushPage(PAGE_CATALOG);
+						window.scrollTo(0, 0);
+					}}
+					selected={location.getViewId() === VIEW_CATALOG}
+					data-story={VIEW_CATALOG}
+					text="Каталог"
+				>
+					<Icon28MenuOutline/>
+				</TabbarItem>
 			</Tabbar>
 		}>
-			<Counters 
-				id={STORIES.COUNTERS} 
+			<Counters id={VIEW_COUNTERS}
 				go={() => go(STORIES.CREATE)}
 				activePanel={activePanelCounters}
 				setActivePanel={setActivePanelCounters}
@@ -410,13 +487,17 @@ const App = () => {
 				activeModal={activeModal}
 				setActiveModal={setActiveModal}
 				handleJoinClick={handleJoinClick}/>
-			<View id={STORIES.CREATE} activePanel={STORIES.CREATE} popout={popout}>
-				<Create 
-					id={STORIES.CREATE} 
-					go={() => {
-						setActivePanelCounters(VIEW.NORMAL);
-						go(STORIES.COUNTERS);
-					}}
+			<View id={VIEW_CREATE} 
+				activePanel={location.getViewActivePanel(VIEW_CREATE)} 
+				popout={popout}
+				history={location.hasOverlay() ? [] : location.getViewHistory(VIEW_CREATE)}
+				onSwipeBack={() => router.popPage()}
+			>
+				<Create id={PANEL_CREATE} 
+					// go={() => {
+					// 	setActivePanelCounters(VIEW.NORMAL);
+					// 	go(STORIES.COUNTERS);
+					// }}
 					openDeleteDialogue={openDeleteDialogue}
 					goBackFromEditMode={goBackFromEditMode} 
 					service={service} 
@@ -426,8 +507,7 @@ const App = () => {
 					setEditMode={setEditMode}
 					setPopout={setPopout}/>
 			</View>
-			<Catalog 
-				id={STORIES.CATALOG}
+			<Catalog id={VIEW_CATALOG}
 				service={service}
 				activePanel={activePanelCatalog}
 				setActivePanel={setActivePanelCatalog}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from '@happysanta/router';
 // import bridge from '@vkontakte/vk-bridge';
 import _ from 'lodash';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
@@ -25,6 +26,7 @@ import { useLocalStorage } from './helpers/useLocalStorage';
 import { images, colors } from './components/img/Covers';
 import { saveService, saveNewCounter } from '../components/storage';
 import RadioCard from './components/RadioCard';
+import { PAGE_COUNTERS } from '../routers';
 
 
 const COVERS = {
@@ -32,7 +34,17 @@ const COVERS = {
 	THEMES: 'theme'
 };
 
-const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters, editMode, setEditMode, openDeleteDialogue}) => {
+const Create = ({ 
+	id, 
+	service, 
+	setService, 
+	loadCounters, 
+	editMode, 
+	setEditMode, 
+	openDeleteDialogue
+}) => {
+	const router = useRouter();
+	
 	if (editMode) { 
 		window.localStorage.clear();
 	};
@@ -108,7 +120,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 				window.localStorage.clear();
 				setEditMode(false);
 
-				go();
+				router.popPage();
 				return window.scrollTo(0, 0);
 			}
 
@@ -129,7 +141,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 			await saveService(cloneService);
 			
 			await loadCounters(cloneService);
-
+			
 			
 			window.localStorage.clear();
 
@@ -137,7 +149,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 
-			go();
+			router.pushPage(PAGE_COUNTERS);
 
 			return window.scrollTo(0, document.body.scrollHeight);
 
@@ -149,7 +161,18 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 	return (
 		<Panel id={id}>
 			<PanelHeader 
-				left={editMode && <PanelHeaderButton><Icon24Back fill='#4bb34b' onClick={() => { goBackFromEditMode(editMode.index) }}/></PanelHeaderButton>}
+				left={editMode && 
+					<PanelHeaderButton>
+						<Icon24Back 
+							fill='#4bb34b' 
+							onClick={() => { 
+								// goBackFromEditMode(editMode.index);
+								setEditMode(false);
+								router.popPage();
+							}}
+						/>
+					</PanelHeaderButton>
+				}
 				separator={false}>{!editMode ? 'Создать' : 'Редактировать'}
 			</PanelHeader>
 			<FormLayout>
@@ -226,7 +249,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 					{activeCoverTab === 'color'
 						? <div className="CoversGrid">
 							<div className="RadioCards">
-								{ colors.map(({ id, style }) => 
+								{colors.map(({ id, style }) => 
 									<RadioCard
 										key={id}
 										value={id} 
@@ -235,12 +258,12 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 										onChange={e => {
 											setCoverType('color');
 											setCoverId(e.target.value);
-										}}/>) }
+										}}/>)}
 							</div>
 						</div>
 						: <div className="CoversGrid">
 							<div className="RadioCards">
-								{ images.map(({ id, small }) => 
+								{images.map(({ id, small }) => 
 									<RadioCard
 										key={id} 
 										value={id} 
@@ -249,7 +272,7 @@ const Create = ({ id, go, goBackFromEditMode, service, setService, loadCounters,
 										onChange={e => {
 											setCoverType('theme');
 											setCoverId(e.target.value);
-										}}/>) }
+										}}/>)}
 							</div>
 						</div>
 					}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation, useRouter } from '@happysanta/router';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -14,6 +15,7 @@ import './Counters.css';
 import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
 import { standardCounters } from '../components/standardCounters';
+import { PAGE_CATALOG_BIG, PANEL_CATALOG, PANEL_CATALOG_BIG } from '../routers';
 
 
 const moment = require('moment');
@@ -36,13 +38,15 @@ const VIEW = {
 };
 
 const Catalog = ({ 
+	id,
 	service, 
-	activePanel,
-	setActivePanel,
 	slideIndex,
 	setSlideIndex,
 	handleJoinClick
-	}) => {
+}) => {
+
+	const location = useLocation();
+	const router = useRouter();
 
 	const dayOfNum = (number) => {  
 		let cases = [2, 0, 1, 1, 1, 2]; 
@@ -50,16 +54,14 @@ const Catalog = ({
 		return titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ];  
 	};
 
-	const switchCard = (panel, index) => {
-		setSlideIndex(index);
-		setActivePanel(panel);
-	};
-
 	return (
-		<View activePanel={activePanel}>
-			<Panel id={VIEW.NORMAL}>
+		<View id={id}
+			activePanel={location.getViewActivePanel(id)}
+			onSwipeBack={() => router.popPage()}
+			history={location.hasOverlay() ? [] : location.getViewHistory(id)}
+		>
+			<Panel id={PANEL_CATALOG}>
 				<PanelHeader 
-					// left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
 					separator={false}
 					>Каталог
 				</PanelHeader>
@@ -69,6 +71,7 @@ const Catalog = ({
 							if (!service.catalog[index]) return result;
 
 							const date = moment(standCounter.date);
+							const trueIndex = result.length;
 							let days = null;
 							let status = null;
 							if (standCounter.howCount === 'to') {
@@ -84,13 +87,14 @@ const Catalog = ({
 								<CounterCard
 									key={standCounter.counterId}
 									id={standCounter.counterId}
-									index={result.length}
 									counter={standCounter}
 									date={date}
 									days={days}
 									status={status}
-									switchCard={switchCard}
-									view={VIEW.BIG}
+									switchCard={() => {
+										setSlideIndex(trueIndex);
+										router.pushPage(PAGE_CATALOG_BIG);
+									}}
 								>
 									<Button 
 										size="xl" 
@@ -108,9 +112,9 @@ const Catalog = ({
 					</CardGrid>
 				</Group>
 			</Panel>
-			<Panel id={VIEW.BIG}>
+			<Panel id={PANEL_CATALOG_BIG}>
 				<PanelHeader 
-					left={<PanelHeaderButton><Icon24Back fill='#4bb34b' onClick={() => setActivePanel(VIEW.NORMAL)}/></PanelHeaderButton>}
+					left={<PanelHeaderButton><Icon24Back fill='#4bb34b' onClick={() => router.popPage()}/></PanelHeaderButton>}
 					separator={false}
 					>Каталог
 				</PanelHeader>
@@ -146,8 +150,7 @@ const Catalog = ({
 								date={date}
 								days={days}
 								status={status}
-								switchCard={switchCard}
-								setActivePanel={setActivePanel}
+								switchCard={() => router.popPage()}
 							>
 								<Button 
 									size="xl" 

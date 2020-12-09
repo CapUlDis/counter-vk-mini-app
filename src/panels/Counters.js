@@ -1,5 +1,6 @@
 import React from 'react';
 // import bridge from "@vkontakte/vk-bridge";
+import { useLocation, useRouter } from '@happysanta/router';
 import { usePlatform, IOS } from '@vkontakte/vkui'
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
@@ -32,6 +33,7 @@ import BigCounterCard from './components/BigCounterCard';
 import { images, colors } from './components/img/Covers';
 import { shareContentByStory, shareContentByWall, shareContentByMessage } from './helpers/share';
 import { isItDesktop } from './helpers/utils';
+import { PAGE_COUNTERS_BIG, MODAL_PAGE, PANEL_COUNTERS, PANEL_COUNTERS_BIG, PAGE_CREATE } from '../routers';
 
 
 const VIEW = {
@@ -55,9 +57,6 @@ moment.updateLocale('ru', {
 
 const Counters = ({ 
 	id, 
-	go, 
-	activePanel, 
-	setActivePanel, 
 	slideIndex, 
 	setSlideIndex, 
 	service, 
@@ -74,8 +73,8 @@ const Counters = ({
 	handleJoinClick
 }) => {
 	const osname = usePlatform();
-
-	isItDesktop();
+	const location = useLocation();
+	const router = useRouter();
 
 	const dayOfNum = (number) => {  
 		let cases = [2, 0, 1, 1, 1, 2]; 
@@ -83,11 +82,6 @@ const Counters = ({
 		return titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ];  
 	};
 
-	const switchCard = (panel, index) => {
-		setSlideIndex(index);
-		setActivePanel(panel);
-	};
-    
     const shareCounterCardByStory = async ({ counter }) => {
 		const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
 		const date = moment(counter.date);
@@ -191,20 +185,21 @@ const Counters = ({
 	};
 
 	return (
-		<View 
-			id={id} 
-			activePanel={activePanel} 
+		<View id={id} 
+			activePanel={location.getViewActivePanel(id)}
+			onSwipeBack={() => router.popPage()}
+			history={location.hasOverlay() ? [] : location.getViewHistory(id)}
 			popout={popout} 
 			modal={
-				<ModalRoot activeModal={activeModal} onClose={() => setActiveModal(null)}>
+				<ModalRoot activeModal={location.getModalId()} onClose={() => router.popPage()}>
 					<ModalPage 
-						id="sharedCounter"
-						onClose={() => setActiveModal(null)}
+						id={MODAL_PAGE}
+						onClose={() => router.popPage()}
 						settlingHeight={100}
 						header={
 							<ModalPageHeader
 								noShadow
-								right={<PanelHeaderButton onClick={() => setActiveModal(null)}>{osname === IOS ? 'Отмена' : <Icon24Cancel />}</PanelHeaderButton>}
+								right={<PanelHeaderButton onClick={() => router.popPage()}>{osname === IOS ? 'Отмена' : <Icon24Cancel />}</PanelHeaderButton>}
 							>
 								Добавить счетчик
 							</ModalPageHeader>
@@ -240,9 +235,8 @@ const Counters = ({
 				</ModalRoot>
 			}
 		> 
-			<Panel id={VIEW.NORMAL}>
+			<Panel id={PANEL_COUNTERS}>
 				<PanelHeader 
-					// left={<PanelHeaderButton><Icon28Notifications fill='#4bb34b'/></PanelHeaderButton>}
 					separator={false}
 					>Счетчики
 				</PanelHeader>
@@ -250,7 +244,7 @@ const Counters = ({
 					? <Placeholder 
 						icon={<Icon56AddCircleOutline/>}
 						header="Создайте счетчик"
-						action={<Button size="l" mode="commerce" onClick={go}>Создать счетчик</Button>}
+						action={<Button size="l" mode="commerce" onClick={() => router.pushPage(PAGE_CREATE)}>Создать счетчик</Button>}
 						stretched>
 						<div className="Placeholder__text__in">
 							Здесь будут отображаться ваши счетчики.
@@ -275,13 +269,14 @@ const Counters = ({
 									<CounterCard
 										key={counter.counterId}
 										id={counter.counterId}
-										index={index}
 										counter={counter}
 										date={date}
 										days={days}
 										status={status}
-										switchCard={switchCard}
-										view={VIEW.BIG}
+										switchCard={() => {
+											setSlideIndex(index);
+											router.pushPage(PAGE_COUNTERS_BIG);
+										}}
 									/>
 								);
 							})}
@@ -289,9 +284,9 @@ const Counters = ({
 					</Group>
 				}
 			</Panel>
-			<Panel id={VIEW.BIG}>
+			<Panel id={PANEL_COUNTERS_BIG}>
 				<PanelHeader 
-					left={<PanelHeaderButton><Icon24Back fill='#4bb34b' onClick={() => setActivePanel(VIEW.NORMAL)}/></PanelHeaderButton>}
+					left={<PanelHeaderButton><Icon24Back fill='#4bb34b' onClick={() => router.popPage()}/></PanelHeaderButton>}
 					separator={false}
 					>Счетчики
 				</PanelHeader>
@@ -299,7 +294,7 @@ const Counters = ({
 					? <Placeholder 
 						icon={<Icon56AddCircleOutline/>}
 						header="Создайте счетчик"
-						action={<Button size="l" mode="commerce" onClick={go}>Создать счетчик</Button>}
+						action={<Button size="l" mode="commerce" onClick={() => router.pushPage(PAGE_CREATE)}>Создать счетчик</Button>}
 						stretched>
 						<div className="Placeholder__text__in">
 							Здесь будут отображаться ваши счетчики.
@@ -329,25 +324,24 @@ const Counters = ({
 								}
 								return (
 									<BigCounterCard key={counter.counterId}
-										index={index}
 										counter={counter}
 										date={date}
 										days={days}
 										status={status}
 										fetchedUser={fetchedUser}
-										switchCard={switchCard}
+										switchCard={() => router.popPage()}
 										right={!counter.standard 
 											? <Icon28WriteOutline 
 												className="BigCounterCard__edit" 
 												onClick={() => {
 													counter.index = index;
 													setEditMode(counter);
-													go();
+													router.pushPage(PAGE_CREATE);
 												}}
 											/>
 											: <Icon28DeleteOutline
 												className="BigCounterCard__edit" 
-												onClick={() => openDeleteDialogue({ counterId: counter.counterId, standard: counter.standard})}
+												onClick={() => openDeleteDialogue({ counterId: counter.counterId, standard: counter.standard })}
 											/>
 										}
 									>

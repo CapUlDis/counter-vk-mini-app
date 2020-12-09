@@ -7,14 +7,14 @@ import './CounterCard.css'
 import { images, colors } from '../components/img/Covers';
 
 
-const CounterCard = ({ switchCard, view, counter, days, date, status, index, id, ...props }) => {
+const CounterCard = ({ switchCard, counter, days, date, status, id, ...props }) => {
     return (
         <Card size="l" mode="shadow" id={id} className="CounterCard">
             <label className="CounterCard__label">
                 <input
                     className="CounterCard__button"
                     type="button"
-                    onClick={() => {switchCard(view, index)}}
+                    onClick={switchCard}
                 />
                 {counter.coverType === "color"
                     ? <div className="CounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
