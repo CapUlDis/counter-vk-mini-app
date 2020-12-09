@@ -3,10 +3,24 @@ import "core-js/features/set";
 import React from "react";
 import ReactDOM from "react-dom";
 import bridge from "@vkontakte/vk-bridge";
+import moment from 'moment';
 import { RouterContext } from '@happysanta/router';
 import { router } from './routers';
 import { ConfigProvider } from '@vkontakte/vkui';
 import App from "./App";
+
+
+moment.locale("ru");
+moment.updateLocale('ru', {
+    longDateFormat : {
+        LTS: 'H:mm:ss',
+        LT: 'H:mm',
+        L: 'DD.MM.YYYY',
+        LL: 'D MMMM YYYY',
+        LLL: 'D MMMM YYYY г., H:mm',
+        LLLL: 'dddd, D MMMM YYYY г., H:mm'
+    }
+});
 
 // Init VK  Mini App
 bridge.send("VKWebAppInit");

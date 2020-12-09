@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import bridge from "@vkontakte/vk-bridge";
 import { useLocation, useRouter } from '@happysanta/router';
 import { usePlatform, IOS } from '@vkontakte/vkui'
@@ -30,16 +30,8 @@ import Icon24Cancel from '@vkontakte/icons/dist/24/cancel';
 import './Counters.css';
 import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
-import { images, colors } from './components/img/Covers';
-import { shareContentByStory, shareContentByWall, shareContentByMessage } from './helpers/share';
-import { isItDesktop } from './helpers/utils';
-import { PAGE_COUNTERS_BIG, MODAL_PAGE, PANEL_COUNTERS, PANEL_COUNTERS_BIG, PAGE_CREATE } from '../routers';
+import { PAGE_COUNTERS_BIG, MODAL_PAGE, PANEL_COUNTERS, PANEL_COUNTERS_BIG, PAGE_CREATE, POPOUT_SHARE, POPOUT_DELETE } from '../routers';
 
-
-const VIEW = {
-	NORMAL: 'normal',
-	BIG: 'big'
-};
 
 const moment = require('moment');
 require('moment/locale/ru');
@@ -56,19 +48,16 @@ moment.updateLocale('ru', {
 
 
 const Counters = ({ 
-	id, 
+	id,
+	popout,
+	setCounterToShare,
+	setCounterToDelete,
 	slideIndex, 
 	setSlideIndex, 
 	service, 
 	counters, 
 	fetchedUser, 
-	appLink, 
 	setEditMode, 
-	openDeleteDialogue, 
-	popout, 
-	setPopout, 
-	activeModal,
-	setActiveModal,
 	sharedCounter,
 	handleJoinClick
 }) => {
@@ -82,107 +71,107 @@ const Counters = ({
 		return titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ];  
 	};
 
-    const shareCounterCardByStory = async ({ counter }) => {
-		const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
-		const date = moment(counter.date);
-		let days = null;
-		let status = null;
-		if (counter.howCount === 'to') {
-			let daysDiff = date.diff(moment().startOf('day'), 'days');
-			days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
-			status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
-		} else {
-			let daysDiff = moment().diff(date, 'days');
-			days = daysDiff + ' ' + dayOfNum(daysDiff);
-			status = 'прошло';
-		}
+    // const shareCounterCardByStory = async ({ counter }) => {
+	// 	const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
+	// 	const date = moment(counter.date);
+	// 	let days = null;
+	// 	let status = null;
+	// 	if (counter.howCount === 'to') {
+	// 		let daysDiff = date.diff(moment().startOf('day'), 'days');
+	// 		days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
+	// 		status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
+	// 	} else {
+	// 		let daysDiff = moment().diff(date, 'days');
+	// 		days = daysDiff + ' ' + dayOfNum(daysDiff);
+	// 		status = 'прошло';
+	// 	}
 
-		// Задаём параметры изображения и канваса
-		const height = 378;
-		const width = 702;
-		const coverH = 234;
-		const textX = 32;
-		const textBigY = 64 + coverH;
-		const textSmallY = 40 + textBigY;
-		const maxWidthTitleText = 460;
-		const canvas = document.createElement("canvas");
-		canvas.height = height;
-		canvas.width = width;
-		const ctx = canvas.getContext("2d");
-		// Скругляем углы канваса
-		ctx.beginPath();
-		const x = 0;
-		const y = 0;
-		const radius = 20;
-		ctx.moveTo(x, y + radius);
-		ctx.lineTo(x, y + height - radius);
-		ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
-		ctx.lineTo(x + width - radius, y + height);
-		ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
-		ctx.lineTo(x + width, y + radius);
-		ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
-		ctx.lineTo(x + radius, y);
-		ctx.quadraticCurveTo(x, y, x, y + radius);
-		ctx.closePath();
-		ctx.clip();
-		// Делаем фон в зависимости от темы
-		ctx.fillStyle = document.body.getAttribute('scheme') === 'bright_light' ? '#ffffff' : '#19191a';
-		ctx.fillRect(0, 0, width, height);
-		// Рисуем обложку
-		if (counter.coverType === 'color') {
-			ctx.fillStyle = colors[parseInt(counter.coverId) - 1].simple;
-			ctx.fillRect(0, 0, width, coverH);
-		} else {
-			const image = new Image();
-			image.src = images[parseInt(counter.coverId) - 11].medium;
-			ctx.drawImage(image, 0, 0, width, coverH);
-		}
-		// Рисуем Заголовок
-		ctx.font = 'bold 34px "TT Commons", -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif';
-		ctx.fillStyle = document.body.getAttribute('scheme') === 'bright_light' ? '#000000' : '#E1E3E6';
-		ctx.fillText(counter.title, textX, textBigY, maxWidthTitleText);
-		// Рисуем количество дней
-		ctx.textAlign = 'end';
-		ctx.fillText(days, width - textX, textBigY);
-		// Рисуем статус
-		ctx.font = '26px "TT Commons", -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif';
-		ctx.fillStyle = '#818C99';
-		ctx.fillText(status, width - textX, textSmallY);
-		// Рисуем дату
-		ctx.textAlign = 'start';
-		ctx.fillText(date.format('LL'), textX, textSmallY);
-		// Заряжаем картинку в сторис
-		shareContentByStory(link, canvas.toDataURL("image/png"));
-    };
+	// 	// Задаём параметры изображения и канваса
+	// 	const height = 378;
+	// 	const width = 702;
+	// 	const coverH = 234;
+	// 	const textX = 32;
+	// 	const textBigY = 64 + coverH;
+	// 	const textSmallY = 40 + textBigY;
+	// 	const maxWidthTitleText = 460;
+	// 	const canvas = document.createElement("canvas");
+	// 	canvas.height = height;
+	// 	canvas.width = width;
+	// 	const ctx = canvas.getContext("2d");
+	// 	// Скругляем углы канваса
+	// 	ctx.beginPath();
+	// 	const x = 0;
+	// 	const y = 0;
+	// 	const radius = 20;
+	// 	ctx.moveTo(x, y + radius);
+	// 	ctx.lineTo(x, y + height - radius);
+	// 	ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
+	// 	ctx.lineTo(x + width - radius, y + height);
+	// 	ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+	// 	ctx.lineTo(x + width, y + radius);
+	// 	ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
+	// 	ctx.lineTo(x + radius, y);
+	// 	ctx.quadraticCurveTo(x, y, x, y + radius);
+	// 	ctx.closePath();
+	// 	ctx.clip();
+	// 	// Делаем фон в зависимости от темы
+	// 	ctx.fillStyle = document.body.getAttribute('scheme') === 'bright_light' ? '#ffffff' : '#19191a';
+	// 	ctx.fillRect(0, 0, width, height);
+	// 	// Рисуем обложку
+	// 	if (counter.coverType === 'color') {
+	// 		ctx.fillStyle = colors[parseInt(counter.coverId) - 1].simple;
+	// 		ctx.fillRect(0, 0, width, coverH);
+	// 	} else {
+	// 		const image = new Image();
+	// 		image.src = images[parseInt(counter.coverId) - 11].medium;
+	// 		ctx.drawImage(image, 0, 0, width, coverH);
+	// 	}
+	// 	// Рисуем Заголовок
+	// 	ctx.font = 'bold 34px "TT Commons", -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif';
+	// 	ctx.fillStyle = document.body.getAttribute('scheme') === 'bright_light' ? '#000000' : '#E1E3E6';
+	// 	ctx.fillText(counter.title, textX, textBigY, maxWidthTitleText);
+	// 	// Рисуем количество дней
+	// 	ctx.textAlign = 'end';
+	// 	ctx.fillText(days, width - textX, textBigY);
+	// 	// Рисуем статус
+	// 	ctx.font = '26px "TT Commons", -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif';
+	// 	ctx.fillStyle = '#818C99';
+	// 	ctx.fillText(status, width - textX, textSmallY);
+	// 	// Рисуем дату
+	// 	ctx.textAlign = 'start';
+	// 	ctx.fillText(date.format('LL'), textX, textSmallY);
+	// 	// Заряжаем картинку в сторис
+	// 	shareContentByStory(link, canvas.toDataURL("image/png"));
+    // };
 
-    const shareCounterAppByWall = async ({ counter }) => {
-		const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
-        shareContentByWall('Считай количество дней от или до даты с помощью приложения "Счётчики времени"!', link);
-    };
+    // const shareCounterAppByWall = async ({ counter }) => {
+	// 	const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
+    //     shareContentByWall('Считай количество дней от или до даты с помощью приложения "Счётчики времени"!', link);
+    // };
 
-    const shareCounterAppByMessage = async ({ counter }) => {
-		const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
-        shareContentByMessage(link);
-    };
+    // const shareCounterAppByMessage = async ({ counter }) => {
+	// 	const link = appLink + '#' + Buffer.from(JSON.stringify(counter)).toString("base64");
+    //     shareContentByMessage(link);
+    // };
 
-	const openShareMenu = ({ counter }) => {
-		setPopout(
-			<ActionSheet onClose={() => setPopout(null)}>
-				{!isItDesktop() &&
-					<ActionSheetItem autoclose before={<Icon28StoryOutline/>} onClick={() => shareCounterCardByStory({ counter })}>
-						В историю
-					</ActionSheetItem>
-				}
-				<ActionSheetItem autoclose before={<Icon28ArticleOutline/>} onClick={() => shareCounterAppByWall({ counter })}>
-					На стену
-				</ActionSheetItem>
-				<ActionSheetItem autoclose before={<Icon28MessageOutline/>} onClick={() => shareCounterAppByMessage({ counter })}>
-					В личные сообщения
-				</ActionSheetItem>
-				{osname === IOS && <ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
-			</ActionSheet>
-		);
-	};
+	// const openShareMenu = ({ counter }) => {
+	// 	setPopout(
+	// 		<ActionSheet onClose={() => setPopout(null)}>
+	// 			{!isItDesktop() &&
+	// 				<ActionSheetItem autoclose before={<Icon28StoryOutline/>} onClick={() => shareCounterCardByStory({ counter })}>
+	// 					В историю
+	// 				</ActionSheetItem>
+	// 			}
+	// 			<ActionSheetItem autoclose before={<Icon28ArticleOutline/>} onClick={() => shareCounterAppByWall({ counter })}>
+	// 				На стену
+	// 			</ActionSheetItem>
+	// 			<ActionSheetItem autoclose before={<Icon28MessageOutline/>} onClick={() => shareCounterAppByMessage({ counter })}>
+	// 				В личные сообщения
+	// 			</ActionSheetItem>
+	// 			{osname === IOS && <ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
+	// 		</ActionSheet>
+	// 	);
+	// };
 
 	return (
 		<View id={id} 
@@ -341,7 +330,10 @@ const Counters = ({
 											/>
 											: <Icon28DeleteOutline
 												className="BigCounterCard__edit" 
-												onClick={() => openDeleteDialogue({ counterId: counter.counterId, standard: counter.standard })}
+												onClick={() => {
+													setCounterToDelete(counter);
+													router.replacePopup(POPOUT_DELETE);
+												}}
 											/>
 										}
 									>
@@ -351,7 +343,10 @@ const Counters = ({
 											className="BigCounterCard__button"
 											style={{ backgroundColor: document.body.getAttribute('scheme') === 'bright_light' ? '#EBF7EB' : 'rgba(98, 119, 98, 0.25)' }}
 											before={<Icon24ShareOutline/>} 
-											onClick={() => openShareMenu({ counter })}
+											onClick={() => {
+												setCounterToShare(counter);
+												router.replacePopup(POPOUT_SHARE);
+											}}
 										>
 											Поделиться
 										</Button>

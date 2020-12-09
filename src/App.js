@@ -31,18 +31,23 @@ import {
 	MODAL_PAGE,
 	POPOUT_LOADER,
 	POPOUT_DELETE,
+	POPOUT_SHARE,
 	PAGE_COUNTERS,
 	PAGE_CREATE,
-	PAGE_CATALOG
+	PAGE_CATALOG,
+	PAGE_COUNTERS_BIG,
+	PAGE_CATALOG_BIG
 } from './routers';
 
 import Counters from './panels/Counters';
 import Create from './panels/Create';
 import Catalog from './panels/Catalog';
 import Intro from './panels/Intro';
+import Share from './popouts/Share';
+import Delete from './popouts/Delete';
 
 
-const LINK = {
+export const LINK = {
 	APP: 'https://vk.com/app7582904'
 };
 
@@ -82,18 +87,30 @@ const App = () => {
 	const [sharedCounter, setSharedCounter] = useState(false);
 	const [activeModal, setActiveModal] = useState(null);
 	const [userHasSeenAdd, setUserHasSeenAdd] = useState(false);
+	const [counterToDelete, setCounterToDelete] = useState(null);
 
 	const [step, setStep] = useState(STEPS.LOADER_INTRO);
 	const [activePanel, setActivePanel] = useState(LOADER_INTRO.LOADER);
 	const [activeStory, setActiveStory] = useState(STORIES.COUNTERS);
-	const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
+	const [popoutSpinner, setPopoutSpinner] = useState(<ScreenSpinner size='large'/>);
 	const [snackbar, setSnackbar] = useState(false);
 
 	const [activePanelCounters, setActivePanelCounters] = useState(VIEW.NORMAL);
 	const [slideIndexCounters, setSlideIndexCounters] = useState(0);
+	const [counterToShare, setCounterToShare] = useState(null);
 	
 	const [activePanelCatalog, setActivePanelCatalog] = useState(VIEW.NORMAL);
 	const [slideIndexCatalog, setSlideIndexCatalog] = useState(0);
+
+	const popout = (() => {
+		if (location.getPopupId() === POPOUT_SHARE) {
+			return <Share counterToShare={counterToShare}/>;
+		}
+
+		if (location.getPopupId() === POPOUT_DELETE) {
+			return <Delete handleDeleteClick={handleDeleteClick}/>;
+		}
+	})();
 	
 	
 	const loadService = async () => {
@@ -145,7 +162,7 @@ const App = () => {
 				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
 				
 				if (!getObject.keys[0].value) {
-					setPopout(null);
+					setPopoutSpinner(null);
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
 				// console.log('tut');
@@ -153,7 +170,7 @@ const App = () => {
 				const fetchedService = JSON.parse(getObject.keys[0].value);
 				
 				if (!fetchedService.hasSeenIntro) {
-					setPopout(null);
+					setPopoutSpinner(null);
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
 
@@ -163,7 +180,7 @@ const App = () => {
 
 				setUser(await bridge.send('VKWebAppGetUserInfo'));
 
-				setPopout(null);
+				setPopoutSpinner(null);
 
 				if (fetchedSharedCounter) {
 					if (!fetchedSharedCounter.standard) {
@@ -180,7 +197,8 @@ const App = () => {
 
 						if (index !== -1) {
 							setStep(STEPS.MAIN);
-							setActivePanelCounters(VIEW.BIG);
+							// setActivePanelCounters(VIEW.BIG);
+							router.pushPage(PAGE_COUNTERS_BIG);
 							return setSlideIndexCounters(index);
 						} 
 
@@ -197,7 +215,8 @@ const App = () => {
 							return false;
 						});
 						setStep(STEPS.MAIN);
-						setActivePanelCounters(VIEW.BIG);
+						// setActivePanelCounters(VIEW.BIG);
+						router.pushPage(PAGE_COUNTERS_BIG);
 						return setSlideIndexCounters(index);
 					} else {
 						let index = parseInt(fetchedSharedCounter.standard);
@@ -207,8 +226,9 @@ const App = () => {
 							}
 						}
 						setStep(STEPS.MAIN);
-						setActiveStory(STORIES.CATALOG);
-						setActivePanelCatalog(VIEW.BIG);
+						// setActiveStory(STORIES.CATALOG);
+						// setActivePanelCatalog(VIEW.BIG);
+						router.pushPage(PAGE_CATALOG_BIG);
 						return setSlideIndexCatalog(index);
 					}
 					
@@ -278,84 +298,15 @@ const App = () => {
 		}
 	};
 
-	// const popout = (() => {
-	// 	if (location.getPopupId() === POPOUT_LOADER) {
-	// 		return <ScreenSpinner size='large'/>
-	// 	}
-
-	// 	if (location.getPopupId() === POPOUT_DELETE) {
-	// 		return (
-	// 			<Alert
-	// 				actions={[{
-	// 					title: 'Отмена',
-	// 					autoclose: true,
-	// 					mode: 'cancel'
-	// 					}, {
-	// 					title: 'Удалить',
-	// 					autoclose: true,
-	// 					mode: 'destructive',
-	// 					action: () => handleDeleteClick({ counterId, standard }),
-	// 				}]}
-	// 				onClose={() => router.popPage()}
-	// 			>
-	// 				<h2>Удаление счетчика</h2>
-	// 				<p>Вы уверены, что хотите удалить этот счетчик?</p>
-	// 			</Alert>
-	// 		);
-	// 	}
-	// })();
-
-	const openDeleteDialogue = ({ counterId, standard }) => {
-
-		if (location.getPopupId() === POPOUT_DELETE) {
-			return (
-				<Alert
-					actions={[{
-						title: 'Отмена',
-						autoclose: true,
-						mode: 'cancel'
-						}, {
-						title: 'Удалить',
-						autoclose: true,
-						mode: 'destructive',
-						action: () => handleDeleteClick({ counterId, standard }),
-					}]}
-					onClose={() => router.popPage()}
-				>
-					<h2>Удаление счетчика</h2>
-					<p>Вы уверены, что хотите удалить этот счетчик?</p>
-				</Alert>
-			);
-		}
-		setPopout(
-			<Alert
-				actions={[{
-					title: 'Отмена',
-					autoclose: true,
-					mode: 'cancel'
-				}, {
-					title: 'Удалить',
-					autoclose: true,
-					mode: 'destructive',
-					action: () => handleDeleteClick({ counterId, standard }),
-				}]}
-				onClose={() => setPopout(null)}
-			>
-				<h2>Удаление счетчика</h2>
-				<p>Вы уверены, что хотите удалить этот счетчик?</p>
-			</Alert>
-		);
-	};
-
-	const handleDeleteClick = async ({ counterId, standard }) => {
+	const handleDeleteClick = async () => {
 		const cloneService = _.cloneDeep(service);
 
-		const index = cloneService.counters.indexOf(counterId);
+		const index = cloneService.counters.indexOf(counterToDelete.counterId);
 		cloneService.counters.splice(index, 1);
-		cloneService.deletedCounters.push(counterId);
+		cloneService.deletedCounters.push(counterToDelete.counterId);
 
-		if (standard) {
-			cloneService.catalog[standard] = true;
+		if (counterToDelete.standard) {
+			cloneService.catalog[counterToDelete.standard] = true;
 		}
 
 		await saveService(cloneService);
@@ -368,11 +319,13 @@ const App = () => {
 
 		window.localStorage.clear();
 		setEditMode(false);
+		setCounterToDelete(null);
 
 		setSlideIndexCounters(index - 1);
 
-		setActiveStory(STORIES.COUNTERS);
-
+		if (location.getPageId === PAGE_CREATE) {
+			router.popPage();
+		}
 	};
 
 	const handleJoinClick = async ({ counter }) => {
@@ -416,7 +369,7 @@ const App = () => {
 
 	if (step === STEPS.LOADER_INTRO) {
 		return (
-			<View activePanel={activePanel} popout={popout}>
+			<View activePanel={activePanel} popout={popoutSpinner}>
 				<Panel id={LOADER_INTRO.LOADER}/>
 				<Intro id={LOADER_INTRO.INTRO} go={viewIntro} snackbarError={snackbar}/>
 			</View>
@@ -470,22 +423,16 @@ const App = () => {
 			</Tabbar>
 		}>
 			<Counters id={VIEW_COUNTERS}
-				go={() => go(STORIES.CREATE)}
-				activePanel={activePanelCounters}
-				setActivePanel={setActivePanelCounters}
+				popout={popout}
+				setCounterToShare={setCounterToShare}
+				setCounterToDelete={setCounterToDelete}
 				slideIndex={slideIndexCounters}
 				setSlideIndex={setSlideIndexCounters}
-				openDeleteDialogue={openDeleteDialogue}
 				service={service} 
 				counters={counters} 
 				fetchedUser={fetchedUser}
-				appLink={LINK.APP}
 				setEditMode={setEditMode}
-				popout={popout}
-				setPopout={setPopout}
 				sharedCounter={sharedCounter}
-				activeModal={activeModal}
-				setActiveModal={setActiveModal}
 				handleJoinClick={handleJoinClick}/>
 			<View id={VIEW_CREATE} 
 				activePanel={location.getViewActivePanel(VIEW_CREATE)} 
@@ -498,14 +445,13 @@ const App = () => {
 					// 	setActivePanelCounters(VIEW.NORMAL);
 					// 	go(STORIES.COUNTERS);
 					// }}
-					openDeleteDialogue={openDeleteDialogue}
 					goBackFromEditMode={goBackFromEditMode} 
 					service={service} 
 					setService={setService} 
 					loadCounters={loadCounters}
 					editMode={editMode}
 					setEditMode={setEditMode}
-					setPopout={setPopout}/>
+					/>
 			</View>
 			<Catalog id={VIEW_CATALOG}
 				service={service}
