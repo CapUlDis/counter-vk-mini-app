@@ -1,13 +1,28 @@
 import React from "react";
+import moment from "moment";
 import Card from '@vkontakte/vkui/dist/components/Card/Card';
 import Title from '@vkontakte/vkui/dist/components/Typography/Title/Title';
 import Caption from '@vkontakte/vkui/dist/components/Typography/Caption/Caption';
 
 import './CounterCard.css'
 import { images, colors } from '../components/img/Covers';
+import { dayOfNum } from '../../helpers/utils';
 
 
-const CounterCard = ({ switchCard, counter, days, date, status, id, ...props }) => {
+const CounterCard = ({ id, counter, switchCard, ...props }) => {
+    const date = moment(counter.date);
+    let days = null;
+    let status = null;
+    if (counter.howCount === 'to') {
+        let daysDiff = date.diff(moment().startOf('day'), 'days');
+        days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
+        status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
+    } else {
+        let daysDiff = moment().diff(date, 'days');
+        days = daysDiff + ' ' + dayOfNum(daysDiff);
+        status = 'прошло';
+    }
+
     return (
         <Card size="l" mode="shadow" id={id} className="CounterCard">
             <label className="CounterCard__label">
@@ -34,6 +49,6 @@ const CounterCard = ({ switchCard, counter, days, date, status, id, ...props }) 
             </div>
         </Card>
     );
-}
+};
 
 export default CounterCard;

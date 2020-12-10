@@ -92,30 +92,9 @@ const Counters = ({
 						}
 					>
 						<CardGrid style={{ margin: "4px 0px" }}>
-							{(() => {
-								const date = moment(sharedCounter.date);
-								let days = null;
-								let status = null;
-								if (sharedCounter.howCount === 'to') {
-									let daysDiff = date.diff(moment().startOf('day'), 'days');
-									days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
-									status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
-								} else {
-									let daysDiff = moment().diff(date, 'days');
-									days = daysDiff + ' ' + dayOfNum(daysDiff);
-									status = 'прошло';
-								}
-								return (
-									<BigCounterCard 
-										counter={sharedCounter}
-										date={date}
-										days={days}
-										status={status}
-									>
-										<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: sharedCounter })} >Присоединиться</Button>
-									</BigCounterCard>
-								);
-							})()}
+							<BigCounterCard counter={sharedCounter}>
+								<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: sharedCounter })}>Присоединиться</Button>
+							</BigCounterCard>
 						</CardGrid>
 					</ModalPage>
 				</ModalRoot>
@@ -139,26 +118,10 @@ const Counters = ({
 					: <Group >
 						<CardGrid style={{ margin: "8px 0px" }}>
 							{counters.map((counter, index) => {
-								const date = moment(counter.date);
-								let days = null;
-								let status = null;
-								if (counter.howCount === 'to') {
-									let daysDiff = date.diff(moment().startOf('day'), 'days');
-									days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
-									status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
-								} else {
-									let daysDiff = moment().diff(date, 'days');
-									days = daysDiff + ' ' + dayOfNum(daysDiff);
-									status = 'прошло';
-								}
 								return (
-									<CounterCard
+									<CounterCard id={counter.counterId}
 										key={counter.counterId}
-										id={counter.counterId}
 										counter={counter}
-										date={date}
-										days={days}
-										status={status}
 										switchCard={() => {
 											setSlideIndex(index);
 											router.pushPage(PAGE_COUNTERS_BIG);
@@ -196,24 +159,9 @@ const Counters = ({
 					>
 						{(counters && fetchedUser) &&
 							counters.map((counter, index) => {
-								const date = moment(counter.date);
-								let days = null;
-								let status = null;
-								if (counter.howCount === 'to') {
-									let daysDiff = date.diff(moment().startOf('day'), 'days');
-									days = daysDiff > 0 ? daysDiff + ' ' + dayOfNum(daysDiff) : 'Закончилось';
-									status = date.diff(moment().startOf('day'), 'days') > 0 ? 'осталось' : '';
-								} else {
-									let daysDiff = moment().diff(date, 'days');
-									days = daysDiff + ' ' + dayOfNum(daysDiff);
-									status = 'прошло';
-								}
 								return (
 									<BigCounterCard key={counter.counterId}
 										counter={counter}
-										date={date}
-										days={days}
-										status={status}
 										fetchedUser={fetchedUser}
 										switchCard={() => router.popPage()}
 										right={!counter.standard 
