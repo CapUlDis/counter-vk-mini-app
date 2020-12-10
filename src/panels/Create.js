@@ -26,7 +26,7 @@ import { useLocalStorage } from './helpers/useLocalStorage';
 import { images, colors } from './components/img/Covers';
 import { saveService, saveNewCounter } from '../components/storage';
 import RadioCard from './components/RadioCard';
-import { PAGE_COUNTERS } from '../routers';
+import { PAGE_COUNTERS, POPOUT_DELETE } from '../routers';
 
 
 const COVERS = {
@@ -41,7 +41,7 @@ const Create = ({
 	loadCounters, 
 	editMode, 
 	setEditMode, 
-	openDeleteDialogue
+	setCounterToDelete
 }) => {
 	const router = useRouter();
 	
@@ -178,7 +178,13 @@ const Create = ({
 			<FormLayout>
 				<ErrorStatusBanner/>
 				{editMode &&
-					<CellButton before={<Icon28DeleteOutline/>} mode="danger" onClick={() => openDeleteDialogue({ counterId: editMode.counterId })}>
+					<CellButton before={<Icon28DeleteOutline/>} 
+						mode="danger" 
+						onClick={() => {
+							setCounterToDelete(editMode);
+							router.pushPopup(POPOUT_DELETE);
+						}}
+					>
 						Удалить счётчик
 					</CellButton>
 				}

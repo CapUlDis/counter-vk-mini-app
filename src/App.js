@@ -312,7 +312,7 @@ const App = () => {
 
 		setSlideIndexCounters(index - 1);
 
-		if (location.getPageId === PAGE_CREATE) {
+		if (location.getPageId() === PAGE_CREATE) {
 			router.popPage();
 		}
 	};
@@ -445,6 +445,7 @@ const App = () => {
 					// 	setActivePanelCounters(VIEW.NORMAL);
 					// 	go(STORIES.COUNTERS);
 					// }}
+					setCounterToDelete={setCounterToDelete}
 					goBackFromEditMode={goBackFromEditMode} 
 					service={service} 
 					setService={setService} 
