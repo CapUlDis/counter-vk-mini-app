@@ -102,17 +102,6 @@ const App = () => {
 	const [activePanelCatalog, setActivePanelCatalog] = useState(VIEW.NORMAL);
 	const [slideIndexCatalog, setSlideIndexCatalog] = useState(0);
 
-	const popout = (() => {
-		if (location.getPopupId() === POPOUT_SHARE) {
-			return <Share counterToShare={counterToShare}/>;
-		}
-
-		if (location.getPopupId() === POPOUT_DELETE) {
-			return <Delete handleDeleteClick={handleDeleteClick}/>;
-		}
-	})();
-	
-	
 	const loadService = async () => {
 		const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
 		setService(JSON.parse(getObject.keys[0].value));
@@ -140,8 +129,8 @@ const App = () => {
 				// 		deletedCounters: []
 				// 	})
 				// });
-				// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
-				// console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 50, "offset": 0}));
+				console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
+				console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 50, "offset": 0}));
 				// console.log(standardCounters);
 
 				let fetchedSharedCounter = false;
@@ -367,6 +356,17 @@ const App = () => {
 	};
 
 
+	const popout = (() => {
+		if (location.getPopupId() === POPOUT_SHARE) {
+			return <Share counterToShare={counterToShare}/>;
+		}
+
+		if (location.getPopupId() === POPOUT_DELETE) {
+			return <Delete handleDeleteClick={handleDeleteClick}/>;
+		}
+	})();
+
+
 	if (step === STEPS.LOADER_INTRO) {
 		return (
 			<View activePanel={activePanel} popout={popoutSpinner}>
@@ -451,7 +451,7 @@ const App = () => {
 					loadCounters={loadCounters}
 					editMode={editMode}
 					setEditMode={setEditMode}
-					/>
+				/>
 			</View>
 			<Catalog id={VIEW_CATALOG}
 				service={service}

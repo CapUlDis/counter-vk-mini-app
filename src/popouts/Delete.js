@@ -12,11 +12,11 @@ const Delete = ({ handleDeleteClick }) => {
                 title: 'Отмена',
                 autoclose: true,
                 mode: 'cancel'
-                }, {
+            }, {
                 title: 'Удалить',
                 autoclose: true,
                 mode: 'destructive',
-                action: handleDeleteClick(),
+                action: () => handleDeleteClick(),
             }]}
             onClose={() => router.popPage()}
         >

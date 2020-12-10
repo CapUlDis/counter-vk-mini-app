@@ -17,7 +17,9 @@ const Share = ({ counterToShare }) => {
             {!isItDesktop() &&
                 <ActionSheetItem autoclose before={<Icon28StoryOutline/>} onClick={() => shareCounterCardByStory({ counterToShare })}>
                     В историю
-                </ActionSheetItem> &&
+                </ActionSheetItem>
+            }
+            {!isItDesktop() &&
                 <ActionSheetItem autoclose before={<Icon28MessageOutline/>} onClick={() => shareCounterByMessage({ counterToShare })}>
                     В личные сообщения
                 </ActionSheetItem>

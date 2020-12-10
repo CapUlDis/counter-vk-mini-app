@@ -332,7 +332,7 @@ const Counters = ({
 												className="BigCounterCard__edit" 
 												onClick={() => {
 													setCounterToDelete(counter);
-													router.replacePopup(POPOUT_DELETE);
+													router.pushPopup(POPOUT_DELETE);
 												}}
 											/>
 										}
@@ -345,7 +345,7 @@ const Counters = ({
 											before={<Icon24ShareOutline/>} 
 											onClick={() => {
 												setCounterToShare(counter);
-												router.replacePopup(POPOUT_SHARE);
+												router.pushPopup(POPOUT_SHARE);
 											}}
 										>
 											Поделиться
