@@ -32,11 +32,6 @@ moment.updateLocale('ru', {
 });
 
 
-const VIEW = {
-	NORMAL: 'normal',
-	BIG: 'big'
-};
-
 const Catalog = ({ 
 	id,
 	service, 

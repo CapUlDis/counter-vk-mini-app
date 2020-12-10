@@ -91,15 +91,12 @@ const App = () => {
 
 	const [step, setStep] = useState(STEPS.LOADER_INTRO);
 	const [activePanel, setActivePanel] = useState(LOADER_INTRO.LOADER);
-	const [activeStory, setActiveStory] = useState(STORIES.COUNTERS);
 	const [popoutSpinner, setPopoutSpinner] = useState(<ScreenSpinner size='large'/>);
 	const [snackbar, setSnackbar] = useState(false);
 
-	const [activePanelCounters, setActivePanelCounters] = useState(VIEW.NORMAL);
 	const [slideIndexCounters, setSlideIndexCounters] = useState(0);
 	const [counterToShare, setCounterToShare] = useState(null);
 	
-	const [activePanelCatalog, setActivePanelCatalog] = useState(VIEW.NORMAL);
 	const [slideIndexCatalog, setSlideIndexCatalog] = useState(0);
 
 	const loadService = async () => {
@@ -245,17 +242,6 @@ const App = () => {
 			bridge.send("VKWebAppShowNativeAds", {ad_format:"preloader"});
 			setUserHasSeenAdd(true);
 		}
-	};
-
-	const go = panel => {
-		setActiveStory(panel);
-	};
-
-	const goBackFromEditMode = index => {
-		setActiveStory(STORIES.COUNTERS);
-		setActivePanelCounters(VIEW.BIG);
-		setSlideIndexCounters(index);
-		setEditMode(false);
 	};
 
 	const viewIntro = async function () {
@@ -441,27 +427,20 @@ const App = () => {
 				onSwipeBack={() => router.popPage()}
 			>
 				<Create id={PANEL_CREATE} 
-					// go={() => {
-					// 	setActivePanelCounters(VIEW.NORMAL);
-					// 	go(STORIES.COUNTERS);
-					// }}
-					setCounterToDelete={setCounterToDelete}
-					goBackFromEditMode={goBackFromEditMode} 
 					service={service} 
-					setService={setService} 
+					setService={setService}
 					loadCounters={loadCounters}
 					editMode={editMode}
 					setEditMode={setEditMode}
+					setCounterToDelete={setCounterToDelete}
 				/>
 			</View>
 			<Catalog id={VIEW_CATALOG}
 				service={service}
-				activePanel={activePanelCatalog}
-				setActivePanel={setActivePanelCatalog}
 				slideIndex={slideIndexCatalog}
 				setSlideIndex={setSlideIndexCatalog}
 				handleJoinClick={handleJoinClick}
-				popout={popout}/>
+			/>
 		</Epic>
 	);
 }
