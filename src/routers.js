@@ -36,4 +36,6 @@ const routes = {
 
 export const router = new Router(routes);
 
+export const sharedCounterHash = window.location.hash.substr(0);
+
 router.start();

@@ -30,21 +30,8 @@ import Icon24Cancel from '@vkontakte/icons/dist/24/cancel';
 import './Counters.css';
 import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
+import ReceivedCounter from  '../modals/ReceivedCounter';
 import { PAGE_COUNTERS_BIG, MODAL_PAGE, PANEL_COUNTERS, PANEL_COUNTERS_BIG, PAGE_CREATE, POPOUT_SHARE, POPOUT_DELETE } from '../routers';
-
-
-const moment = require('moment');
-require('moment/locale/ru');
-moment.updateLocale('ru', {
-    longDateFormat : {
-        LTS: 'H:mm:ss',
-        LT: 'H:mm',
-        L: 'DD.MM.YYYY',
-        LL: 'D MMMM YYYY',
-        LLL: 'D MMMM YYYY г., H:mm',
-        LLLL: 'dddd, D MMMM YYYY г., H:mm'
-    }
-});
 
 
 const Counters = ({ 
@@ -65,40 +52,13 @@ const Counters = ({
 	const location = useLocation();
 	const router = useRouter();
 
-	const dayOfNum = (number) => {  
-		let cases = [2, 0, 1, 1, 1, 2]; 
-		let titles = ['день', 'дня', 'дней'];
-		return titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ];  
-	};
-
 	return (
 		<View id={id} 
 			activePanel={location.getViewActivePanel(id)}
 			onSwipeBack={() => router.popPage()}
 			history={location.hasOverlay() ? [] : location.getViewHistory(id)}
 			popout={popout} 
-			modal={
-				<ModalRoot activeModal={location.getModalId()} onClose={() => router.popPage()}>
-					<ModalPage id={MODAL_PAGE}
-						onClose={() => router.popPage()}
-						settlingHeight={100}
-						header={
-							<ModalPageHeader
-								noShadow
-								right={<PanelHeaderButton onClick={() => router.popPage()}>{osname === IOS ? 'Отмена' : <Icon24Cancel />}</PanelHeaderButton>}
-							>
-								Добавить счетчик
-							</ModalPageHeader>
-						}
-					>
-						<CardGrid style={{ margin: "4px 0px" }}>
-							<BigCounterCard counter={sharedCounter}>
-								<Button size="xl" mode="secondary" className="Button__join" onClick={() => handleJoinClick({ counter: sharedCounter })}>Присоединиться</Button>
-							</BigCounterCard>
-						</CardGrid>
-					</ModalPage>
-				</ModalRoot>
-			}
+			modal={<ReceivedCounter sharedCounter={sharedCounter} handleJoinClick={handleJoinClick}/>}
 		> 
 			<Panel id={PANEL_COUNTERS}>
 				<PanelHeader 

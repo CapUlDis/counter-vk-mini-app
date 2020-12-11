@@ -94,6 +94,7 @@ const drawCounterCard = ({ counterToShare }) => {
 export async function shareCounterCardByStory({ counterToShare }) {
     // Задаём ссылку для нажатия по счётчику
     const link = APPLINK + '#' + Buffer.from(JSON.stringify(counterToShare)).toString("base64");
+    console.log(link);
 
     // Задаём параметры объекта
     const stickerH = 189;

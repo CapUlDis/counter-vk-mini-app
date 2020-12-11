@@ -136,12 +136,9 @@ const Create = ({
 			counterObj.counterId = counterKey;
 			cloneService.counters.push(counterKey);
 			await saveNewCounter({ counterKey: counterKey, counterObj });
-			
-			setService(cloneService);
 			await saveService(cloneService);
-			
 			await loadCounters(cloneService);
-			
+			setService(cloneService);
 			
 			window.localStorage.clear();
 

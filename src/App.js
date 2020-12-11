@@ -36,7 +36,8 @@ import {
 	PAGE_CREATE,
 	PAGE_CATALOG,
 	PAGE_COUNTERS_BIG,
-	PAGE_CATALOG_BIG
+	PAGE_CATALOG_BIG,
+	sharedCounterHash
 } from './routers';
 
 import Counters from './panels/Counters';
@@ -77,6 +78,7 @@ const VIEW = {
 };
 
 const App = () => {
+	// const base64 = window.location.hash.substr(0);
 	const location = useLocation();
 	const router = useRouter();
 
@@ -131,11 +133,11 @@ const App = () => {
 				// console.log(standardCounters);
 
 				let fetchedSharedCounter = false;
+				console.log(sharedCounterHash);
 
-				if (window.location.hash.substr(0)) {
+				if (sharedCounterHash !== '#/') {
 					try {
-						const base64 = window.location.hash.substr(0);
-						const str = Buffer.from(base64, 'base64').toString();
+						const str = Buffer.from(sharedCounterHash, 'base64').toString();
 						fetchedSharedCounter = JSON.parse(str);
 						setSharedCounter(fetchedSharedCounter);
 					} catch (error) {
@@ -143,7 +145,7 @@ const App = () => {
 					}
 				}
 
-				// console.log(fetchedSharedCounter);
+				console.log(fetchedSharedCounter);
 
 				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
 				
@@ -168,60 +170,63 @@ const App = () => {
 
 				setPopoutSpinner(null);
 
-				if (fetchedSharedCounter) {
-					if (!fetchedSharedCounter.standard) {
-						let index = fetchedCounters.findIndex(counter => {
-							if (counter.title === fetchedSharedCounter.title &&
-								counter.date === fetchedSharedCounter.date &&
-								counter.howCount === fetchedSharedCounter.howCount &&
-								counter.coverType === fetchedSharedCounter.coverType &&
-								counter.coverId === fetchedSharedCounter.coverId) {
-								return true;
-							}
-							return false;
-						});
+				if (!fetchedSharedCounter) {
+					return setStep(STEPS.MAIN);
+				}
 
-						if (index !== -1) {
-							setStep(STEPS.MAIN);
-							// setActivePanelCounters(VIEW.BIG);
-							router.pushPage(PAGE_COUNTERS_BIG);
-							return setSlideIndexCounters(index);
-						} 
-
+				if (!fetchedSharedCounter.standard) {
+					if (fetchedService.counters.length === 0) {
 						setStep(STEPS.MAIN);
-						return setActiveModal("sharedCounter");
-
+						return router.pushModal(MODAL_PAGE);
 					}
 
-					if (!fetchedService.catalog[fetchedSharedCounter.standard]) {
-						let index = fetchedCounters.findIndex(counter => {
-							if (counter.standard === fetchedSharedCounter.standard) {
-								return true;
-							}
-							return false;
-						});
+					let index = fetchedCounters.findIndex(counter => {
+						if (counter.title === fetchedSharedCounter.title &&
+							counter.date === fetchedSharedCounter.date &&
+							counter.howCount === fetchedSharedCounter.howCount &&
+							counter.coverType === fetchedSharedCounter.coverType &&
+							counter.coverId === fetchedSharedCounter.coverId) {
+							return true;
+						}
+						return false;
+					});
+
+					if (index !== -1) {
 						setStep(STEPS.MAIN);
 						// setActivePanelCounters(VIEW.BIG);
 						router.pushPage(PAGE_COUNTERS_BIG);
 						return setSlideIndexCounters(index);
-					} else {
-						let index = parseInt(fetchedSharedCounter.standard);
-						for (let i = 0; i <= fetchedSharedCounter.standard; i++) {
-							if (!fetchedService.catalog[i]) {
-								index--;
-							}
-						}
-						setStep(STEPS.MAIN);
-						// setActiveStory(STORIES.CATALOG);
-						// setActivePanelCatalog(VIEW.BIG);
-						router.pushPage(PAGE_CATALOG_BIG);
-						return setSlideIndexCatalog(index);
-					}
-					
+					} 
+
+					setStep(STEPS.MAIN);
+					return router.pushModal(MODAL_PAGE);
 				}
 
-				return setStep(STEPS.MAIN);
-
+				if (!fetchedService.catalog[fetchedSharedCounter.standard]) {
+					let index = fetchedCounters.findIndex(counter => {
+						if (counter.standard === fetchedSharedCounter.standard) {
+							return true;
+						}
+						return false;
+					});
+					setStep(STEPS.MAIN);
+					// setActivePanelCounters(VIEW.BIG);
+					router.pushPage(PAGE_COUNTERS_BIG);
+					return setSlideIndexCounters(index);
+				} else {
+					let index = parseInt(fetchedSharedCounter.standard);
+					for (let i = 0; i <= fetchedSharedCounter.standard; i++) {
+						if (!fetchedService.catalog[i]) {
+							index--;
+						}
+					}
+					setStep(STEPS.MAIN);
+					// setActiveStory(STORIES.CATALOG);
+					// setActivePanelCatalog(VIEW.BIG);
+					router.pushPage(PAGE_CATALOG_BIG);
+					return setSlideIndexCatalog(index);
+				}
+					
 			} catch (error) {
 				setSnackbar(<Snackbar
 					layout='vertical'
@@ -258,6 +263,18 @@ const App = () => {
 
 			await loadService();
 
+			if(sharedCounter) {
+				if (!sharedCounter.standard) {
+					setStep(STEPS.MAIN);
+					return router.pushModal(MODAL_PAGE);
+				}
+
+				let index = parseInt(sharedCounter.standard);
+				setStep(STEPS.MAIN);
+				setSlideIndexCatalog(index);
+				return router.pushPage(PAGE_CATALOG_BIG);
+			}
+
 			return setStep(STEPS.MAIN);
 			
 		} catch (error) {
@@ -285,9 +302,8 @@ const App = () => {
 		}
 
 		await saveService(cloneService);
-		setService(cloneService);
-		
 		await loadCounters(cloneService);
+		setService(cloneService);
 
 		// console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
 		// console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
@@ -321,18 +337,13 @@ const App = () => {
 			}
 
 			await saveNewCounter({ counterKey: counterKey, counterObj: counter });
-
 			await saveService(cloneService);
-			setService(cloneService);
-			
 			await loadCounters(cloneService);
+			setService(cloneService);
 			// Проверочные логи
 			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 
-			setActiveModal(null);
-			// setActivePanelCounters(VIEW.NORMAL);
-			// setActiveStory(STORIES.COUNTERS);
 			router.pushPage(PAGE_COUNTERS);
 			return window.scrollTo(0, document.body.scrollHeight);
 
