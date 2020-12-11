@@ -182,7 +182,7 @@ const Create = ({
 							router.pushPopup(POPOUT_DELETE);
 						}}
 					>
-						Удалить счётчик
+						Удалить счетчик
 					</CellButton>
 				}
 				<Input
@@ -236,7 +236,7 @@ const Create = ({
 					onChange={() => setPub(!pub)}
 				>Сделать счетчик публичным
 				</Checkbox>	
-				<FormLayoutGroup top="Обложка счётчик">
+				<FormLayoutGroup top="Обложка счетчика">
 					<Tabs>
 						<TabsItem
 						onClick={() => setActiveCoverTab(COVERS.COLORS)}
@@ -285,7 +285,7 @@ const Create = ({
 			<FixedLayout vertical='bottom'>
 				<Div className='DivCreateButton'>
 					<Button className='CreateButton' mode='commerce' size='xl' onClick={handleCreateSaveClick}>
-						{!editMode ? 'Создать счётчик' : 'Сохранить изменения'}
+						{!editMode ? 'Создать счетчик' : 'Сохранить изменения'}
 					</Button>
 				</Div>
 			</FixedLayout>
