@@ -41,6 +41,7 @@ const Create = ({
 	loadCounters, 
 	editMode, 
 	setEditMode, 
+	setSlideIndexCatalog,
 	setCounterToDelete
 }) => {
 	const router = useRouter();
@@ -162,7 +163,7 @@ const Create = ({
 						<Icon24Back 
 							fill='#4bb34b' 
 							onClick={() => { 
-								// goBackFromEditMode(editMode.index);
+								setSlideIndexCatalog(editMode.index);
 								setEditMode(false);
 								router.popPage();
 							}}

@@ -416,6 +416,7 @@ const App = () => {
 					loadCounters={loadCounters}
 					editMode={editMode}
 					setEditMode={setEditMode}
+					setSlideIndexCatalog={setSlideIndexCatalog}
 					setCounterToDelete={setCounterToDelete}
 				/>
 			</View>
