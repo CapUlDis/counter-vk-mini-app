@@ -284,10 +284,18 @@ const App = () => {
 		setEditMode(false);
 		setCounterToDelete(null);
 
-		setSlideIndexCounters(index - 1);
-
 		if (location.getPageId() === PAGE_CREATE) {
-			router.popPage();
+			if (cloneService.counters.length === 0) {
+				router.pushPage(PAGE_COUNTERS);
+			} else {
+				router.popPage();
+			}
+		} else {
+			if (cloneService.counters.length === 0) {
+				router.pushPage(PAGE_COUNTERS);
+			} else {
+				setSlideIndexCounters(index - 1);
+			}
 		}
 	};
 

@@ -86,68 +86,57 @@ const Counters = ({
 					separator={false}
 					>Счетчики
 				</PanelHeader>
-				{service.counters.length === 0
-					? <Placeholder 
-						icon={<Icon56AddCircleOutline/>}
-						header="Создайте счетчик"
-						action={<Button size="l" mode="commerce" onClick={() => router.pushPage(PAGE_CREATE)}>Создать счетчик</Button>}
-						stretched>
-						<div className="Placeholder__text__in">
-							Здесь будут отображаться ваши счетчики.
-						</div>
-					</Placeholder>
-					: <Gallery
-						slideWidth="90%"
-						align="center"
-						className="BigCounters_Gallery"
-						slideIndex={slideIndex}
-						onChange={slideIndex => setSlideIndex({ slideIndex })}
-						style={{ marginTop: "9px" }}
-					>
-						{(counters && fetchedUser) &&
-							counters.map((counter, index) => {
-								return (
-									<BigCounterCard key={counter.counterId}
-										counter={counter}
-										fetchedUser={fetchedUser}
-										switchCard={() => router.popPage()}
-										right={!counter.standard 
-											? <Icon28WriteOutline 
-												className="BigCounterCard__edit" 
-												onClick={() => {
-													counter.index = index;
-													setEditMode(counter);
-													router.pushPage(PAGE_CREATE);
-												}}
-											/>
-											: <Icon28DeleteOutline
-												className="BigCounterCard__edit" 
-												onClick={() => {
-													setCounterToDelete(counter);
-													router.pushPopup(POPOUT_DELETE);
-												}}
-											/>
-										}
-									>
-										<Button 
-											size="xl" 
-											mode="secondary" 
-											className="BigCounterCard__button"
-											style={{ backgroundColor: document.body.getAttribute('scheme') === 'bright_light' ? '#EBF7EB' : 'rgba(98, 119, 98, 0.25)' }}
-											before={<Icon24ShareOutline/>} 
+				<Gallery
+					slideWidth="90%"
+					align="center"
+					className="BigCounters_Gallery"
+					slideIndex={slideIndex}
+					onChange={slideIndex => setSlideIndex({ slideIndex })}
+					style={{ marginTop: "9px" }}
+				>
+					{(counters && fetchedUser) &&
+						counters.map((counter, index) => {
+							return (
+								<BigCounterCard key={counter.counterId}
+									counter={counter}
+									fetchedUser={fetchedUser}
+									switchCard={() => router.popPage()}
+									right={!counter.standard 
+										? <Icon28WriteOutline 
+											className="BigCounterCard__edit" 
 											onClick={() => {
-												setCounterToShare(counter);
-												router.pushPopup(POPOUT_SHARE);
+												counter.index = index;
+												setEditMode(counter);
+												router.pushPage(PAGE_CREATE);
 											}}
-										>
-											Поделиться
-										</Button>
-									</BigCounterCard>
-								);
-							})
-						}
-					</Gallery>
-				}
+										/>
+										: <Icon28DeleteOutline
+											className="BigCounterCard__edit" 
+											onClick={() => {
+												setCounterToDelete(counter);
+												router.pushPopup(POPOUT_DELETE);
+											}}
+										/>
+									}
+								>
+									<Button 
+										size="xl" 
+										mode="secondary" 
+										className="BigCounterCard__button"
+										style={{ backgroundColor: document.body.getAttribute('scheme') === 'bright_light' ? '#EBF7EB' : 'rgba(98, 119, 98, 0.25)' }}
+										before={<Icon24ShareOutline/>} 
+										onClick={() => {
+											setCounterToShare(counter);
+											router.pushPopup(POPOUT_SHARE);
+										}}
+									>
+										Поделиться
+									</Button>
+								</BigCounterCard>
+							);
+						})
+					}
+				</Gallery>
 			</Panel>
 		</View>
 	)
