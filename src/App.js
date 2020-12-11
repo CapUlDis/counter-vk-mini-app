@@ -82,11 +82,6 @@ const App = () => {
 	
 	const [slideIndexCatalog, setSlideIndexCatalog] = useState(0);
 
-	const loadService = async () => {
-		const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
-		setService(JSON.parse(getObject.keys[0].value));
-	};
-
 	const loadCounters = async (serviceObj) => {
 		if (serviceObj.counters.length !== 0) {
 			const storageArray = await bridge.send("VKWebAppStorageGet", { "keys": serviceObj.counters });
@@ -238,9 +233,9 @@ const App = () => {
 				value: JSON.stringify(initialService)
 			});
 
-			await loadService();
+			setService(initialService);
 
-			if(sharedCounter) {
+			if (sharedCounter) {
 				if (!sharedCounter.standard) {
 					setStep(STEPS.MAIN);
 					return router.pushModal(MODAL_PAGE);
