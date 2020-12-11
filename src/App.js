@@ -65,7 +65,7 @@ const App = () => {
 	const router = useRouter();
 
 	const [service, setService] = useState({});
-	const [counters, setCounters] = useState({});
+	const [counters, setCounters] = useState([]);
 	const [fetchedUser, setUser] = useState(null);
 	const [editMode, setEditMode] = useState(false);
 	const [sharedCounter, setSharedCounter] = useState(false);
@@ -110,7 +110,8 @@ const App = () => {
 
 				let fetchedSharedCounter = false;
 				console.log(sharedCounterHash);
-
+				
+				//*Проверка, есть ли хэш с счётчиком.
 				if (sharedCounterHash !== '#/') {
 					try {
 						const str = Buffer.from(sharedCounterHash, 'base64').toString();
@@ -122,25 +123,23 @@ const App = () => {
 				}
 
 				console.log(fetchedSharedCounter);
-
+				//* Получение сервисного ключа.
 				const getObject = await bridge.send("VKWebAppStorageGet", { "keys": [STORAGE_KEYS.SERVICE] });
-				
+				//* Проверка, есть ли значение в ключе.
 				if (!getObject.keys[0].value) {
 					setPopoutSpinner(null);
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
-				
+				//* Если есть, парсим ДЖСОН и проверяем видел ли юзер интро.
 				const fetchedService = JSON.parse(getObject.keys[0].value);
-				
 				if (!fetchedService.hasSeenIntro) {
 					setPopoutSpinner(null);
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
-
+				//* Если видел, то загружаем счётчики по ключам из сервиса,
 				let fetchedCounters = await loadCounters(fetchedService);
-
+				//* Сеттим сервис в стэйт, сеттим юзер инфо
 				setService(fetchedService);
-
 				setUser(await bridge.send('VKWebAppGetUserInfo'));
 
 				setPopoutSpinner(null);
@@ -228,11 +227,12 @@ const App = () => {
 				deletedCounters: [],
 				catalog: standardCounters.map(() => true)
 			};
+			//* Записываем в сторэйдж дефолтный сервис.
 			await bridge.send('VKWebAppStorageSet', {
 				key: STORAGE_KEYS.SERVICE,
 				value: JSON.stringify(initialService)
 			});
-
+			//* Сэттим дефолтный сервис.
 			setService(initialService);
 
 			if (sharedCounter) {
