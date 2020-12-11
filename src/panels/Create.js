@@ -57,7 +57,6 @@ const Create = ({
 	const [pub, setPub] = useLocalStorage('pub',  !editMode ? false : editMode.pub);
 	const [coverType, setCoverType] = useLocalStorage('coverType', !editMode ? COVERS.COLORS : editMode.coverType);
 	const [coverId, setCoverId] = useLocalStorage('coverId', !editMode ? '1' : editMode.coverId);
-	// const [popout, setPopout] = useState(null);
 	
 	const ErrorStatusBanner = function() {
 		if (inputStatuses.howCount === 'default') {

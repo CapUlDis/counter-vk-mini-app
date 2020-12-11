@@ -10,7 +10,6 @@ import TabbarItem from '@vkontakte/vkui/dist/components/TabbarItem/TabbarItem';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import Snackbar from '@vkontakte/vkui/dist/components/Snackbar/Snackbar';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
-import Alert from '@vkontakte/vkui/dist/components/Alert/Alert';
 import Icon28RecentOutline from '@vkontakte/icons/dist/28/recent_outline';
 import Icon28AddCircleOutline from '@vkontakte/icons/dist/28/add_circle_outline';
 import Icon28MenuOutline from '@vkontakte/icons/dist/28/menu_outline';
@@ -23,13 +22,8 @@ import {
 	VIEW_COUNTERS,
 	VIEW_CREATE,
 	VIEW_CATALOG,
-	PANEL_COUNTERS,
-	PANEL_COUNTERS_BIG,
 	PANEL_CREATE,
-	PANEL_CATALOG,
-	PANEL_CATALOG_BIG,
 	MODAL_PAGE,
-	POPOUT_LOADER,
 	POPOUT_DELETE,
 	POPOUT_SHARE,
 	PAGE_COUNTERS,
@@ -52,12 +46,6 @@ export const LINK = {
 	APP: 'https://vk.com/app7582904'
 };
 
-const STORIES = {
-	COUNTERS: 'counters',
-	CREATE: 'create',
-	CATALOG: 'catalog'
-};
-
 const STEPS = {
 	LOADER_INTRO: 'loader_intro',
 	MAIN: 'main'
@@ -72,13 +60,7 @@ const STORAGE_KEYS = {
 	SERVICE: 'serviceCounters',
 };
 
-const VIEW = {
-	NORMAL: 'normal',
-	BIG: 'big'
-};
-
 const App = () => {
-	// const base64 = window.location.hash.substr(0);
 	const location = useLocation();
 	const router = useRouter();
 
@@ -87,7 +69,6 @@ const App = () => {
 	const [fetchedUser, setUser] = useState(null);
 	const [editMode, setEditMode] = useState(false);
 	const [sharedCounter, setSharedCounter] = useState(false);
-	const [activeModal, setActiveModal] = useState(null);
 	const [userHasSeenAdd, setUserHasSeenAdd] = useState(false);
 	const [counterToDelete, setCounterToDelete] = useState(null);
 
@@ -153,7 +134,6 @@ const App = () => {
 					setPopoutSpinner(null);
 					return setActivePanel(LOADER_INTRO.INTRO);
 				}
-				// console.log('tut');
 				
 				const fetchedService = JSON.parse(getObject.keys[0].value);
 				
@@ -193,7 +173,6 @@ const App = () => {
 
 					if (index !== -1) {
 						setStep(STEPS.MAIN);
-						// setActivePanelCounters(VIEW.BIG);
 						router.pushPage(PAGE_COUNTERS_BIG);
 						return setSlideIndexCounters(index);
 					} 
@@ -210,7 +189,6 @@ const App = () => {
 						return false;
 					});
 					setStep(STEPS.MAIN);
-					// setActivePanelCounters(VIEW.BIG);
 					router.pushPage(PAGE_COUNTERS_BIG);
 					return setSlideIndexCounters(index);
 				} else {
@@ -221,8 +199,6 @@ const App = () => {
 						}
 					}
 					setStep(STEPS.MAIN);
-					// setActiveStory(STORIES.CATALOG);
-					// setActivePanelCatalog(VIEW.BIG);
 					router.pushPage(PAGE_CATALOG_BIG);
 					return setSlideIndexCatalog(index);
 				}
@@ -251,14 +227,15 @@ const App = () => {
 
 	const viewIntro = async function () {
 		try {
+			const initialService = {
+				hasSeenIntro: true,
+				counters: [],
+				deletedCounters: [],
+				catalog: standardCounters.map(() => true)
+			};
 			await bridge.send('VKWebAppStorageSet', {
 				key: STORAGE_KEYS.SERVICE,
-				value: JSON.stringify({
-					hasSeenIntro: true,
-					counters: [],
-					deletedCounters: [],
-					catalog: standardCounters.map(() => true)
-				})
+				value: JSON.stringify(initialService)
 			});
 
 			await loadService();
@@ -379,8 +356,6 @@ const App = () => {
 				<TabbarItem
 					onClick={() => {
 						setEditMode(false);
-						// setActivePanelCounters(VIEW.NORMAL);
-						// setActiveStory(STORIES.COUNTERS);
 						router.pushPage(PAGE_COUNTERS);
 						window.scrollTo(0, 0);
 					}}
@@ -393,7 +368,6 @@ const App = () => {
 				<TabbarItem
 					onClick={() => {
 						showAdd();
-						// setActiveStory(STORIES.CREATE);
 						router.pushPage(PAGE_CREATE);
 						window.scrollTo(0, 0);
 					}}
@@ -407,7 +381,6 @@ const App = () => {
 					onClick={() => {
 						showAdd();
 						setEditMode(false);
-						// setActiveStory(STORIES.CATALOG);
 						router.pushPage(PAGE_CATALOG);
 						window.scrollTo(0, 0);
 					}}

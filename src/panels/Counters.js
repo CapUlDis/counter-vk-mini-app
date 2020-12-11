@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-// import bridge from "@vkontakte/vk-bridge";
+import React from 'react';
 import { useLocation, useRouter } from '@happysanta/router';
-import { usePlatform, IOS } from '@vkontakte/vkui'
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -11,27 +9,17 @@ import Group from '@vkontakte/vkui/dist/components/Group/Group';
 import CardGrid from '@vkontakte/vkui/dist/components/CardGrid/CardGrid';
 import Gallery from '@vkontakte/vkui/dist/components/Gallery/Gallery';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
-import ActionSheet from '@vkontakte/vkui/dist/components/ActionSheet/ActionSheet';
-import ActionSheetItem from '@vkontakte/vkui/dist/components/ActionSheetItem/ActionSheetItem';
-import ModalRoot from '@vkontakte/vkui/dist/components/ModalRoot/ModalRoot';
-import ModalPage from '@vkontakte/vkui/dist/components/ModalPage/ModalPage';
-import ModalPageHeader from '@vkontakte/vkui/dist/components/ModalPageHeader/ModalPageHeader';
-import Icon28ArticleOutline from '@vkontakte/icons/dist/28/article_outline';
-import Icon28MessageOutline from '@vkontakte/icons/dist/28/message_outline';
-import Icon28StoryOutline from '@vkontakte/icons/dist/28/story_outline';
 import Icon56AddCircleOutline from '@vkontakte/icons/dist/56/add_circle_outline';
-// import Icon28Notifications from '@vkontakte/icons/dist/28/notifications';
 import Icon24ShareOutline from '@vkontakte/icons/dist/24/share_outline';
 import Icon28WriteOutline from '@vkontakte/icons/dist/28/write_outline';
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
-import Icon24Cancel from '@vkontakte/icons/dist/24/cancel';
 
 import './Counters.css';
 import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
 import ReceivedCounter from  '../modals/ReceivedCounter';
-import { PAGE_COUNTERS_BIG, MODAL_PAGE, PANEL_COUNTERS, PANEL_COUNTERS_BIG, PAGE_CREATE, POPOUT_SHARE, POPOUT_DELETE } from '../routers';
+import { PAGE_COUNTERS_BIG, PANEL_COUNTERS, PANEL_COUNTERS_BIG, PAGE_CREATE, POPOUT_SHARE, POPOUT_DELETE } from '../routers';
 
 
 const Counters = ({ 
@@ -48,7 +36,6 @@ const Counters = ({
 	sharedCounter,
 	handleJoinClick
 }) => {
-	const osname = usePlatform();
 	const location = useLocation();
 	const router = useRouter();
 
