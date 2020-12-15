@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import moment from 'moment';
 import { useRouter } from '@happysanta/router';
-// import bridge from '@vkontakte/vk-bridge';
 import _ from 'lodash';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -87,8 +87,8 @@ const Create = ({
 			}
 			setInputStatuses({ title: 'default', date: 'default', howCount: 'default' });
 			
-			const today = new Date();
-			const userDate = new Date(date);
+			const today = moment();
+			const userDate = moment(date);
 			
 			if (today > userDate && howCount === 'to') {
 				window.scrollTo(0, 0);
