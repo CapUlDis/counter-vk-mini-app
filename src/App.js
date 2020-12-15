@@ -293,9 +293,7 @@ const App = () => {
 		} else {
 			if (cloneService.counters.length === 0) {
 				router.pushPage(PAGE_COUNTERS);
-			} else {
-				setSlideIndexCounters(index - 1);
-			}
+			} 
 		}
 	};
 
