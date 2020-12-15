@@ -104,6 +104,9 @@ const App = () => {
 				// 		deletedCounters: []
 				// 	})
 				// });
+				//* Сэттим юзера
+				setUser(await bridge.send('VKWebAppGetUserInfo'));
+
 				console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 				console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 50, "offset": 0}));
 				// console.log(standardCounters);
@@ -138,10 +141,8 @@ const App = () => {
 				}
 				//* Если видел, то загружаем счётчики по ключам из сервиса,
 				let fetchedCounters = await loadCounters(fetchedService);
-				//* Сеттим сервис в стэйт, сеттим юзер инфо
+				//* Сеттим сервис в стэйт
 				setService(fetchedService);
-				setUser(await bridge.send('VKWebAppGetUserInfo'));
-
 				setPopoutSpinner(null);
 
 				if (!fetchedSharedCounter) {

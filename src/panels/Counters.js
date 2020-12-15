@@ -94,7 +94,7 @@ const Counters = ({
 					onChange={slideIndex => setSlideIndex({ slideIndex })}
 					style={{ marginTop: "9px" }}
 				>
-					{(counters && fetchedUser) &&
+					{service.counters.length !== 0 &&
 						counters.map((counter, index) => {
 							return (
 								<BigCounterCard key={counter.counterId}
