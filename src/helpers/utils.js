@@ -18,3 +18,15 @@ export function dayOfNum(number) {
     let titles = ['день', 'дня', 'дней'];
     return titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ];
 }
+
+export function isSafari() {
+    //* Для версий с 3.0 до 9.1.3
+    const isOlderSafari = /constructor/i.test(window.HTMLElement);
+
+    //* Для версий с 7.1
+    function isYoungerSafari(p) { 
+        return p.toString() === "[object SafariRemoteNotification]"; 
+    }
+
+    return isOlderSafari || isYoungerSafari(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+}
