@@ -76,6 +76,7 @@ const Create = ({
 
 	const handleCreateSaveClick = async function () {
 		try {
+			console.log(date);
 			if (!title.trim()) {
 				window.scrollTo(0, 0);
 				return setInputStatuses({ title: 'error', date: 'default', howCount: 'default' });
@@ -199,6 +200,7 @@ const Create = ({
 					type="date"
 					top="Дата"
 					name="date"
+					max={'9999-12-31'}
 					value={date}
 					status={inputStatuses.date}
 					placeholder="Выберите дату"
