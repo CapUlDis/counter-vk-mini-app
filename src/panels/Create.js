@@ -55,7 +55,6 @@ const Create = ({
 	const [title, setTitle] = useLocalStorage('title', !editMode ? '' : editMode.title);
 	const [date, setDate] = useLocalStorage('date', !editMode ? '' : editMode.date)
 	const [howCount, setHowCount] = useLocalStorage('howCount', !editMode ? 'from' : editMode.howCount);
-	const [pub, setPub] = useLocalStorage('pub',  !editMode ? false : editMode.pub);
 	const [coverType, setCoverType] = useLocalStorage('coverType', !editMode ? COVERS.COLORS : editMode.coverType);
 	const [coverId, setCoverId] = useLocalStorage('coverId', !editMode ? '1' : editMode.coverId);
 	
@@ -104,7 +103,6 @@ const Create = ({
 				title,
 				date,
 				howCount,
-				pub,
 				coverType,
 				coverId,
 				standard: false
@@ -231,13 +229,6 @@ const Create = ({
 						>До выбранной даты
 					</Radio>
 				</FormLayoutGroup>
-				<Checkbox 
-					top="Дополнительно"
-					name="public"
-					checked={pub}
-					onChange={() => setPub(!pub)}
-				>Сделать счетчик публичным
-				</Checkbox>	
 				<FormLayoutGroup top="Обложка счетчика">
 					<Tabs>
 						<TabsItem

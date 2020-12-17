@@ -1,16 +1,4 @@
 const moment = require('moment');
-require('moment/locale/ru');
-moment.updateLocale('ru', {
-    longDateFormat : {
-        LTS: 'H:mm:ss',
-        LT: 'H:mm',
-        L: 'DD.MM.YYYY',
-        LL: 'D MMMM YYYY',
-        LLL: 'D MMMM YYYY г., H:mm',
-        LLLL: 'dddd, D MMMM YYYY г., H:mm'
-    }
-});
-
 const today = moment();
 
 let date2 = '';
@@ -43,7 +31,6 @@ export const standardCounters = [
         title: 'Новый год',
         date: `${moment().year()}-12-31`,
         howCount: 'to',
-        pub: true,
         coverType: 'theme',
         coverId: '12',
         standard: '0'
@@ -53,7 +40,6 @@ export const standardCounters = [
         title: title8,
         date: date8,
         howCount: 'to',
-        pub: true,
         coverType: 'theme',
         coverId: '18',
         standard: '1'
@@ -63,7 +49,6 @@ export const standardCounters = [
         title: title2,
         date: date2,
         howCount: 'to',
-        pub: true,
         coverType: 'theme',
         coverId: '19',
         standard: '2'
@@ -73,7 +58,6 @@ export const standardCounters = [
         title: '8 марта',
         date: (today <= moment(`${moment().year()}-03-08`) ? `${moment().year()}-03-08` : `${moment().year() + 1}-03-08`),
         howCount: 'to',
-        pub: true,
         coverType: 'theme',
         coverId: '15',
         standard: '3'
@@ -83,7 +67,6 @@ export const standardCounters = [
         title: '14 февраля',
         date: (today <= moment(`${moment().year()}-02-14`) ? `${moment().year()}-02-14` : `${moment().year() + 1}-02-14`),
         howCount: 'to',
-        pub: true,
         coverType: 'theme',
         coverId: '11',
         standard: '4'
@@ -93,7 +76,6 @@ export const standardCounters = [
         title: 'В.В.Путин у власти',
         date: '1999-12-31',
         howCount: 'from',
-        pub: true,
         coverType: 'theme',
         coverId: '13',
         standard: '5'
@@ -103,7 +85,6 @@ export const standardCounters = [
         title: 'Основание Вконтакте',
         date: '2006-10-10',
         howCount: 'from',
-        pub: true,
         coverType: 'color',
         coverId: '1',
         standard: '6'
@@ -113,7 +94,6 @@ export const standardCounters = [
         title: 'Распад СССР',
         date: '1991-12-26',
         howCount: 'from',
-        pub: true,
         coverType: 'color',
         coverId: '3',
         standard: '7'
@@ -123,7 +103,6 @@ export const standardCounters = [
         title: 'Крым наш!',
         date: '2014-03-26',
         howCount: 'from',
-        pub: true,
         coverType: 'theme',
         coverId: '14',
         standard: '8'
