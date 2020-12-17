@@ -34,7 +34,10 @@ const ReceivedCounter = ({ sharedCounter, handleJoinClick }) => {
                         <Button className="Button__join" 
                             size="xl" 
                             mode="secondary" 
-                            onClick={() => handleJoinClick({ counter: sharedCounter })}
+                            onClick={() => {
+                                handleJoinClick({ counter: sharedCounter });
+                                router.popPage();
+                            }}
                         >
                             Присоединиться
                         </Button>

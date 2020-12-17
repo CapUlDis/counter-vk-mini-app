@@ -322,10 +322,6 @@ const App = () => {
 			// Проверочные логи
 			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": [counterKey]}));
 			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
-
-			router.pushPage(PAGE_COUNTERS);
-			return window.scrollTo(0, document.body.scrollHeight);
-
 		} catch (error) {
 			console.log(error);
 		}
