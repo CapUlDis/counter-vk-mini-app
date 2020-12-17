@@ -96,7 +96,6 @@ const Catalog = ({
 						result.push(
 							<BigCounterCard key={standCounter.counterId}
 								counter={standCounter}
-								switchCard={() => router.popPage()}
 							>
 								<Button className="Button__join" 
 									size="xl" 

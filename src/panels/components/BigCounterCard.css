@@ -39,10 +39,6 @@
     color:  #4bb34b;
 }
 
-.BigCounterCard__divButton {
-    display: none;
-}
-
 :root, body[scheme="space_gray"] {
     --action_sheet_action_foreground: #4bb34b;
 }

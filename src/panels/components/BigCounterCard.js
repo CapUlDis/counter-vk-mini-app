@@ -10,7 +10,7 @@ import { images, colors } from '../components/img/Covers';
 import { dayOfNum } from '../../helpers/utils';
 
 
-const BigCounterCard = ({ counter, switchCard, fetchedUser, ...props }) => {
+const BigCounterCard = ({ counter, fetchedUser, ...props }) => {
     const date = moment(counter.date);
     let days = null;
     let status = null;
@@ -26,19 +26,10 @@ const BigCounterCard = ({ counter, switchCard, fetchedUser, ...props }) => {
 
     return (
         <Card size="l" mode="shadow" className="BigCounterCard">
-            <label>
-                {switchCard &&
-                    <input
-                        className="BigCounterCard__divButton"
-                        type="button"
-                        onClick={switchCard}
-                    />
-                }
-                {counter.coverType === "color"
-                    ? <div className="BigCounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
-                    : <div className="BigCounterCard__cover" style={{ background: `url(${images[parseInt(counter.coverId) - 11].large}) no-repeat center`, backgroundSize: "cover" }} />
-                }
-            </label>
+            {counter.coverType === "color"
+                ? <div className="BigCounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
+                : <div className="BigCounterCard__cover" style={{ background: `url(${images[parseInt(counter.coverId) - 11].large}) no-repeat center`, backgroundSize: "cover" }} />
+            }
             <div className="BigCounterCard__text">
                 {props.right}
                 <div className="BigCounterCard__row">

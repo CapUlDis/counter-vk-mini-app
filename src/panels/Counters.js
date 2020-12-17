@@ -100,7 +100,6 @@ const Counters = ({
 								<BigCounterCard key={counter.counterId}
 									counter={counter}
 									fetchedUser={fetchedUser}
-									switchCard={() => router.popPage()}
 									right={!counter.standard 
 										? <Icon28WriteOutline 
 											className="BigCounterCard__edit" 
