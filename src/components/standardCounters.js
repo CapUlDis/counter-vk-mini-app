@@ -1,4 +1,5 @@
-const moment = require('moment');
+import moment from "moment";
+
 const today = moment();
 
 let date2 = '';

@@ -7,7 +7,6 @@ import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader
 import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton';
 import FormLayout from '@vkontakte/vkui/dist/components/FormLayout/FormLayout';
 import FormLayoutGroup from '@vkontakte/vkui/dist/components/FormLayoutGroup/FormLayoutGroup';
-import Checkbox from '@vkontakte/vkui/dist/components/Checkbox/Checkbox';
 import Radio from '@vkontakte/vkui/dist/components/Radio/Radio';
 import Input from '@vkontakte/vkui/dist/components/Input/Input';
 import Tabs from '@vkontakte/vkui/dist/components/Tabs/Tabs';
@@ -58,21 +57,6 @@ const Create = ({
 	const [coverType, setCoverType] = useLocalStorage('coverType', !editMode ? COVERS.COLORS : editMode.coverType);
 	const [coverId, setCoverId] = useLocalStorage('coverId', !editMode ? '1' : editMode.coverId);
 	
-	const ErrorStatusBanner = function() {
-		if (inputStatuses.howCount === 'default') {
-			return null;
-		}
-
-		return (
-			<FormStatus header="Некорректный способ отсчета" mode="error">
-				{howCount === 'to'
-					? 'Нельзя считать количество дней до прошедшей даты. Измените дату на будущую или способ отсчета даты на "От выбранной даты".'
-					: 'Нельзя считать количество дней от будущей даты. Измените дату на прошлую или способ отсчета даты на "До выбранной даты".'
-				}
-			</FormStatus>
-		);
-	}
-
 	const handleCreateSaveClick = async function () {
 		try {
 			console.log(date);
@@ -172,7 +156,14 @@ const Create = ({
 				separator={false}>{!editMode ? 'Создать' : 'Редактировать'}
 			</PanelHeader>
 			<FormLayout>
-				<ErrorStatusBanner/>
+				{inputStatuses.howCount === 'error' &&
+					<FormStatus header="Некорректный способ отсчета" mode="error">
+						{howCount === 'to'
+							? 'Нельзя считать количество дней до прошедшей даты. Измените дату на будущую или способ отсчета даты на "От выбранной даты".'
+							: 'Нельзя считать количество дней от будущей даты. Измените дату на прошлую или способ отсчета даты на "До выбранной даты".'
+						}
+					</FormStatus>
+				}
 				{editMode &&
 					<CellButton before={<Icon28DeleteOutline/>} 
 						mode="danger" 
