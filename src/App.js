@@ -354,8 +354,7 @@ const App = () => {
 				<TabbarItem
 					onClick={() => {
 						setEditMode(false);
-						router.pushPage(PAGE_COUNTERS);
-						window.scrollTo(0, 0);
+						if (location.getViewId() !== VIEW_COUNTERS) router.pushPage(PAGE_COUNTERS);
 					}}
 					selected={location.getViewId() === VIEW_COUNTERS}
 					data-story={VIEW_COUNTERS}
@@ -366,8 +365,7 @@ const App = () => {
 				<TabbarItem
 					onClick={() => {
 						showAdd();
-						router.pushPage(PAGE_CREATE);
-						window.scrollTo(0, 0);
+						if (location.getViewId() !== VIEW_CREATE) router.pushPage(PAGE_CREATE);
 					}}
 					selected={location.getViewId() === VIEW_CREATE}
 					data-story={VIEW_CREATE}
@@ -379,8 +377,7 @@ const App = () => {
 					onClick={() => {
 						showAdd();
 						setEditMode(false);
-						router.pushPage(PAGE_CATALOG);
-						window.scrollTo(0, 0);
+						if (location.getViewId() !== VIEW_CATALOG) router.pushPage(PAGE_CATALOG);
 					}}
 					selected={location.getViewId() === VIEW_CATALOG}
 					data-story={VIEW_CATALOG}
