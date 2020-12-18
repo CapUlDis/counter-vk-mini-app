@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useRouter } from '@happysanta/router';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
@@ -19,7 +19,7 @@ import './Counters.css';
 import CounterCard from './components/CounterCard';
 import BigCounterCard from './components/BigCounterCard';
 import ReceivedCounter from  '../modals/ReceivedCounter';
-import { PAGE_COUNTERS_BIG, PANEL_COUNTERS, PANEL_COUNTERS_BIG, PAGE_CREATE, POPOUT_SHARE, POPOUT_DELETE } from '../routers';
+import { PAGE_COUNTERS, PAGE_COUNTERS_BIG, PANEL_COUNTERS, PANEL_COUNTERS_BIG, PAGE_CREATE, POPOUT_SHARE, POPOUT_DELETE } from '../routers';
 
 
 const Counters = ({ 
@@ -38,6 +38,13 @@ const Counters = ({
 }) => {
 	const location = useLocation();
 	const router = useRouter();
+
+	useEffect(() => {
+		if (location.getPageId() === PAGE_COUNTERS_BIG && service.counters.length === 0) {
+			router.popPageTo(PAGE_COUNTERS);
+			console.log(location.getViewHistory(id));
+		}
+	});
 
 	return (
 		<View id={id} 
