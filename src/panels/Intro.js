@@ -25,7 +25,7 @@ const Intro = ({ id, snackbarError, go }) => {
 				</Div>
 				<FixedLayout vertical='bottom'>
 					<Div>
-						<Button mode='commerce' size='xl' onClick={() => go()}>
+						<Button className="clickable" mode='commerce' size='xl' onClick={() => go()}>
 							Начать
 						</Button>
 					</Div>

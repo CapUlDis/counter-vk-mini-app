@@ -5,9 +5,9 @@ import "./RadioCard.css";
 const RadioCard = ({ value, color, theme, onChange, checked, defaultChecked }) => {
 
     return (
-        <label className="RadioCard">
+        <label className="RadioCard clickable">
             <input
-                className="RadioCard__input "
+                className="RadioCard__input"
                 type="radio"
                 name="cover"
                 value={value}

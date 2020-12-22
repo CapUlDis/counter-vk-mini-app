@@ -20,7 +20,7 @@ const ReceivedCounter = ({ sharedCounter, handleJoinClick }) => {
                 header={
                     <ModalPageHeader noShadow
                         right={
-                            <PanelHeaderButton onClick={() => router.popPage()}>
+                            <PanelHeaderButton className="clickable" onClick={() => router.popPage()}>
                                 {osname === IOS ? 'Отмена' : <Icon24Cancel />}
                             </PanelHeaderButton>
                         }
@@ -31,7 +31,7 @@ const ReceivedCounter = ({ sharedCounter, handleJoinClick }) => {
             >
                 <CardGrid style={{ margin: "4px 0px" }}>
                     <BigCounterCard counter={sharedCounter}>
-                        <Button className="Button__join" 
+                        <Button className="Button__join clickable" 
                             size="xl" 
                             mode="secondary" 
                             onClick={() => {

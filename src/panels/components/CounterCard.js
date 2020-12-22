@@ -25,7 +25,7 @@ const CounterCard = ({ id, counter, switchCard, ...props }) => {
 
     return (
         <Card size="l" mode="shadow" id={id} className="CounterCard">
-            <label className="CounterCard__label">
+            <label className="CounterCard__label clickable">
                 <input
                     className="CounterCard__button"
                     type="button"

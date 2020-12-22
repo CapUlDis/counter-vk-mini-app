@@ -391,6 +391,7 @@ const App = () => {
 		<Epic activeStory={location.getViewId()} tabbar={
 			<Tabbar shadow={location.getViewId() === VIEW_CREATE ? false : true}>
 				<TabbarItem
+					className="clickable"
 					onClick={() => {
 						setEditMode(false);
 						if (location.getViewId() !== VIEW_COUNTERS) router.pushPage(PAGE_COUNTERS);
@@ -402,6 +403,7 @@ const App = () => {
 					<Icon28RecentOutline/>
 				</TabbarItem>
 				<TabbarItem
+					className="clickable"
 					onClick={() => {
 						showAdd();
 						if (location.getViewId() !== VIEW_CREATE) router.pushPage(PAGE_CREATE);
@@ -413,6 +415,7 @@ const App = () => {
 					<Icon28AddCircleOutline/>
 				</TabbarItem>
 				<TabbarItem
+					className="clickable"
 					onClick={() => {
 						showAdd();
 						setEditMode(false);

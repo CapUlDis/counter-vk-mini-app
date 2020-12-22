@@ -15,3 +15,7 @@
 .ShareOutput {
     display: none;
 }
+
+.clickable {
+    cursor: pointer;
+}

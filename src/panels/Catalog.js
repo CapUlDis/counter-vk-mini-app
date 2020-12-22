@@ -63,7 +63,7 @@ const Catalog = ({
 											router.pushPage(PAGE_CATALOG_BIG);
 										}}
 									>
-										<Button className="Button__join" 
+										<Button className="Button__join clickable" 
 											size="xl" 
 											mode="secondary" 
 											onClick={() => handleJoinClick({ counter: standCounter })}
@@ -82,7 +82,11 @@ const Catalog = ({
 			</Panel>
 			<Panel id={PANEL_CATALOG_BIG}>
 				<PanelHeader 
-					left={<PanelHeaderButton><Icon24Back fill='#4bb34b' onClick={() => router.popPage()}/></PanelHeaderButton>}
+					left={
+						<PanelHeaderButton>
+							<Icon24Back className="clickable" fill='#4bb34b' onClick={() => router.popPage()}/>
+						</PanelHeaderButton>
+					}
 					separator={false}
 					>Каталог
 				</PanelHeader>
@@ -99,7 +103,7 @@ const Catalog = ({
 							<BigCounterCard key={standCounter.counterId}
 								counter={standCounter}
 							>
-								<Button className="Button__join" 
+								<Button className="Button__join clickable" 
 									size="xl" 
 									mode="secondary" 
 									style={{ backgroundColor: document.body.getAttribute('scheme') === 'bright_light' ? '#EBF7EB' : 'rgba(98, 119, 98, 0.25)' }}

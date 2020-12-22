@@ -15,19 +15,19 @@ const Share = ({ counterToShare }) => {
     return (
         <ActionSheet onClose={() => router.popPage()}>
             {!isItDesktop() &&
-                <ActionSheetItem autoclose before={<Icon28StoryOutline/>} onClick={() => shareCounterCardByStory({ counterToShare })}>
+                <ActionSheetItem className="clickable" autoclose before={<Icon28StoryOutline/>} onClick={() => shareCounterCardByStory({ counterToShare })}>
                     В историю
                 </ActionSheetItem>
             }
             {!isItDesktop() &&
-                <ActionSheetItem autoclose before={<Icon28MessageOutline/>} onClick={() => shareCounterByMessage({ counterToShare })}>
+                <ActionSheetItem className="clickable" autoclose before={<Icon28MessageOutline/>} onClick={() => shareCounterByMessage({ counterToShare })}>
                     В личные сообщения
                 </ActionSheetItem>
             }
-            <ActionSheetItem autoclose before={<Icon28ArticleOutline/>} onClick={() => shareCounterByWall({ counterToShare })}>
+            <ActionSheetItem className="clickable" autoclose before={<Icon28ArticleOutline/>} onClick={() => shareCounterByWall({ counterToShare })}>
                 На стену
             </ActionSheetItem>
-            {osname === IOS && <ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
+            {osname === IOS && <ActionSheetItem className="clickable" autoclose mode="cancel">Отменить</ActionSheetItem>}
         </ActionSheet>
     );
 };

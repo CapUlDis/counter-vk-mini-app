@@ -64,7 +64,7 @@ const Counters = ({
 					? <Placeholder 
 						icon={<Icon56AddCircleOutline/>}
 						header="Создайте счетчик"
-						action={<Button size="l" mode="commerce" onClick={() => router.pushPage(PAGE_CREATE)}>Создать счетчик</Button>}
+						action={<Button className="clickable" size="l" mode="commerce" onClick={() => router.pushPage(PAGE_CREATE)}>Создать счетчик</Button>}
 						stretched>
 						<div className="Placeholder__text__in">
 							Здесь будут отображаться ваши счетчики.
@@ -90,7 +90,11 @@ const Counters = ({
 			</Panel>
 			<Panel id={PANEL_COUNTERS_BIG}>
 				<PanelHeader 
-					left={<PanelHeaderButton><Icon24Back fill='#4bb34b' onClick={() => router.popPage()}/></PanelHeaderButton>}
+					left={
+						<PanelHeaderButton>
+							<Icon24Back fill='#4bb34b' className="clickable" onClick={() => router.popPage()}/>
+						</PanelHeaderButton>
+					}
 					separator={false}
 					>Счетчики
 				</PanelHeader>
@@ -110,7 +114,7 @@ const Counters = ({
 									fetchedUser={fetchedUser}
 									right={!counter.standard 
 										? <Icon28WriteOutline 
-											className="BigCounterCard__edit" 
+											className="BigCounterCard__edit clickable" 
 											onClick={() => {
 												counter.index = index;
 												setEditMode(counter);
@@ -118,7 +122,7 @@ const Counters = ({
 											}}
 										/>
 										: <Icon28DeleteOutline
-											className="BigCounterCard__edit" 
+											className="BigCounterCard__edit clickable" 
 											onClick={() => {
 												setCounterToDelete(counter);
 												router.pushPopup(POPOUT_DELETE);
@@ -129,7 +133,7 @@ const Counters = ({
 									<Button 
 										size="xl" 
 										mode="secondary" 
-										className="BigCounterCard__button"
+										className="BigCounterCard__button clickable"
 										style={{ backgroundColor: document.body.getAttribute('scheme') === 'bright_light' ? '#EBF7EB' : 'rgba(98, 119, 98, 0.25)' }}
 										before={<Icon24ShareOutline/>} 
 										onClick={() => {

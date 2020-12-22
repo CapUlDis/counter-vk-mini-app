@@ -27,8 +27,8 @@ const BigCounterCard = ({ counter, fetchedUser, ...props }) => {
     return (
         <Card size="l" mode="shadow" className="BigCounterCard">
             {counter.coverType === "color"
-                ? <div className="BigCounterCard__cover" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
-                : <div className="BigCounterCard__cover" style={{ background: `url(${images[parseInt(counter.coverId) - 11].large}) no-repeat center`, backgroundSize: "cover" }} />
+                ? <div className="BigCounterCard__cover clickable" style={{ background:  colors[parseInt(counter.coverId) - 1].style }} />
+                : <div className="BigCounterCard__cover clickable" style={{ background: `url(${images[parseInt(counter.coverId) - 11].large}) no-repeat center`, backgroundSize: "cover" }} />
             }
             <div className="BigCounterCard__text">
                 {props.right}

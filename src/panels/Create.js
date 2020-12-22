@@ -188,7 +188,8 @@ const Create = ({
 				left={editMode && 
 					<PanelHeaderButton>
 						<Icon24Back 
-							fill='#4bb34b' 
+							fill='#4bb34b'
+							className="clickable" 
 							onClick={() => { 
 								setEditMode(false);
 								router.popPage();
@@ -210,6 +211,7 @@ const Create = ({
 				{editMode &&
 					<CellButton before={<Icon28DeleteOutline/>} 
 						mode="danger" 
+						className="clickable"
 						onClick={() => {
 							setCounterToDelete(editMode);
 							router.pushPopup(POPOUT_DELETE);
@@ -229,7 +231,7 @@ const Create = ({
 					maxLength="40"
 				/>
 				{isDateSupported()
-					? <Input
+					? <Input 
 						type="date"
 						top="Дата"
 						name="date"
@@ -287,6 +289,7 @@ const Create = ({
 					<Radio 
 						name="howCount" 
 						value="from"
+						className="clickable"
 						checked={howCount === 'from'}
 						onChange={e => {
 							setInputStatuses({});
@@ -297,6 +300,7 @@ const Create = ({
 					<Radio 
 						name="howCount" 
 						value="to"
+						className="clickable"
 						checked={howCount === 'to'}
 						onChange={e => {
 							setInputStatuses({});
@@ -307,14 +311,16 @@ const Create = ({
 				</FormLayoutGroup>
 				<FormLayoutGroup top="Обложка счетчика">
 					<Tabs>
-						<TabsItem
-						onClick={() => setActiveCoverTab(COVERS.COLORS)}
-						selected={activeCoverTab === COVERS.COLORS}>
+						<TabsItem className="clickable"
+							onClick={() => setActiveCoverTab(COVERS.COLORS)}
+							selected={activeCoverTab === COVERS.COLORS}
+						>
 							Цвета
 						</TabsItem>
-						<TabsItem
-						onClick={() => setActiveCoverTab(COVERS.THEMES)}
-						selected={activeCoverTab === COVERS.THEMES}>
+						<TabsItem className="clickable"
+							onClick={() => setActiveCoverTab(COVERS.THEMES)}
+							selected={activeCoverTab === COVERS.THEMES}
+						>
 							Тематическая
 						</TabsItem>
 					</Tabs>
@@ -352,7 +358,7 @@ const Create = ({
 			</FormLayout>
 			<FixedLayout vertical='bottom'>
 				<Div className='DivCreateButton'>
-					<Button className='CreateButton' mode='commerce' size='xl' onClick={handleCreateSaveClick}>
+					<Button className='CreateButton clickable' mode='commerce' size='xl' onClick={handleCreateSaveClick}>
 						{!editMode ? 'Создать счетчик' : 'Сохранить изменения'}
 					</Button>
 				</Div>
