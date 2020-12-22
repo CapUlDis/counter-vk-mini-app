@@ -277,6 +277,11 @@ const App = () => {
 			const cloneService = _.cloneDeep(service);
 
 			const index = cloneService.counters.indexOf(counterToDelete.counterId);
+			if (index === cloneService.counters.length - 1 && index !== 0) {
+				setSlideIndexCounters(index - 1);
+			} else {
+				setSlideIndexCounters(index);
+			}
 			cloneService.counters.splice(index, 1);
 			cloneService.deletedCounters.push(counterToDelete.counterId);
 
