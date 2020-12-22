@@ -44,7 +44,7 @@ const Create = ({
 	loadCounters, 
 	editMode, 
 	setEditMode, 
-	setSlideIndexCatalog,
+	setSlideIndexCounters,
 	setCounterToDelete,
 	snackbarError,
 	setSnackbarError
@@ -191,6 +191,7 @@ const Create = ({
 							fill='#4bb34b'
 							className="clickable" 
 							onClick={() => { 
+								setSlideIndexCounters(editMode.index);
 								setEditMode(false);
 								router.popPage();
 							}}
