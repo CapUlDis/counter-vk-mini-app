@@ -71,11 +71,12 @@ const App = () => {
 	const [sharedCounter, setSharedCounter] = useState(false);
 	const [userHasSeenAdd, setUserHasSeenAdd] = useState(false);
 	const [counterToDelete, setCounterToDelete] = useState(null);
+	const [watchFlag, setWatchFlag] = useState(0);
 
 	const [step, setStep] = useState(STEPS.LOADER_INTRO);
 	const [activePanel, setActivePanel] = useState(LOADER_INTRO.LOADER);
 	const [popoutSpinner, setPopoutSpinner] = useState(<ScreenSpinner size='large'/>);
-	const [snackbar, setSnackbar] = useState(false);
+	const [snackbarError, setSnackbarError] = useState(null);
 
 	const [slideIndexCounters, setSlideIndexCounters] = useState(0);
 	const [counterToShare, setCounterToShare] = useState(null);
@@ -199,19 +200,23 @@ const App = () => {
 				}
 					
 			} catch (error) {
-				setSnackbar(<Snackbar
-					layout='vertical'
-					onClose={() => setSnackbar(null)}
-					before={<Avatar size={24} style={{ backgroundColor: 'var(--dynamic-red)'}}
-					><Icon24Error fill='#fff' width='14' height='14'/></Avatar>}
-					duration={900}
-				>
-					Проблема с получением данных из Storage.
-				</Snackbar>);
 				console.log(error);
+				setSnackbarError(
+					<Snackbar
+						layout='vertical'
+						onClose={() => setSnackbarError(null)}
+						before={
+							<Avatar size={24} style={{ backgroundColor: 'var(--dynamic-red)'}}>
+								<Icon24Error fill='#fff' width='14' height='14'/>
+							</Avatar>
+						}
+					>
+						Проблема с получением данных из Storage. Проверьте интернет-соединение.
+					</Snackbar>);
+				setWatchFlag(watchFlag + 1);
 			}
 		})();
-	}, []);
+	}, [watchFlag]);
 
 	const showAdd = () => {
 		if (!userHasSeenAdd) {
@@ -251,50 +256,70 @@ const App = () => {
 			return setStep(STEPS.MAIN);
 			
 		} catch (error) {
-			setSnackbar(<Snackbar
-				layout='vertical'
-				onClose={() => setSnackbar(null)}
-				before={<Avatar size={24} style={{ backgroundColor: 'var(--dynamic-red)'}}
-				><Icon24Error fill='#fff' width='14' height='14'/></Avatar>}
-				duration={900}
-			>
-				Проблема с отправкой данных в Storage.
-			</Snackbar>)
+			console.log(error);
+			setSnackbarError(
+				<Snackbar
+					onClose={() => setSnackbarError(null)}
+					before={
+						<Avatar size={24} style={{ backgroundColor: 'var(--dynamic-red)'}}>
+							<Icon24Error fill='#fff' width='14' height='14'/>
+						</Avatar>
+					}
+				>
+					Проблема с отправкой данных в Storage. Проверьте интернет-соединение.
+				</Snackbar>
+			);
 		}
 	};
 
 	const handleDeleteClick = async () => {
-		const cloneService = _.cloneDeep(service);
+		try {
+			const cloneService = _.cloneDeep(service);
 
-		const index = cloneService.counters.indexOf(counterToDelete.counterId);
-		cloneService.counters.splice(index, 1);
-		cloneService.deletedCounters.push(counterToDelete.counterId);
+			const index = cloneService.counters.indexOf(counterToDelete.counterId);
+			cloneService.counters.splice(index, 1);
+			cloneService.deletedCounters.push(counterToDelete.counterId);
 
-		if (counterToDelete.standard) {
-			cloneService.catalog[counterToDelete.standard] = true;
-		}
-
-		await saveService(cloneService);
-		await loadCounters(cloneService);
-		setService(cloneService);
-
-		// console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
-		// console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
-
-		window.localStorage.clear();
-		setEditMode(false);
-		setCounterToDelete(null);
-
-		if (location.getPageId() === PAGE_CREATE) {
-			if (cloneService.counters.length === 0) {
-				router.pushPage(PAGE_COUNTERS);
-			} else {
-				router.popPage();
+			if (counterToDelete.standard) {
+				cloneService.catalog[counterToDelete.standard] = true;
 			}
-		} else {
-			if (cloneService.counters.length === 0) {
-				router.pushPage(PAGE_COUNTERS);
-			} 
+
+			await saveService(cloneService);
+			await loadCounters(cloneService);
+			setService(cloneService);
+
+			// console.log(await bridge.send("VKWebAppStorageGetKeys", {"count": 30, "offset": 0}));
+			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": [STORAGE_KEYS.SERVICE]}));
+
+			window.localStorage.clear();
+			setEditMode(false);
+			setCounterToDelete(null);
+
+			if (location.getPageId() === PAGE_CREATE) {
+				if (cloneService.counters.length === 0) {
+					router.pushPage(PAGE_COUNTERS);
+				} else {
+					router.popPage();
+				}
+			} else {
+				if (cloneService.counters.length === 0) {
+					router.pushPage(PAGE_COUNTERS);
+				} 
+			}
+		} catch(error) {
+			console.log(error);
+			setSnackbarError(
+				<Snackbar
+					onClose={() => setSnackbarError(null)}
+					before={
+						<Avatar size={24} style={{ backgroundColor: 'var(--dynamic-red)' }}>
+							<Icon24Error fill='#fff' width='14' height='14'/>
+						</Avatar>
+					}
+				>
+					Проблема с отправкой данных в Storage. Проверьте интернет-соединение.
+				</Snackbar>
+			);
 		}
 	};
 
@@ -324,6 +349,18 @@ const App = () => {
 			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 		} catch (error) {
 			console.log(error);
+			setSnackbarError(
+				<Snackbar
+					onClose={() => setSnackbarError(null)}
+					before={
+						<Avatar size={24} style={{ backgroundColor: 'var(--dynamic-red)'}}>
+							<Icon24Error fill='#fff' width='14' height='14'/>
+						</Avatar>
+					}
+				>
+					Проблема с отправкой данных в Storage. Проверьте интернет-соединение.
+				</Snackbar>
+			);
 		}
 	};
 
@@ -342,8 +379,10 @@ const App = () => {
 	if (step === STEPS.LOADER_INTRO) {
 		return (
 			<View activePanel={activePanel} popout={popoutSpinner}>
-				<Panel id={LOADER_INTRO.LOADER}/>
-				<Intro id={LOADER_INTRO.INTRO} go={viewIntro} snackbarError={snackbar}/>
+				<Panel id={LOADER_INTRO.LOADER}>
+					{snackbarError}
+				</Panel>
+				<Intro id={LOADER_INTRO.INTRO} go={viewIntro} snackbarError={snackbarError}/>
 			</View>
 		);
 	}
@@ -398,7 +437,8 @@ const App = () => {
 				fetchedUser={fetchedUser}
 				setEditMode={setEditMode}
 				sharedCounter={sharedCounter}
-				handleJoinClick={handleJoinClick}/>
+				handleJoinClick={handleJoinClick}
+				snackbarError={snackbarError}/>
 			<View id={VIEW_CREATE} 
 				activePanel={location.getViewActivePanel(VIEW_CREATE)} 
 				popout={popout}
@@ -413,6 +453,8 @@ const App = () => {
 					setEditMode={setEditMode}
 					setSlideIndexCatalog={setSlideIndexCatalog}
 					setCounterToDelete={setCounterToDelete}
+					snackbarError={snackbarError}
+					setSnackbarError={setSnackbarError}
 				/>
 			</View>
 			<Catalog id={VIEW_CATALOG}
@@ -420,6 +462,7 @@ const App = () => {
 				slideIndex={slideIndexCatalog}
 				setSlideIndex={setSlideIndexCatalog}
 				handleJoinClick={handleJoinClick}
+				snackbarError={snackbarError}
 			/>
 		</Epic>
 	);

@@ -16,11 +16,15 @@ import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import CellButton from '@vkontakte/vkui/dist/components/CellButton/CellButton';
 import FormStatus from '@vkontakte/vkui/dist/components/FormStatus/FormStatus';
 import Div from '@vkontakte/vkui/dist/components/Div/Div';
+import Snackbar from '@vkontakte/vkui/dist/components/Snackbar/Snackbar';
+import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
+import Icon24Error from '@vkontakte/icons/dist/24/error';
 
 import './Create.css';
 
+import { isDateSupported } from '../helpers/utils';
 import { useLocalStorage } from './helpers/useLocalStorage';
 import { images, colors } from './components/img/Covers';
 import { saveService, saveNewCounter } from '../components/storage';
@@ -41,7 +45,9 @@ const Create = ({
 	editMode, 
 	setEditMode, 
 	setSlideIndexCatalog,
-	setCounterToDelete
+	setCounterToDelete,
+	snackbarError,
+	setSnackbarError
 }) => {
 	const router = useRouter();
 	
@@ -50,42 +56,68 @@ const Create = ({
 	};
 
 	const [activeCoverTab, setActiveCoverTab] = useLocalStorage('activeCoverTab', !editMode ? COVERS.COLORS : editMode.coverType);
-	const [inputStatuses, setInputStatuses] = useState({ title: 'default', date: 'default', howCount: 'default' });
 	const [title, setTitle] = useLocalStorage('title', !editMode ? '' : editMode.title);
 	const [date, setDate] = useLocalStorage('date', !editMode ? '' : editMode.date)
 	const [howCount, setHowCount] = useLocalStorage('howCount', !editMode ? 'from' : editMode.howCount);
 	const [coverType, setCoverType] = useLocalStorage('coverType', !editMode ? COVERS.COLORS : editMode.coverType);
 	const [coverId, setCoverId] = useLocalStorage('coverId', !editMode ? '1' : editMode.coverId);
+
+	const [day, setDay] = useLocalStorage('day', !editMode ? moment().date() : moment(editMode.date).date());
+	const [month, setMonth] = useLocalStorage('month', !editMode ? moment().month() + 1 : moment(editMode.date).month() + 1);
+	const [year, setYear] = useLocalStorage('year', !editMode ? moment().year() : moment(editMode.date).year());
+	const [inputStatuses, setInputStatuses] = useState({});
 	
 	const handleCreateSaveClick = async function () {
 		try {
-			console.log(date);
 			if (!title.trim()) {
 				window.scrollTo(0, 0);
-				return setInputStatuses({ title: 'error', date: 'default', howCount: 'default' });
+				return setInputStatuses({ title: 'error' });
 			} 
-			if (!date) {
-				window.scrollTo(0, 0);
-				return setInputStatuses({ title: 'default', date: 'error', howCount: 'default' });
-			}
-			setInputStatuses({ title: 'default', date: 'default', howCount: 'default' });
-			
+
 			const today = moment();
-			const userDate = moment(date);
+			let userDate = null;
+			let dateString = null;
 			
+			if (isDateSupported()) {
+				if (!date) {
+					window.scrollTo(0, 0);
+					return setInputStatuses({ date: 'error'});
+				}
+				userDate = moment(date);
+			} else {
+				if (!day || parseInt(day) === 0) {
+					window.scrollTo(0, 0);
+					return setInputStatuses({ day: 'error' });
+				}
+				if (!month || parseInt(month) === 0) {
+					window.scrollTo(0, 0);
+					return setInputStatuses({ month: 'error' });
+				}
+				if (!year) {
+					window.scrollTo(0, 0);
+					return setInputStatuses({ year: 'error' });
+				}
+				dateString = ('000' + year).slice(-4) + '-' + ('0' + month).slice(-2) + '-' + ('0' + day).slice(-2);
+				userDate = moment(dateString);
+				if (!userDate.isValid()) {
+					window.scrollTo(0, 0);
+					return setInputStatuses({ day: 'error' });
+				}
+			}
+
 			if (today > userDate && howCount === 'to') {
 				window.scrollTo(0, 0);
-				return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
+				return setInputStatuses({ howCount: 'error' });
 			}
 			if (today < userDate && howCount === 'from') {
 				window.scrollTo(0, 0);
-				return setInputStatuses({ title: 'default', date: 'default', howCount: 'error' });
+				return setInputStatuses({ howCount: 'error' });
 			}
 
 			const counterObj = {
 				counterId: editMode? editMode.counterId : null,
 				title,
-				date,
+				date: isDateSupported() ? date : dateString,
 				howCount,
 				coverType,
 				coverId,
@@ -135,6 +167,18 @@ const Create = ({
 
 		} catch(error) {
 			console.log(error);
+			setSnackbarError(
+				<Snackbar
+					onClose={() => setSnackbarError(null)}
+					before={
+						<Avatar size={24} style={{ backgroundColor: 'var(--dynamic_red)' }}>
+							<Icon24Error fill='#fff' width='14' height='14'/>
+						</Avatar>
+					}
+				>
+					Проблемы с отправкой данных в Storage. Проверьте интернет-соединение.
+				</Snackbar>
+			);
 		}
 	}
 
@@ -146,7 +190,6 @@ const Create = ({
 						<Icon24Back 
 							fill='#4bb34b' 
 							onClick={() => { 
-								setSlideIndexCatalog(editMode.index);
 								setEditMode(false);
 								router.popPage();
 							}}
@@ -180,31 +223,73 @@ const Create = ({
 					top="Название"
 					name="title"
 					value={title}
-					status={inputStatuses.title}
+					status={inputStatuses.title ? inputStatuses.title : 'default'}
 					placeholder="Введите название"
 					onChange={e => setTitle(e.target.value)}
 					maxLength="40"
 				/>
-				<Input
-					type="date"
-					top="Дата"
-					name="date"
-					max={'9999-12-31'}
-					value={date}
-					status={inputStatuses.date}
-					placeholder="Выберите дату"
-					onChange={e => {
-						setInputStatuses({ title: 'default', date: 'default', howCount: 'default' });
-						setDate(e.target.value);
-					}}
-				/>
+				{isDateSupported()
+					? <Input
+						type="date"
+						top="Дата"
+						name="date"
+						max={'9999-12-31'}
+						value={date}
+						status={inputStatuses.date ? inputStatuses.date : 'default'}
+						placeholder="Выберите дату"
+						onChange={e => {
+							setInputStatuses({});
+							setDate(e.target.value);
+						}}
+					/>
+					: <FormLayoutGroup top="Дата">
+						<Input value={day}
+							type="text"
+							placeholder="Введите число"
+							status={inputStatuses.day ? inputStatuses.day : 'default'}
+							onChange={e => {
+								setInputStatuses({});
+								setDay(e.target.value.replace(/\D+/, '').replace(/^[0-9]{2}$/g, n => {
+									if (parseInt(n) === 0) return '01';
+									if (parseInt(n) > 31) return '31';
+									return n;
+								}));
+							}}
+							maxLength="2"
+						/>
+						<Input value={month}
+							type="text"
+							placeholder="Введите месяц"
+							status={inputStatuses.month ? inputStatuses.month : 'default'}
+							onChange={e => {
+								setInputStatuses({});
+								setMonth(e.target.value.replace(/\D+/, '').replace(/^[0-9]{2}$/g, n => {
+									if (parseInt(n) === 0) return '01';
+									if (parseInt(n) > 12) return '12';
+									return n;
+								}));
+							}}
+							maxLength="2"
+						/>
+						<Input value={year}
+							type="text"
+							placeholder="Введите год"
+							status={inputStatuses.year ? inputStatuses.year : 'default'}
+							onChange={e => {
+								setInputStatuses({});
+								setYear(e.target.value.replace(/\D+/, ''));
+							}}
+							maxLength="4"
+						/>
+					</FormLayoutGroup>
+				}
 				<FormLayoutGroup top="Как отсчитывать дату?">
 					<Radio 
 						name="howCount" 
 						value="from"
 						checked={howCount === 'from'}
 						onChange={e => {
-							setInputStatuses({ title: 'default', date: 'default', howCount: 'default' });
+							setInputStatuses({});
 							setHowCount(e.target.value);
 						}}
 						>От выбранной даты
@@ -214,7 +299,7 @@ const Create = ({
 						value="to"
 						checked={howCount === 'to'}
 						onChange={e => {
-							setInputStatuses({ title: 'default', date: 'default', howCount: 'default' });
+							setInputStatuses({});
 							setHowCount(e.target.value);
 						}}
 						>До выбранной даты
@@ -264,7 +349,6 @@ const Create = ({
 						</div>
 					}
 				</FormLayoutGroup>
-				
 			</FormLayout>
 			<FixedLayout vertical='bottom'>
 				<Div className='DivCreateButton'>
@@ -273,6 +357,7 @@ const Create = ({
 					</Button>
 				</Div>
 			</FixedLayout>
+			{snackbarError}
 		</Panel>
 	)
 };
