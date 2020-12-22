@@ -29,7 +29,7 @@ import { useLocalStorage } from './helpers/useLocalStorage';
 import { images, colors } from './components/img/Covers';
 import { saveService, saveNewCounter } from '../components/storage';
 import RadioCard from './components/RadioCard';
-import { PAGE_COUNTERS, POPOUT_DELETE } from '../routers';
+import { PAGE_CREATE, PAGE_COUNTERS, POPOUT_DELETE } from '../routers';
 
 
 const COVERS = {
@@ -53,6 +53,10 @@ const Create = ({
 	
 	if (editMode) { 
 		window.localStorage.clear();
+		router.onLeavePage(PAGE_CREATE, () => {
+			setSlideIndexCounters(editMode.index);
+			setEditMode(false);
+		});
 	};
 
 	const [activeCoverTab, setActiveCoverTab] = useLocalStorage('activeCoverTab', !editMode ? COVERS.COLORS : editMode.coverType);
@@ -66,6 +70,7 @@ const Create = ({
 	const [month, setMonth] = useLocalStorage('month', !editMode ? moment().month() + 1 : moment(editMode.date).month() + 1);
 	const [year, setYear] = useLocalStorage('year', !editMode ? moment().year() : moment(editMode.date).year());
 	const [inputStatuses, setInputStatuses] = useState({});
+
 	
 	const handleCreateSaveClick = async function () {
 		try {
