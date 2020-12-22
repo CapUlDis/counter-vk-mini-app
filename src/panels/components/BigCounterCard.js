@@ -43,7 +43,7 @@ const BigCounterCard = ({ counter, fetchedUser, ...props }) => {
                 {fetchedUser &&
                     <div className="BigCounterCard__avatars">
                         {fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200} size={24}/> : null}
-                        <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)", marginLeft: "8px" }}>Ждете Вы</Caption>
+                        <Caption level="1" weight="regular" style={{ color: "var(--text_secondary)", marginLeft: "8px" }}>{counter.howCount === 'to' ? 'Ждете Вы' : 'Следите Вы'}</Caption>
                     </div>
                 }
                 {props.children}
