@@ -83,7 +83,7 @@ export const standardCounters = [
     },
     {
         counterId: 'standCounter6',
-        title: 'Основание Вконтакте',
+        title: 'Основание ВКонтакте',
         date: '2006-10-10',
         howCount: 'from',
         coverType: 'color',
