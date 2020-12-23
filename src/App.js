@@ -459,7 +459,6 @@ const App = () => {
 					loadCounters={loadCounters}
 					editMode={editMode}
 					setEditMode={setEditMode}
-					setSlideIndexCounters={setSlideIndexCounters}
 					setCounterToDelete={setCounterToDelete}
 					snackbarError={snackbarError}
 					setSnackbarError={setSnackbarError}

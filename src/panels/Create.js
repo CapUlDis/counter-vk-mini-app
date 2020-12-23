@@ -44,7 +44,6 @@ const Create = ({
 	loadCounters, 
 	editMode, 
 	setEditMode, 
-	setSlideIndexCounters,
 	setCounterToDelete,
 	snackbarError,
 	setSnackbarError
@@ -53,10 +52,6 @@ const Create = ({
 	
 	if (editMode) { 
 		window.localStorage.clear();
-		router.onLeavePage(PAGE_CREATE, () => {
-			setSlideIndexCounters(editMode.index);
-			setEditMode(false);
-		});
 	};
 
 	const [activeCoverTab, setActiveCoverTab] = useLocalStorage('activeCoverTab', !editMode ? COVERS.COLORS : editMode.coverType);
@@ -196,7 +191,6 @@ const Create = ({
 							fill='#4bb34b'
 							className="clickable" 
 							onClick={() => { 
-								setSlideIndexCounters(editMode.index);
 								setEditMode(false);
 								router.popPage();
 							}}

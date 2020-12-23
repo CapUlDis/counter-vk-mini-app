@@ -103,7 +103,7 @@ const Counters = ({
 					align="center"
 					className="BigCounters_Gallery"
 					slideIndex={slideIndex}
-					onChange={slideIndex => setSlideIndex({ slideIndex })}
+					onChange={slideIndex => setSlideIndex(slideIndex)}
 					style={{ marginTop: "9px" }}
 				>
 					{service.counters.length !== 0 &&

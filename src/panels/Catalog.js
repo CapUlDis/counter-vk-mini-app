@@ -94,7 +94,7 @@ const Catalog = ({
 					slideWidth="90%"
 					align="center"
 					slideIndex={slideIndex}
-					onChange={slideIndex => setSlideIndex({ slideIndex })}
+					onChange={slideIndex => setSlideIndex(slideIndex)}
 					style={{ marginTop: "9px" }}
 				>
 					{standardCounters.reduce((result, standCounter, index) => {
