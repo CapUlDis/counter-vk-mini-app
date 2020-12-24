@@ -25,7 +25,7 @@ const Catalog = ({
 	slideIndex,
 	setSlideIndex,
 	handleJoinClick,
-	snackbarError
+	snackbar
 }) => {
 	const location = useLocation();
 	const router = useRouter();
@@ -78,7 +78,7 @@ const Catalog = ({
 						</CardGrid>
 					</Group>
 				}
-				{snackbarError}
+				{snackbar}
 			</Panel>
 			<Panel id={PANEL_CATALOG_BIG}>
 				<PanelHeader 
@@ -116,7 +116,7 @@ const Catalog = ({
 						return result;
 					}, [])}
 				</Gallery>
-				{snackbarError}
+				{snackbar}
 			</Panel>
 		</View>
 	);	

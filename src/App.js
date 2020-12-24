@@ -8,14 +8,12 @@ import Epic from '@vkontakte/vkui/dist/components/Epic/Epic';
 import Tabbar from '@vkontakte/vkui/dist/components/Tabbar/Tabbar';
 import TabbarItem from '@vkontakte/vkui/dist/components/TabbarItem/TabbarItem';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
-import Snackbar from '@vkontakte/vkui/dist/components/Snackbar/Snackbar';
-import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 import Icon28RecentOutline from '@vkontakte/icons/dist/28/recent_outline';
 import Icon28AddCircleOutline from '@vkontakte/icons/dist/28/add_circle_outline';
 import Icon28MenuOutline from '@vkontakte/icons/dist/28/menu_outline';
-import Icon24Error from '@vkontakte/icons/dist/24/error';
 
 import '@vkontakte/vkui/dist/vkui.css';
+import SnackbarError from './snackbars/SnackbarError';
 import { standardCounters } from './components/standardCounters';
 import { saveService, saveNewCounter } from './components/storage';
 import {
@@ -80,8 +78,12 @@ const App = () => {
 
 	const [slideIndexCounters, setSlideIndexCounters] = useState(0);
 	const [counterToShare, setCounterToShare] = useState(null);
+	const [snackbarCounters, setSnackbarCounters] = useState(null);
 	
 	const [slideIndexCatalog, setSlideIndexCatalog] = useState(0);
+	const [snackbarCatalog, setSnackbarCatalog] = useState(null);
+
+	const [snackbarCreate, setSnackbarCreate] = useState(null);
 
 	const loadCounters = async (serviceObj) => {
 		if (serviceObj.counters.length !== 0) {
@@ -202,17 +204,10 @@ const App = () => {
 			} catch (error) {
 				console.log(error);
 				setSnackbarError(
-					<Snackbar
-						layout='vertical'
-						onClose={() => setSnackbarError(null)}
-						before={
-							<Avatar size={24} style={{ backgroundColor: 'var(--dynamic_red)'}}>
-								<Icon24Error fill='#fff' width='14' height='14'/>
-							</Avatar>
-						}
-					>
+					<SnackbarError setSnackbarError={setSnackbarError}>
 						Проблема с получением данных из Storage. Проверьте интернет-соединение.
-					</Snackbar>);
+					</SnackbarError>
+				);
 				setWatchFlag(watchFlag + 1);
 			}
 		})();
@@ -258,16 +253,9 @@ const App = () => {
 		} catch (error) {
 			console.log(error);
 			setSnackbarError(
-				<Snackbar
-					onClose={() => setSnackbarError(null)}
-					before={
-						<Avatar size={24} style={{ backgroundColor: 'var(--dynamic_red)'}}>
-							<Icon24Error fill='#fff' width='14' height='14'/>
-						</Avatar>
-					}
-				>
+				<SnackbarError setSnackbarError={setSnackbarError}>
 					Проблема с отправкой данных в Storage. Проверьте интернет-соединение.
-				</Snackbar>
+				</SnackbarError>
 			);
 		}
 	};
@@ -313,18 +301,21 @@ const App = () => {
 			}
 		} catch(error) {
 			console.log(error);
-			setSnackbarError(
-				<Snackbar
-					onClose={() => setSnackbarError(null)}
-					before={
-						<Avatar size={24} style={{ backgroundColor: 'var(--dynamic_red)' }}>
-							<Icon24Error fill='#fff' width='14' height='14'/>
-						</Avatar>
-					}
-				>
-					Проблема с отправкой данных в Storage. Проверьте интернет-соединение.
-				</Snackbar>
-			);
+			if (location.getViewId() === VIEW_COUNTERS) {
+				return setSnackbarCounters(
+					<SnackbarError setSnackbarError={setSnackbarCounters}>
+						Проблема с отправкой данных в Storage. Проверьте интернет-соединение.
+					</SnackbarError>
+				);
+			}
+			if (location.getViewId() === VIEW_CREATE) {
+				return setSnackbarCreate(
+					<SnackbarError setSnackbarError={setSnackbarCreate}>
+						Проблема с отправкой данных в Storage. Проверьте интернет-соединение.
+					</SnackbarError>
+				);
+			}
+
 		}
 	};
 
@@ -354,17 +345,10 @@ const App = () => {
 			// console.log(await bridge.send("VKWebAppStorageGet", {"keys": ['serviceCounters']}));
 		} catch (error) {
 			console.log(error);
-			setSnackbarError(
-				<Snackbar
-					onClose={() => setSnackbarError(null)}
-					before={
-						<Avatar size={24} style={{ backgroundColor: 'var(--dynamic_red)'}}>
-							<Icon24Error fill='#fff' width='14' height='14'/>
-						</Avatar>
-					}
-				>
+			setSnackbarCatalog(
+				<SnackbarError setSnackbarError={setSnackbarCatalog}>
 					Проблема с отправкой данных в Storage. Проверьте интернет-соединение.
-				</Snackbar>
+				</SnackbarError>
 			);
 		}
 	};
@@ -446,7 +430,7 @@ const App = () => {
 				setEditMode={setEditMode}
 				sharedCounter={sharedCounter}
 				handleJoinClick={handleJoinClick}
-				snackbarError={snackbarError}/>
+				snackbar={snackbarCounters}/>
 			<View id={VIEW_CREATE} 
 				activePanel={location.getViewActivePanel(VIEW_CREATE)} 
 				popout={popout}
@@ -460,8 +444,8 @@ const App = () => {
 					editMode={editMode}
 					setEditMode={setEditMode}
 					setCounterToDelete={setCounterToDelete}
-					snackbarError={snackbarError}
-					setSnackbarError={setSnackbarError}
+					snackbar={snackbarCreate}
+					setSnackbar={setSnackbarCreate}
 				/>
 			</View>
 			<Catalog id={VIEW_CATALOG}
@@ -469,7 +453,7 @@ const App = () => {
 				slideIndex={slideIndexCatalog}
 				setSlideIndex={setSlideIndexCatalog}
 				handleJoinClick={handleJoinClick}
-				snackbarError={snackbarError}
+				snackbar={snackbarCatalog}
 			/>
 		</Epic>
 	);

@@ -35,7 +35,7 @@ const Counters = ({
 	setEditMode, 
 	sharedCounter,
 	handleJoinClick,
-	snackbarError
+	snackbar
 }) => {
 	const location = useLocation();
 	const router = useRouter();
@@ -148,7 +148,7 @@ const Counters = ({
 						})
 					}
 				</Gallery>
-				{snackbarError}
+				{snackbar}
 			</Panel>
 		</View>
 	)

@@ -16,20 +16,18 @@ import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import CellButton from '@vkontakte/vkui/dist/components/CellButton/CellButton';
 import FormStatus from '@vkontakte/vkui/dist/components/FormStatus/FormStatus';
 import Div from '@vkontakte/vkui/dist/components/Div/Div';
-import Snackbar from '@vkontakte/vkui/dist/components/Snackbar/Snackbar';
-import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
-import Icon24Error from '@vkontakte/icons/dist/24/error';
 
 import './Create.css';
 
+import RadioCard from './components/RadioCard';
+import SnackbarError from './../snackbars/SnackbarError';
 import { isDateSupported } from '../helpers/utils';
 import { useLocalStorage } from './helpers/useLocalStorage';
 import { images, colors } from './components/img/Covers';
 import { saveService, saveNewCounter } from '../components/storage';
-import RadioCard from './components/RadioCard';
-import { PAGE_CREATE, PAGE_COUNTERS, POPOUT_DELETE } from '../routers';
+import { PAGE_COUNTERS, POPOUT_DELETE } from '../routers';
 
 
 const COVERS = {
@@ -45,8 +43,8 @@ const Create = ({
 	editMode, 
 	setEditMode, 
 	setCounterToDelete,
-	snackbarError,
-	setSnackbarError
+	snackbar,
+	setSnackbar
 }) => {
 	const router = useRouter();
 	
@@ -167,17 +165,10 @@ const Create = ({
 
 		} catch(error) {
 			console.log(error);
-			setSnackbarError(
-				<Snackbar
-					onClose={() => setSnackbarError(null)}
-					before={
-						<Avatar size={24} style={{ backgroundColor: 'var(--dynamic_red)' }}>
-							<Icon24Error fill='#fff' width='14' height='14'/>
-						</Avatar>
-					}
-				>
+			setSnackbar(
+				<SnackbarError setSnackbarError={setSnackbar}>
 					Проблемы с отправкой данных в Storage. Проверьте интернет-соединение.
-				</Snackbar>
+				</SnackbarError>
 			);
 		}
 	}
@@ -363,7 +354,7 @@ const Create = ({
 					</Button>
 				</Div>
 			</FixedLayout>
-			{snackbarError}
+			{snackbar}
 		</Panel>
 	)
 };
