@@ -1,0 +1,23 @@
+.RadioCards {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.CoversGrid {
+    font-family: sans-serif;
+    text-align: center;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-bottom: 53px;
+}
+
+.RadioCard__in2 {
+    height: 96px;
+    border-radius: 6px;
+}
+
+.DivCreateButton {
+    background: var(--background_content);
+    padding: 12px 12px;
+}

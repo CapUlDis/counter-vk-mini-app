@@ -1,0 +1,32 @@
+.RadioCard {
+    width: calc(50% - 8px);
+    flex-shrink: 0;
+    flex-grow: 1;
+    margin: 4px;
+    position: relative;
+}
+
+.RadioCard__input {
+    display: none;
+}
+
+.RadioCard__in {
+    border-radius: 6px;
+    background-size: cover;
+    width: 100%;
+    padding-bottom: 55.8%
+}
+
+.RadioCard__check {
+    color: #ffffff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -14px;
+    margin-top: -14px;
+    display: none;
+}
+
+.RadioCard__input:checked ~ .RadioCard__check {
+    display: block;
+}
